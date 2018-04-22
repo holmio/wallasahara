@@ -1,0 +1,18 @@
+<ion-content padding>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <button ion-button round outline (click)="changeLanguage('ar')">
+            {{ 'TUTORIAL_ARABIC_BUTTON' | translate }}
+          </button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <button ion-button round outline (click)="changeLanguage('es')">
+            {{ 'TUTORIAL_SPANISH_BUTTON' | translate }}
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+</ion-content>

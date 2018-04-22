@@ -1,18 +1,15 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { TutorialPage } from './tutorial';
+import { SelectLanguagePage } from './select-language';
 import { SharedModule } from '../../app/shared.module';
 
 @NgModule({
   declarations: [
-    TutorialPage,
+    SelectLanguagePage,
   ],
   imports: [
-    IonicPageModule.forChild(TutorialPage),
-    SharedModule
+    IonicPageModule.forChild(SelectLanguagePage),
+    SharedModule,
   ],
-  exports: [
-    TutorialPage
-  ]
 })
-export class TutorialPageModule { }
+export class SelectLanguagePageModule {}

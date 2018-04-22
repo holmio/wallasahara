@@ -64,5 +64,7 @@
   "CARDS_TITLE": "اجتماعي",
 
   "SEARCH_TITLE": "بحث",
-  "SEARCH_PLACEHOLDER": "ابحث في قائمة العناصر، مثل \"Donald Duck\""
+  "SEARCH_PLACEHOLDER": "ابحث في قائمة العناصر، مثل \"Donald Duck\"",
+
+  "TUTORIAL_ARABIC_BUTTON": "العربية"
 }
