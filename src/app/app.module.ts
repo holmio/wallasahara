@@ -1,22 +1,36 @@
+// Angular
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Camera } from '@ionic-native/camera';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
-import { IonicStorageModule, Storage } from '@ionic/storage';
+
+// Translate Core and Loader
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
+// Ionic
+import { IonicStorageModule, Storage } from '@ionic/storage';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { Camera } from '@ionic-native/camera';
+
+// Angular FireBase
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireStorageModule } from 'angularfire2/storage';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { environment } from './environments/environment';
+
+// Providers
 import { Items } from '../mocks/providers/items';
-import { Settings } from '../providers/providers';
-import { User } from '../providers/providers';
-import { Api } from '../providers/providers';
+import { Settings, User, Api } from '../providers/providers';
 import { MyApp } from './app.component';
-import { SharedModule } from './shared.module';
-import { SelectLanguagePage } from '../pages/select-language/select-language';
-import { SelectLanguagePageModule } from '../pages/select-language/select-language.module';
+
+// Shared Module
+import { SharedModule } from './shared/shared.module';
+
+// Services
+import { AuthService, ToastService } from '../services/services';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -45,6 +59,10 @@ export function provideSettings(storage: Storage) {
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+    AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
+    AngularFireStorageModule, // imports firebase/storage only needed for storage features
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {
@@ -56,17 +74,17 @@ export function provideSettings(storage: Storage) {
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     SharedModule.forRoot(),
-    SelectLanguagePageModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    SelectLanguagePage,
   ],
   providers: [
     Api,
     Items,
     User,
+    AuthService,
+    ToastService,
     Camera,
     SplashScreen,
     StatusBar,

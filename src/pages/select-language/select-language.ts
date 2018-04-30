@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { Platform } from 'ionic-angular/platform/platform';
 import { TranslateService } from '@ngx-translate/core';
+import { TabsPage } from '../tabs/tabs';
 
 /**
  * Generated class for the SelectLanguagePage page.
@@ -43,7 +44,7 @@ export class SelectLanguagePage {
         console.log(error);
       },
       () => {
-        this.viewController.dismiss();
+        this.navCtrl.setRoot(TabsPage);
       }
     );
   }

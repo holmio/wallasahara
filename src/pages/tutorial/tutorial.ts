@@ -27,7 +27,8 @@ export class TutorialPage {
     public platform: Platform,
   ) {
     this.dir = platform.dir();
-    translate.get(["TUTORIAL_SLIDE1_TITLE",
+    translate.get([
+      "TUTORIAL_SLIDE1_TITLE",
       "TUTORIAL_SLIDE1_DESCRIPTION",
       "TUTORIAL_SLIDE2_TITLE",
       "TUTORIAL_SLIDE2_DESCRIPTION",
@@ -57,7 +58,7 @@ export class TutorialPage {
   }
 
   startApp() {
-    this.navCtrl.setRoot('WelcomePage', {}, {
+    this.navCtrl.setRoot('LoginPage', {}, {
       animate: true,
       direction: 'forward'
     });

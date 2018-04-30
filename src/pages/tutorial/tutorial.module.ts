@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TutorialPage } from './tutorial';
-import { SharedModule } from '../../app/shared.module';
+import { SharedModule } from '../../app/shared/shared.module';
 
 @NgModule({
   declarations: [

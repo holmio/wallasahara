@@ -14,7 +14,7 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
  imports:      [
    CommonModule,
-   TranslateModule
+   TranslateModule,
   ],
  declarations: [  ],
  exports:      [ CommonModule, FormsModule, TranslateModule ]

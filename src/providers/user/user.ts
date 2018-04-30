@@ -25,7 +25,7 @@ import { Api } from '../api/api';
  */
 @Injectable()
 export class User {
-  _user: any;
+  private user: any;
 
   constructor(public api: Api) { }
 
@@ -39,7 +39,7 @@ export class User {
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
       if (res.status == 'success') {
-        this._loggedIn(res);
+        this.loggedIn(res);
       } else {
       }
     }, err => {
@@ -59,7 +59,7 @@ export class User {
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
       if (res.status == 'success') {
-        this._loggedIn(res);
+        this.loggedIn(res);
       }
     }, err => {
       console.error('ERROR', err);
@@ -72,13 +72,13 @@ export class User {
    * Log the user out, which forgets the session
    */
   logout() {
-    this._user = null;
+    this.user = null;
   }
 
   /**
    * Process a login/signup response to store user data
    */
-  _loggedIn(resp) {
-    this._user = resp.user;
+  private loggedIn(resp) {
+    this.user = resp.user;
   }
 }

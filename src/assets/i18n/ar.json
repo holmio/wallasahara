@@ -43,6 +43,7 @@
   "WELCOME_TITLE": "مرحبا",
 
   "LOGIN_TITLE": "تسجيل الدخول",
+  "LOGIN_SUCCESS": "Has iniciado sesion con exito. [AR]",
   "LOGIN_ERROR": "تعذر تسجيل الدخول. يرجى التحقق من معلومات حسابك وإعادة المحاولة.",
   "LOGIN_BUTTON": "تسجيل الدخول",
   "SIGNUP_TITLE": "انشاء الحساب",

@@ -1,39 +1,55 @@
-<ion-header>
-
+<ion-header no-border>
   <ion-navbar>
     <ion-title>{{ 'LOGIN_TITLE' | translate }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
-<ion-content>
-  <form (submit)="doLogin()">
-    <ion-list>
+<ion-content scroll="false" no-bounce>
+  <ion-grid>
+      <ion-row>
+        <ion-col>
+          <form>
+            <ion-list>
 
-      <ion-item>
-        <ion-label fixed>{{ 'EMAIL' | translate }}</ion-label>
-        <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
-      </ion-item>
+              <ion-item>
+                <ion-label fixed>{{ 'EMAIL' | translate }}</ion-label>
+                <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
+              </ion-item>
 
-      <!--
-      Want to use a Username instead of an Email? Here you go:
+              <!--
+              Want to use a Username instead of an Email? Here you go:
 
-      <ion-item>
-        <ion-label floating>{{ 'USERNAME' | translate }}</ion-label>
-        <ion-input type="text" [(ngModel)]="account.username" name="username"></ion-input>
-      </ion-item>
-      -->
+              <ion-item>
+                <ion-label floating>{{ 'USERNAME' | translate }}</ion-label>
+                <ion-input type="text" [(ngModel)]="account.username" name="username"></ion-input>
+              </ion-item>
+              -->
 
-      <ion-item>
-        <ion-label fixed>{{ 'PASSWORD' | translate }}</ion-label>
-        <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
-      </ion-item>
+              <ion-item>
+                <ion-label fixed>{{ 'PASSWORD' | translate }}</ion-label>
+                <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
+              </ion-item>
 
-      <div padding>
-        <button ion-button color="primary" block>{{ 'LOGIN_BUTTON' | translate }}</button>
-      </div>
+              <div padding>
+                <button ion-button block round type="submit" (click)="doLogin()">{{ 'LOGIN_BUTTON' | translate }}</button>
+                <button ion-button block round outline (click)="signup()" class="signup">{{ 'SIGNUP' | translate }}</button>
+              </div>
 
-    </ion-list>
-  </form>
+            </ion-list>
+          </form>
+        </ion-col>
+      </ion-row>
+      <ion-row class='social-icons'>
+        <ion-col>
+            <img src="../assets/img/facebook-icon.png" (click)="facebookUp()" >
+        </ion-col>
+        <ion-col>
+            <img src="../assets/img/twitter-icon.png" (click)="twitterUp()" >
+        </ion-col>
+        <ion-col>
+            <img src="../assets/img/google-plus-icon.png" (click)="googleUp()" >
+        </ion-col>
+      </ion-row>
+  </ion-grid>
 </ion-content>
