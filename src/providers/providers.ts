@@ -7,5 +7,5 @@ export {
     Api,
     Items,
     Settings,
-    User
+    User,
 };

@@ -1,0 +1,7 @@
+ion-toast.success .toast-wrapper {
+	background: color($colors, secondary);
+}
+
+ion-toast.error .toast-wrapper {
+	background: color($colors, danger);
+}

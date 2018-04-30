@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 
 import { User } from '../../providers/providers';
 import { MainPage } from '../pages';
+import { AuthService, ToastService } from '../../services/services';
 
 @IonicPage()
 @Component({
@@ -16,35 +17,45 @@ export class LoginPage {
   // sure to add it to the type
   account: { email: string, password: string } = {
     email: 'test@example.com',
-    password: 'test'
+    password: 'test123456'
   };
 
   // Our translated text strings
   private loginErrorString: string;
+  private loginSuccessString: string;
 
   constructor(public navCtrl: NavController,
-    public user: User,
-    public toastCtrl: ToastController,
+    public auth: AuthService,
+    public toastService: ToastService,
     public translateService: TranslateService) {
 
-    this.translateService.get('LOGIN_ERROR').subscribe((value) => {
-      this.loginErrorString = value;
+    this.translateService.get(['LOGIN_ERROR', 'LOGIN_SUCCESS']).subscribe((value) => {
+      this.loginErrorString = value.LOGIN_ERROR;
+      this.loginSuccessString = value.LOGIN_SUCCESS;
     })
   }
 
   // Attempt to login in through our User service
   doLogin() {
-    this.user.login(this.account).subscribe((resp) => {
+    this.auth.signInWithEmail(this.account).subscribe((resp) => {
+      this.toastService.show(this.loginSuccessString, 'success');
       this.navCtrl.push(MainPage);
     }, (err) => {
-      this.navCtrl.push(MainPage);
       // Unable to log in
-      let toast = this.toastCtrl.create({
-        message: this.loginErrorString,
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
+      this.toastService.show(this.loginSuccessString, 'error');
     });
+  }
+
+  signup() {
+    this.navCtrl.push('SignupPage');
+  }
+  facebookUp() {
+
+  }
+  twitterUp() {
+
+  }
+  googleUp() {
+
   }
 }
