@@ -23,14 +23,15 @@ import { environment } from './environments/environment';
 
 // Providers
 import { Items } from '../mocks/providers/items';
-import { Settings, User, Api } from '../providers/providers';
+import { User, Api } from '../providers/providers';
 import { MyApp } from './app.component';
 
 // Shared Module
 import { SharedModule } from './shared/shared.module';
 
 // Services
-import { AuthService, ToastService } from '../services/services';
+import { AuthService, ToastService, LoadingService, SettingsService } from '../services/services';
+import { LoginPage } from '../pages/login/login';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -45,7 +46,7 @@ export function provideSettings(storage: Storage) {
    * You can add new settings options at any time. Once the settings are saved,
    * these values will not overwrite the saved values (this can be done manually if desired).
    */
-  return new Settings(storage, {
+  return new SettingsService(storage, {
     option1: true,
     option2: 'Ionitron J. Framework',
     option3: '3',
@@ -85,10 +86,11 @@ export function provideSettings(storage: Storage) {
     User,
     AuthService,
     ToastService,
+    LoadingService,
     Camera,
     SplashScreen,
     StatusBar,
-    { provide: Settings, useFactory: provideSettings, deps: [Storage] },
+    { provide: SettingsService, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]

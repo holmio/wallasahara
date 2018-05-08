@@ -5,9 +5,8 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { Config, Nav, Platform, MenuController } from 'ionic-angular';
 
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
-import { Settings } from '../providers/providers';
-import { AuthService } from '../services/services';
-
+import { AuthService, LoadingService, SettingsService } from '../services/services';
+import { Observable } from 'rxjs';
 
 @Component({
   template: `<ion-menu [content]="content">
@@ -16,7 +15,6 @@ import { AuthService } from '../services/services';
         <ion-title>Pages</ion-title>
       </ion-toolbar>
     </ion-header>
-
     <ion-content>
       <ion-list>
         <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
@@ -33,16 +31,16 @@ import { AuthService } from '../services/services';
   <ion-nav #content [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  rootPage = FirstRunPage;
+  rootPage = LoginPage;
 
   @ViewChild(Nav) nav: Nav;
 
   pages: any[] = [
+    { title: 'Login', component: 'LoginPage' },
     { title: 'Tutorial', component: 'TutorialPage' },
     { title: 'Tabs', component: 'TabsPage' },
     { title: 'Cards', component: 'CardsPage' },
     { title: 'Content', component: 'ContentPage' },
-    { title: 'Login', component: 'LoginPage' },
     { title: 'Signup', component: 'SignupPage' },
     { title: 'Master Detail', component: 'ListMasterPage' },
     { title: 'Menu', component: 'MenuPage' },
@@ -53,18 +51,18 @@ export class MyApp {
   private menu: MenuController;
 
   constructor(
-    private translate: TranslateService,
     public platform: Platform,
-    public settings: Settings,
+    public settingsService: SettingsService,
+    public auth: AuthService,
+    public loadingService: LoadingService,
+    private translate: TranslateService,
     private config: Config,
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
-    public auth: AuthService,
     private menuController: MenuController,
   ) {
     this.menu = menuController;
     this.initializeApp();
-    this.initTranslate();
   }
 
   initializeApp() {
@@ -73,37 +71,24 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.initTranslate();
+      this.initLoginUser();
     });
-
-    this.auth.afAuth.authState.subscribe( user => {
-      if (user) {
-        this.rootPage = MainPage;
-      } else {
-        this.rootPage = LoginPage;
-      }
-    },
-    () => { this.rootPage = LoginPage; });
   }
 
+
   initTranslate() {
+    let langApp: string = 'es';
     // Set the default language for translation strings, and the current language.
-    this.translate.setDefaultLang('es');
-
-    // if (browserLang) {
-    //   if (browserLang === 'ar') {
-    //     const browserCultureLang = this.translate.getBrowserCultureLang();
-
-    //     if (browserCultureLang.match(/-CN|CHS|Hans/i)) {
-    //       this.translate.use('zh-cmn-Hans');
-    //     } else if (browserCultureLang.match(/-TW|CHT|Hant/i)) {
-    //       this.translate.use('zh-cmn-Hant');
-    //     }
-    //   } else {
-    //     this.translate.use(this.translate.getBrowserLang());
-    //   }
-    // } else {
-    //   this.translate.use('es'); // Set your language here
-    // }
+    this.settingsService.getValue('langApp').then((lang) => {
+      if (lang) langApp = lang;
+      this.translate.setDefaultLang(langApp);
+      if (langApp === 'ar') {
+        this.platform.setDir('rtl', true);
+      } else {
+        this.platform.setDir('ltr', true);
+      }
+    });
 
     this.translate.get(['BACK_BUTTON_TEXT']).subscribe(values => {
       this.config.set('ios', 'backButtonText', values.BACK_BUTTON_TEXT);
@@ -126,5 +111,29 @@ export class MyApp {
     this.menu.close();
     this.auth.signOut();
     this.nav.setRoot(LoginPage);
+  }
+
+  private initLoginUser () {
+
+    this.loadingService.showLoading();
+    let source = Observable.zip(
+      this.settingsService.getValue('initialRun'),
+      this.auth.afAuth.authState,
+    )
+    source.subscribe(
+      (res) => {
+        console.log(res);
+        if (res[0]) {
+          if (res[1]) {
+            this.rootPage = MainPage;
+          } else {
+            this.rootPage = LoginPage;
+          }
+          this.loadingService.hideLoading();
+        } else {
+          this.rootPage = FirstRunPage;
+          this.loadingService.hideLoading();
+        }
+      });
   }
 }
