@@ -4,7 +4,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 
 import { User } from '../../providers/providers';
 import { MainPage } from '../pages';
-import { AuthService, ToastService } from '../../services/services';
+import { AuthService, ToastService, LoadingService } from '../../services/services';
 
 @IonicPage()
 @Component({
@@ -27,6 +27,7 @@ export class LoginPage {
   constructor(public navCtrl: NavController,
     public auth: AuthService,
     public toastService: ToastService,
+    public loadingService: LoadingService,
     public translateService: TranslateService) {
 
     this.translateService.get(['LOGIN_ERROR', 'LOGIN_SUCCESS']).subscribe((value) => {
@@ -37,10 +38,13 @@ export class LoginPage {
 
   // Attempt to login in through our User service
   doLogin() {
+    this.loadingService.showLoading();
     this.auth.signInWithEmail(this.account).subscribe((resp) => {
+      this.loadingService.hideLoading();
       this.toastService.show(this.loginSuccessString, 'success');
       this.navCtrl.push(MainPage);
     }, (err) => {
+      this.loadingService.hideLoading();
       // Unable to log in
       this.toastService.show(this.loginSuccessString, 'error');
     });

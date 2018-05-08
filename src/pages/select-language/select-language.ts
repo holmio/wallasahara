@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { Platform } from 'ionic-angular/platform/platform';
 import { TranslateService } from '@ngx-translate/core';
-import { TabsPage } from '../tabs/tabs';
+import { LoginPage } from '../login/login';
+import { SettingsService } from '../../services/services';
 
 /**
  * Generated class for the SelectLanguagePage page.
@@ -17,12 +18,13 @@ import { TabsPage } from '../tabs/tabs';
   templateUrl: 'select-language.html',
 })
 export class SelectLanguagePage {
-
+  loginPage: any = LoginPage;
   constructor(
     public navCtrl: NavController,
     public translate: TranslateService,
     public platform: Platform,
     private viewController: ViewController,
+    public settingsService: SettingsService,
   ) {
   }
 
@@ -31,12 +33,14 @@ export class SelectLanguagePage {
   }
 
   changeLanguage(language: string) {
-    console.log(this.translate.getLangs());
     this.translate.use(language).subscribe(
       () => {
+        this.settingsService.setValue('initialRun', 'true');
         if (language === 'ar') {
+          this.settingsService.setValue('langApp', 'ar');
           this.platform.setDir('rtl', true);
         } else {
+          this.settingsService.setValue('langApp', 'es');
           this.platform.setDir('ltr', true);
         }
       },
@@ -44,7 +48,7 @@ export class SelectLanguagePage {
         console.log(error);
       },
       () => {
-        this.navCtrl.setRoot(TabsPage);
+        this.navCtrl.setRoot(this.loginPage);
       }
     );
   }

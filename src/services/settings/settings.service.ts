@@ -5,25 +5,25 @@ import { Storage } from '@ionic/storage';
  * A simple settings/config class for storing key/value pairs with persistence.
  */
 @Injectable()
-export class Settings {
+export class SettingsService {
   private SETTINGS_KEY: string = '_settings';
 
-  settings: any;
+  settings: any = {};
 
-  _defaults: any;
-  _readyPromise: Promise<any>;
+  private defaults: any;
+  private readyPromise: Promise<any>;
 
   constructor(public storage: Storage, defaults: any) {
-    this._defaults = defaults;
+    this.defaults = defaults;
   }
 
   load() {
     return this.storage.get(this.SETTINGS_KEY).then((value) => {
       if (value) {
         this.settings = value;
-        return this.mergeDefaults(this._defaults);
+        return this.mergeDefaults(this.defaults);
       } else {
-        return this.setAll(this._defaults).then((val) => {
+        return this.setAll(this.defaults).then((val) => {
           this.settings = val;
         })
       }
@@ -58,7 +58,7 @@ export class Settings {
   getValue(key: string) {
     return this.storage.get(this.SETTINGS_KEY)
       .then(settings => {
-        return settings[key];
+        return settings ? settings[key] : undefined;
       });
   }
 
