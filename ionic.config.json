@@ -1,6 +1,6 @@
 {
   "name": "wallaSaharaUI",
-  "app_id": "",
+  "app_id": "c705da65",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
