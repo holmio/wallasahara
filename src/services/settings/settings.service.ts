@@ -11,7 +11,7 @@ export class SettingsService {
   settings: any = {};
 
   private defaults: any;
-  private readyPromise: Promise<any>;
+  // private readyPromise: Promise<any>;
 
   constructor(public storage: Storage, defaults: any) {
     this.defaults = defaults;

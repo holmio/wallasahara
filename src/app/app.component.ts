@@ -46,7 +46,6 @@ export class MyApp {
     { title: 'Menu', component: 'MenuPage' },
     { title: 'Settings', component: 'SettingsPage' },
     { title: 'Search', component: 'SearchPage' },
-    { title: 'Select Language', component: 'SelectLanguagePage', icon: 'grid' },
   ]
   private menu: MenuController;
 
@@ -78,12 +77,11 @@ export class MyApp {
 
 
   initTranslate() {
-    let langApp: string = 'es';
     // Set the default language for translation strings, and the current language.
-    this.settingsService.getValue('langApp').then((lang) => {
-      if (lang) langApp = lang;
-      this.translate.setDefaultLang(langApp);
-      if (langApp === 'ar') {
+    this.settingsService.getValue('optionLang').then((lang) => {
+      if (!lang) lang = 'es';
+      this.translate.setDefaultLang(lang);
+      if (lang === 'ar') {
         this.platform.setDir('rtl', true);
       } else {
         this.platform.setDir('ltr', true);
