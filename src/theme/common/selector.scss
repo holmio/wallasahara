@@ -1,0 +1,9 @@
+.selector {
+  max-width: 100% !important;
+  padding-left: 0px !important;
+}
+.select-popover {
+  .popover-content {
+    background-color: color($colors, light-second) !important;
+  }
+}

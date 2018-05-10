@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ pageTitle }}</ion-title>
+    <ion-title>{{ 'SETTINGS_TITLE' | translate  }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -21,11 +21,10 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>{{ 'SETTINGS_OPTION3' | translate }}</ion-label>
-        <ion-select formControlName="option3">
-          <ion-option value="1" checked="true">1</ion-option>
-          <ion-option value="2">2</ion-option>
-          <ion-option value="3">3</ion-option>
+        <ion-label>{{ 'SETTINGS_SELECT_LANG' | translate }}</ion-label>
+        <ion-select interface="popover" class="selector" formControlName="optionLang" [(ngModel)]="selectedLang">
+          <ion-option class="option" value="es">{{ 'SETTINGS_LANG_SPANISH' | translate }}</ion-option>
+          <ion-option class="option" value="ar">{{ 'SETTINGS_LANG_ARABIC' | translate }}</ion-option>
         </ion-select>
       </ion-item>
 

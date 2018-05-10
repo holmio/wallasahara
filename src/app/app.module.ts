@@ -49,7 +49,7 @@ export function provideSettings(storage: Storage) {
   return new SettingsService(storage, {
     option1: true,
     option2: 'Ionitron J. Framework',
-    option3: '3',
+    optionLang: 'es',
     option4: 'Hello'
   });
 }
