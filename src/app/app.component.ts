@@ -7,6 +7,8 @@ import { Config, Nav, Platform, MenuController } from 'ionic-angular';
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
 import { AuthService, LoadingService, SettingsService } from '../services/services';
 import { Observable } from 'rxjs';
+export const LANG_ES: string = 'es';
+export const LANG_AR: string = 'ar';
 
 @Component({
   template: `<ion-menu [content]="content">
@@ -31,6 +33,7 @@ import { Observable } from 'rxjs';
   <ion-nav #content [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
+
   rootPage = LoginPage;
 
   @ViewChild(Nav) nav: Nav;
@@ -78,24 +81,25 @@ export class MyApp {
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.
-    this.settingsService.getValue('optionLang').then((lang) => {
-      if (!lang) lang = 'es';
-      this.translate.setDefaultLang(lang);
-      if (lang === 'ar') {
-        this.platform.setDir('rtl', true);
-      } else {
-        this.platform.setDir('ltr', true);
-      }
-    });
+    this.translate.setDefaultLang(LANG_ES);
 
     this.translate.get(['BACK_BUTTON_TEXT']).subscribe(values => {
       this.config.set('ios', 'backButtonText', values.BACK_BUTTON_TEXT);
     });
+    /**
+     *
+     */
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       console.log("onLangChange", event.translations)
-    })
-    this.translate.onDefaultLangChange.subscribe((event: LangChangeEvent) => {
-      console.log("onDefaultLangChange", event.translations)
+      if(event.lang == LANG_AR) {
+        this.settingsService.setValue('optionLang', LANG_AR);
+        this.platform.setDir('rtl', true);
+        this.platform.setDir('ltr', false);
+      } else {
+        this.settingsService.setValue('optionLang', LANG_ES);
+        this.platform.setDir('ltr', true);
+        this.platform.setDir('rtl', false);
+      }
     })
   }
 

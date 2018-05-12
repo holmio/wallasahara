@@ -38,13 +38,6 @@ export class SelectLanguagePage {
     this.translate.use(language).subscribe(
       () => {
         this.settingsService.setValue('initialRun', 'true');
-        if (language === 'ar') {
-          this.settingsService.setValue('optionLang', 'ar');
-          this.platform.setDir('rtl', true);
-        } else {
-          this.settingsService.setValue('optionLang', 'es');
-          this.platform.setDir('ltr', true);
-        }
       },
       (error) => {
         console.log(error);
