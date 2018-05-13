@@ -54,9 +54,9 @@ export class MyApp {
 
   constructor(
     public platform: Platform,
-    public settingsService: SettingsService,
     public auth: AuthService,
-    public loadingService: LoadingService,
+    private loadingService: LoadingService,
+    private settingsService: SettingsService,
     private translate: TranslateService,
     private config: Config,
     private statusBar: StatusBar,
@@ -82,6 +82,9 @@ export class MyApp {
   initTranslate() {
     // Set the default language for translation strings, and the current language.
     this.translate.setDefaultLang(LANG_ES);
+    this.settingsService.getValue('optionLang').then((lang) => {
+      if (lang === LANG_AR) this.translate.setDefaultLang(LANG_AR);
+    });
 
     this.translate.get(['BACK_BUTTON_TEXT']).subscribe(values => {
       this.config.set('ios', 'backButtonText', values.BACK_BUTTON_TEXT);
@@ -127,6 +130,7 @@ export class MyApp {
         console.log(res);
         if (res[0]) {
           if (res[1]) {
+            this.settingsService.setValue('uuid', res[1].uid);
             this.rootPage = MainPage;
           } else {
             this.rootPage = LoginPage;

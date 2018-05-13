@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
+import { ItemsService, LoadingService } from '../../services/services';
 
 @IonicPage()
 @Component({
@@ -17,7 +18,14 @@ export class ItemCreatePage {
 
   form: FormGroup;
 
-  constructor(public navCtrl: NavController, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera) {
+  constructor(
+    public navCtrl: NavController,
+    public viewCtrl: ViewController,
+    public formBuilder: FormBuilder,
+    public camera: Camera,
+    private itemsService: ItemsService,
+    private loadingService: LoadingService,
+  ) {
     this.form = formBuilder.group({
       profilePic: [''],
       name: ['', Validators.required],
@@ -36,13 +44,16 @@ export class ItemCreatePage {
 
   getPicture() {
     if (Camera['installed']()) {
+      this.loadingService.showLoading();
       this.camera.getPicture({
         destinationType: this.camera.DestinationType.DATA_URL,
         targetWidth: 96,
         targetHeight: 96
       }).then((data) => {
         this.form.patchValue({ 'profilePic': 'data:image/jpg;base64,' + data });
+        this.loadingService.showLoading();
       }, (err) => {
+        this.loadingService.showLoading();
         alert('Unable to take photo');
       })
     } else {
@@ -73,11 +84,19 @@ export class ItemCreatePage {
   }
 
   /**
-   * The user is done and wants to create the item, so return it
+   * The user can create and item and return to the las page
    * back to the presenter.
    */
-  done() {
+  createItem() {
     if (!this.form.valid) { return; }
-    this.viewCtrl.dismiss(this.form.value);
+    this.loadingService.showLoading();
+    this.itemsService.addItem(this.form.value).subscribe((data) => {
+      this.loadingService.hideLoading();
+      this.viewCtrl.dismiss(this.form.value);
+    },
+    (error) => {
+      this.loadingService.hideLoading();
+      console.error(error);
+    });
   }
 }

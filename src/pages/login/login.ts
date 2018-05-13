@@ -4,7 +4,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 
 import { User } from '../../providers/providers';
 import { MainPage } from '../pages';
-import { AuthService, ToastService, LoadingService } from '../../services/services';
+import { AuthService, ToastService, LoadingService, SettingsService } from '../../services/services';
 
 @IonicPage()
 @Component({
@@ -25,10 +25,12 @@ export class LoginPage {
   private loginSuccessString: string;
 
   constructor(public navCtrl: NavController,
-    public auth: AuthService,
-    public toastService: ToastService,
-    public loadingService: LoadingService,
-    public translateService: TranslateService) {
+    public translateService: TranslateService,
+    private auth: AuthService,
+    private toastService: ToastService,
+    private loadingService: LoadingService,
+    private settingsService: SettingsService,
+  ) {
 
     this.translateService.get(['LOGIN_ERROR', 'LOGIN_SUCCESS']).subscribe((value) => {
       this.loginErrorString = value.LOGIN_ERROR;
@@ -40,13 +42,14 @@ export class LoginPage {
   doLogin() {
     this.loadingService.showLoading();
     this.auth.signInWithEmail(this.account).subscribe((resp) => {
+      this.settingsService.setValue('uuid', resp.uuid);
       this.loadingService.hideLoading();
       this.toastService.show(this.loginSuccessString, 'success');
       this.navCtrl.push(MainPage);
     }, (err) => {
       this.loadingService.hideLoading();
       // Unable to log in
-      this.toastService.show(this.loginSuccessString, 'error');
+      this.toastService.show(this.loginErrorString, 'error');
     });
   }
 
