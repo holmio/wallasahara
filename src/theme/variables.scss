@@ -4,7 +4,7 @@ $font-path: "../assets/fonts";
 
 @import "ionic.globals";
 
-
+$app-direction: multi;
 
 // Named Color Variables
 // --------------------------------------------------
@@ -37,6 +37,8 @@ $app-background:      linear-gradient(to right, color($colors, light) 0%, color(
 $background-color:    transparent;
 $toolbar-background:  transparent;
 $text-input-highlight-color-valid: color($colors, success);
+$text-input-highlight-color-invalid: color($colors, danger);
+$text-input-md-show-focus-highlight: false;
 $text-input-highlight-color: color($colors, success);
 
 

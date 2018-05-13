@@ -30,7 +30,7 @@ import { MyApp } from './app.component';
 import { SharedModule } from './shared/shared.module';
 
 // Services
-import { AuthService, ToastService, LoadingService, SettingsService } from '../services/services';
+import { AuthService, ToastService, LoadingService, SettingsService, ItemsService } from '../services/services';
 import { LoginPage } from '../pages/login/login';
 
 // The translate loader needs to know where to load i18n files
@@ -49,7 +49,6 @@ export function provideSettings(storage: Storage) {
   return new SettingsService(storage, {
     option1: true,
     option2: 'Ionitron J. Framework',
-    optionLang: 'es',
     option4: 'Hello'
   });
 }
@@ -85,6 +84,7 @@ export function provideSettings(storage: Storage) {
     Items,
     User,
     AuthService,
+    ItemsService,
     ToastService,
     LoadingService,
     Camera,

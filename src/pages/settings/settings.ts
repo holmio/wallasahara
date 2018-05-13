@@ -44,6 +44,7 @@ export class SettingsPage {
     public platform: Platform,
     private loadingService: LoadingService,
   ) {
+    // setting current value of lang
     this.settingsService.getValue('optionLang').then((lang) => this.currentLang = lang);
   }
 
@@ -86,10 +87,11 @@ export class SettingsPage {
     }
     this.form = this.formBuilder.group(group);
 
-    // Watch the form for changes, and
+    // Watch the form for changes, and set value of lang
     this.form.valueChanges.subscribe((formData) => {
-      console.log(formData);
       if(formData.optionLang !== this.currentLang) {
+        // setting again current value of lang
+        this.currentLang = formData.optionLang;
         this.changeLanguage(formData.optionLang)
       }
       this.settingsService.merge(this.form.value);
@@ -99,26 +101,12 @@ export class SettingsPage {
   ngOnChanges() {
     console.log('Ng All Changes');
   }
+  /**
+   * Method to set the laguage was choosed
+   * @param language language param
+   */
   changeLanguage(language: string) {
     this.loadingService.showLoading();
-    this.translate.use(language).subscribe(
-      () => {
-        this.settingsService.setValue('initialRun', 'true');
-        if (language === 'ar') {
-          this.settingsService.setValue('optionLang', 'ar');
-          this.platform.setDir('rtl', true);
-        } else {
-          this.settingsService.setValue('optionLang', 'es');
-          this.platform.setDir('ltr', true);
-        }
-      },
-      (error) => {
-        console.log(error);
-        this.loadingService.hideLoading();
-      },
-      () => {
-        this.loadingService.hideLoading();
-      }
-    );
+    this.translate.use(language);
   }
 }
