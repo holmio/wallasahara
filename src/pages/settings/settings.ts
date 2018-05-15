@@ -42,7 +42,6 @@ export class SettingsPage {
     public navParams: NavParams,
     public translate: TranslateService,
     public platform: Platform,
-    private loadingService: LoadingService,
   ) {
     // setting current value of lang
     this.settingsService.getValue('optionLang').then((lang) => this.currentLang = lang);
@@ -106,7 +105,6 @@ export class SettingsPage {
    * @param language language param
    */
   changeLanguage(language: string) {
-    this.loadingService.showLoading();
     this.translate.use(language);
   }
 }

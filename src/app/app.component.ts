@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { Config, Nav, Platform, MenuController } from 'ionic-angular';
+import { Config, Nav, Platform, MenuController, ModalController } from 'ionic-angular';
 
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
 import { AuthService, LoadingService, SettingsService } from '../services/services';
@@ -55,6 +55,7 @@ export class MyApp {
   constructor(
     public platform: Platform,
     public auth: AuthService,
+    public modalCtrl: ModalController,
     private loadingService: LoadingService,
     private settingsService: SettingsService,
     private translate: TranslateService,
@@ -137,9 +138,14 @@ export class MyApp {
           }
           this.loadingService.hideLoading();
         } else {
-          this.rootPage = FirstRunPage;
+          // this.selectLanguage();
           this.loadingService.hideLoading();
         }
       });
+  }
+
+  private selectLanguage() {
+    let addModal = this.modalCtrl.create(FirstRunPage);
+    addModal.present();
   }
 }

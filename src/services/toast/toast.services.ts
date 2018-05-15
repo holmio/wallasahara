@@ -11,7 +11,7 @@ export class ToastService {
   show (message: string, cssClass?: string, duration: number = 4000) {
     let toast = this.toastController.create({
       message: message,
-      duration: 4000,
+      duration: 3000,
       position: 'top',
       cssClass: cssClass
     });

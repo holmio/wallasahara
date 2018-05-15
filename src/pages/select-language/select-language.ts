@@ -23,7 +23,7 @@ export class SelectLanguagePage {
     public navCtrl: NavController,
     public translate: TranslateService,
     public platform: Platform,
-    private viewController: ViewController,
+    public viewCtrl: ViewController,
     public settingsService: SettingsService,
     private loadingService: LoadingService,
   ) {
@@ -34,20 +34,9 @@ export class SelectLanguagePage {
   }
 
   changeLanguage(language: string) {
-    this.loadingService.showLoading();
-    this.translate.use(language).subscribe(
-      () => {
-        this.settingsService.setValue('initialRun', 'true');
-      },
-      (error) => {
-        console.log(error);
-        this.loadingService.hideLoading();
-      },
-      () => {
-        this.loadingService.hideLoading();
-        this.navCtrl.setRoot(this.loginPage);
-      }
-    );
+    this.translate.use(language)
+    this.settingsService.setValue('initialRun', 'true');
+    this.viewCtrl.dismiss();
   }
 
 }
