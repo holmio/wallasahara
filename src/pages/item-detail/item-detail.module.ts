@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
+import { SharedModule } from '../../app/shared/shared.module';
 
 import { ItemDetailPage } from './item-detail';
 
@@ -10,7 +10,7 @@ import { ItemDetailPage } from './item-detail';
   ],
   imports: [
     IonicPageModule.forChild(ItemDetailPage),
-    TranslateModule.forChild()
+    SharedModule,
   ],
   exports: [
     ItemDetailPage

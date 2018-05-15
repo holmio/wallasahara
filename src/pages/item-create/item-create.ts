@@ -23,8 +23,8 @@ export class ItemCreatePage {
     public viewCtrl: ViewController,
     public formBuilder: FormBuilder,
     public camera: Camera,
-    private itemsService: ItemsService,
-    private loadingService: LoadingService,
+    public itemsService: ItemsService,
+    public loadingService: LoadingService,
   ) {
     this.form = formBuilder.group({
       profilePic: [''],
