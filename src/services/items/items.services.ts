@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
 import { DocumentReference } from '@firebase/firestore-types';
@@ -24,14 +24,16 @@ export class ItemsService {
 
   updateItem(updateData: any): Observable<any> {
     return Observable.fromPromise(this.itemCollectionRef.doc(updateData.id).update(updateData.dataItem))
-    .map((data) => { return data })
     .catch((error) => { return error });
   }
 
   deleteItem(itemId: any): Observable<any> {
     return Observable.fromPromise(this.itemCollectionRef.doc(itemId).delete())
-    .map((data) => { return data })
     .catch((error) => { return error });
-	}
+  }
+
+  getListOfItems() {
+    return this.itemCollectionRef.valueChanges();
+  }
 
 }
