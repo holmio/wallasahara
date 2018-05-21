@@ -1,9 +1,11 @@
 take-picture {
   .gallery-images {
-    margin: 0px 20px 0px 15px;
+    // margin: 0px 20px 0px 15px;
+    // @include margin(0px, 20px, 0px, 0px);
     display: inline-flex;
     .profile-image-wrapper {
-      margin-right: 18px;
+      @include margin(0px, 18px, 0px, 0px);
+      // margin-right: 18px;
       .profile-image {
         width: 66px;
         height: 66px;
@@ -14,22 +16,20 @@ take-picture {
       }
 
       .profile-image-placeholder {
-        background-color: color($colors, light);
-        width: 70px;
-        height: 70px;
+        background-color: color($colors, secondary);
+        width: 66px;
+        height: 66px;
         border-radius: 10%;
-
         font-size: 12px;
-
         ion-icon {
           font-size: 40px;
-          margin-left: 24%;
-          margin-top: 24%;
+          @include margin(24%, 0, 0, 24%);
         }
       }
     }
     .profile-image-wrapper:last-child {
-      margin-right: 0px;
+      @include margin(0px);
+
     }
   }
 }

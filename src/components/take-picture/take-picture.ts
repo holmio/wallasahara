@@ -32,12 +32,15 @@ export class TakePictureComponent {
         targetWidth: 96,
         targetHeight: 96,
         correctOrientation: true,
-        sourceType: this.camera.PictureSourceType.CAMERA,
+        quality: 60,
+        encodingType: this.camera.EncodingType.JPEG,
+        mediaType: this.camera.MediaType.PICTURE
       }
       this.loadingService.showLoading();
       this.camera.getPicture(configCamera).then((data) => {
         this.loadingService.hideLoading();
-        this.dataToEmmit.emit(data);
+        let base64Image = 'data:image/jpeg;base64,' + data;
+        this.dataToEmmit.emit(base64Image);
       },
       (error) => {
         this.loadingService.hideLoading();

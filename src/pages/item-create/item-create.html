@@ -23,7 +23,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="createItem()">
     <take-picture (dataToEmmit)="handlePictureBtn($event)" [profilePic] = "form.controls.profilePic.value"></take-picture>
 
