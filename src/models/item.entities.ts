@@ -1,3 +1,5 @@
+import { FieldValue } from "@firebase/firestore-types";
+
 /**
  * A generic model that our Master-Detail pages list, create, and delete.
  *
@@ -9,16 +11,21 @@
  */
 export class Item {
 
-  constructor(fields: any) {
-    // Quick and dirty extend/assign fields to this model
-    for (const f in fields) {
-      // @ts-ignore
-      this[f] = fields[f];
-    }
-  }
+  constructor() {}
 
 }
 
-export interface Item {
-  [prop: string]: any;
+export type TypeExtra = 'price_negotiable' | 'changeable';
+export interface CreateItem {
+  name: string;
+  description: string;
+  category: Array<string>;
+  price: number;
+  extraStatus: TypeExtra;
+  timestamp?: any;
+}
+
+export interface ItemImage {
+  base64: string;
+  idItem: string;
 }

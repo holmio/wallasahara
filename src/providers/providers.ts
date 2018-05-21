@@ -1,9 +1,17 @@
 import { Api } from './api/api';
-import { Items } from '../mocks/providers/items';
-import { User } from './user/user';
+import { ItemsService } from './items/items.services';
+import { ToastService } from './toast/toast.services';
+import { SettingsService } from './settings/settings.service';
+import { LoadingService } from './loading/locading.services';
+import { AuthService } from './auth/auth.services';
+import { UploadService } from './upload/upload.services';
 
 export {
     Api,
-    Items,
-    User,
+    ItemsService,
+    ToastService,
+    SettingsService,
+    LoadingService,
+    UploadService,
+    AuthService,
 };

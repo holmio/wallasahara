@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController } from 'ionic-angular';
-
-import { User } from '../../providers/providers';
 import { MainPage } from '../pages';
-import { AuthService, ToastService, LoadingService, SettingsService } from '../../services/services';
+import { AuthService, ToastService, LoadingService, SettingsService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -44,7 +42,7 @@ export class LoginPage {
     this.auth.signInWithEmail(this.account).subscribe((resp) => {
       this.settingsService.setValue('uuid', resp.uuid);
       this.loadingService.hideLoading();
-      this.toastService.show(this.loginSuccessString, 'success');
+      // this.toastService.show(this.loginSuccessString, 'success');
       this.navCtrl.push(MainPage);
     }, (err) => {
       this.loadingService.hideLoading();

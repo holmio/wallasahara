@@ -1,0 +1,27 @@
+<input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)" />
+<div class="gallery-images">
+  <div class="profile-image-wrapper" (click)="takePicture($event)">
+    <div class="profile-image-placeholder" *ngIf="!profilePic">
+      <ion-icon name="camera"></ion-icon>
+    </div>
+    <div class="profile-image" [style.backgroundImage]="getProfileImageStyle()" *ngIf="profilePic"></div>
+  </div>
+  <div class="profile-image-wrapper" (click)="takePicture($event)">
+      <div class="profile-image-placeholder" *ngIf="!profilePic">
+        <ion-icon name="camera"></ion-icon>
+      </div>
+      <div class="profile-image" [style.backgroundImage]="getProfileImageStyle()" *ngIf="profilePic"></div>
+    </div>
+    <div class="profile-image-wrapper" (click)="takePicture($event)">
+        <div class="profile-image-placeholder" *ngIf="!profilePic">
+          <ion-icon name="camera"></ion-icon>
+        </div>
+        <div class="profile-image" [style.backgroundImage]="getProfileImageStyle()" *ngIf="profilePic"></div>
+      </div>
+      <div class="profile-image-wrapper" (click)="takePicture($event)">
+          <div class="profile-image-placeholder" *ngIf="!profilePic">
+            <ion-icon name="camera"></ion-icon>
+          </div>
+          <div class="profile-image" [style.backgroundImage]="getProfileImageStyle()" *ngIf="profilePic"></div>
+        </div>
+</div>

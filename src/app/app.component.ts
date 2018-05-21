@@ -5,7 +5,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { Config, Nav, Platform, MenuController, ModalController } from 'ionic-angular';
 
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
-import { AuthService, LoadingService, SettingsService } from '../services/services';
+import { AuthService, LoadingService, SettingsService } from '../providers/providers';
 import { Observable } from 'rxjs';
 export const LANG_ES: string = 'es';
 export const LANG_AR: string = 'ar';

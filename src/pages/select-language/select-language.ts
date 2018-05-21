@@ -3,7 +3,7 @@ import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { Platform } from 'ionic-angular/platform/platform';
 import { TranslateService } from '@ngx-translate/core';
 import { LoginPage } from '../login/login';
-import { SettingsService, LoadingService } from '../../services/services';
+import { SettingsService, LoadingService } from '../../providers/providers';
 
 /**
  * Generated class for the SelectLanguagePage page.

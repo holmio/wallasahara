@@ -12,14 +12,16 @@
 
 </ion-header>
 
-<ion-content class="card-background-page">
-  <ion-card *ngFor="let item of currentItems">
-    <span (click)="openItem(item)">
-      <img [src]="item.profilePic"/>
-      <div class="description">
-        <div class="card-title">{{item.name}}</div>
-        <div class="card-subtitle">{{item.about}}</div>
-      </div>
-    </span>
-  </ion-card>
+<ion-content scroll="false">
+  <div class="card-background-page">
+    <!-- <ion-card *ngFor="let item of currentItems">
+      <span (click)="openItem(item)">
+        <img [src]="item.profilePic"/>
+        <div class="description">
+          <div class="card-title">{{item.name}}</div>
+          <div class="card-subtitle">{{item.about}}</div>
+        </div>
+      </span>
+    </ion-card> -->
+  </div>
 </ion-content>

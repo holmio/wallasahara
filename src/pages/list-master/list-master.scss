@@ -1,11 +1,14 @@
 page-list-master {
   .card-background-page {
-
+    position: relative;
+    column-count: 2;
+    column-gap: 1em;
+    padding: 0.8em;
     ion-card {
-      position: relative;
-      text-align: center;
+      display: inline-block;
+      margin: 0px 0px 4px 0px !important;
+      width: 100%;
       .description {
-        position: absolute;
         top: 80%;
         width: 100%;
         background-color: #458292;

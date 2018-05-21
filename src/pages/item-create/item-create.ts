@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
-import { ItemsService, LoadingService } from '../../services/services';
+import { ItemsService, LoadingService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -22,9 +22,8 @@ export class ItemCreatePage {
     public navCtrl: NavController,
     public viewCtrl: ViewController,
     public formBuilder: FormBuilder,
-    public camera: Camera,
-    public itemsService: ItemsService,
-    public loadingService: LoadingService,
+    private itemsService: ItemsService,
+    private loadingService: LoadingService,
   ) {
     this.form = formBuilder.group({
       profilePic: [''],
@@ -42,39 +41,25 @@ export class ItemCreatePage {
 
   }
 
-  getPicture() {
-    if (Camera['installed']()) {
-      this.loadingService.showLoading();
-      this.camera.getPicture({
-        destinationType: this.camera.DestinationType.DATA_URL,
-        targetWidth: 96,
-        targetHeight: 96
-      }).then((data) => {
-        this.form.patchValue({ 'profilePic': 'data:image/jpg;base64,' + data });
-        this.loadingService.showLoading();
-      }, (err) => {
-        this.loadingService.showLoading();
-        alert('Unable to take photo');
-      })
-    } else {
-      this.fileInput.nativeElement.click();
-    }
+  handlePictureBtn(event) {
+    console.log(event)
+    this.form.patchValue({ 'profilePic': event.data });
   }
 
-  processWebImage(event) {
-    let reader = new FileReader();
-    reader.onload = (readerEvent) => {
+  // processWebImage(event) {
+  //   let reader = new FileReader();
+  //   reader.onload = (readerEvent) => {
 
-      let imageData = (readerEvent.target as any).result;
-      this.form.patchValue({ 'profilePic': imageData });
-    };
+  //     let imageData = (readerEvent.target as any).result;
+  //     this.form.patchValue({ 'profilePic': imageData });
+  //   };
 
-    reader.readAsDataURL(event.target.files[0]);
-  }
+  //   reader.readAsDataURL(event.target.files[0]);
+  // }
 
-  getProfileImageStyle() {
-    return 'url(' + this.form.controls['profilePic'].value + ')'
-  }
+  // getProfileImageStyle() {
+  //   return 'url(' + this.form.controls['profilePic'].value + ')'
+  // }
 
   /**
    * The user cancelled, so we dismiss without sending data back.

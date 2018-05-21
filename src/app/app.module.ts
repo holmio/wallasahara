@@ -22,16 +22,11 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from './environments/environment';
 
 // Providers
-import { Items } from '../mocks/providers/items';
-import { User, Api } from '../providers/providers';
+import { AuthService, ToastService, LoadingService, SettingsService, ItemsService, UploadService, Api } from '../providers/providers';
 import { MyApp } from './app.component';
 
 // Shared Module
 import { SharedModule } from './shared/shared.module';
-
-// Services
-import { AuthService, ToastService, LoadingService, SettingsService, ItemsService } from '../services/services';
-import { LoginPage } from '../pages/login/login';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -81,12 +76,11 @@ export function provideSettings(storage: Storage) {
   ],
   providers: [
     Api,
-    Items,
-    User,
     AuthService,
     ItemsService,
     ToastService,
     LoadingService,
+    UploadService,
     Camera,
     SplashScreen,
     StatusBar,

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { Items } from '../../providers/providers';
+import { ItemsService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -11,8 +11,12 @@ import { Items } from '../../providers/providers';
 export class ItemDetailPage {
   item: any;
 
-  constructor(public navCtrl: NavController, navParams: NavParams, items: Items) {
-    this.item = navParams.get('item') || items.defaultItem;
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private items: ItemsService
+  ) {
+    // this.item = navParams.get('item') || items.defaultItem;
   }
 
 }
