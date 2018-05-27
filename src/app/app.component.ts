@@ -3,6 +3,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { Config, Nav, Platform, MenuController, ModalController } from 'ionic-angular';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
 import { AuthService, LoadingService, SettingsService } from '../providers/providers';
@@ -49,7 +51,12 @@ export class MyApp {
     { title: 'Menu', component: 'MenuPage' },
     { title: 'Settings', component: 'SettingsPage' },
     { title: 'Search', component: 'SearchPage' },
-  ]
+  ];
+  PERMISSION = {
+    WRITE_EXTERNAL: this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
+    READ_EXTERNAL: this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE,
+    CAMERA: this.androidPermissions.PERMISSION.CAMERA,
+  };
   private menu: MenuController;
 
   constructor(
@@ -63,7 +70,12 @@ export class MyApp {
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
     private menuController: MenuController,
+    private androidPermissions: AndroidPermissions,
+    private diagnostic: Diagnostic
   ) {
+    /** TODO */
+    this.translate.setDefaultLang(LANG_AR);
+    this.platform.setDir('rtl', true);
     this.menu = menuController;
     this.initializeApp();
   }
@@ -74,6 +86,9 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      if (this.platform.is('android')) {
+        this.requestAllPermissions();
+      }
       this.initTranslate();
       this.initLoginUser();
     });
@@ -82,7 +97,6 @@ export class MyApp {
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.
-    this.translate.setDefaultLang(LANG_ES);
     this.settingsService.getValue('optionLang').then((lang) => {
       if (lang === LANG_AR) this.translate.setDefaultLang(LANG_AR);
     });
@@ -95,7 +109,7 @@ export class MyApp {
      */
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       console.log("onLangChange", event.translations)
-      if(event.lang == LANG_AR) {
+      if (event.lang == LANG_AR) {
         this.settingsService.setValue('optionLang', LANG_AR);
         this.platform.setDir('rtl', true);
         this.platform.setDir('ltr', false);
@@ -119,7 +133,16 @@ export class MyApp {
     this.nav.setRoot(LoginPage);
   }
 
-  private initLoginUser () {
+  private requestAllPermissions() {
+    const permissions = Object.keys(this.PERMISSION).map(k => this.PERMISSION[k]);
+    this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.CAMERA, this.androidPermissions.PERMISSION.GET_ACCOUNTS]).then((status) => {
+      alert(JSON.stringify(status));
+    }, error => {
+      console.error('permission error:', error);
+    });
+  }
+
+  private initLoginUser() {
 
     this.loadingService.showLoading();
     let source = Observable.zip(

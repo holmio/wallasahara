@@ -1,0 +1,11 @@
+<!-- <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)" /> -->
+<div class="gallery-images">
+  <ng-container *ngFor="let picture of profilePic; let i = index">
+    <div class="profile-image-wrapper" (click)="presentMethodToUploadPictures(i)">
+      <div class="profile-image-placeholder" *ngIf="!picture">
+        <ion-icon name="camera"></ion-icon>
+      </div>
+      <img class="profile-image" [src] = picture *ngIf="picture">
+    </div>
+  </ng-container>
+</div>
