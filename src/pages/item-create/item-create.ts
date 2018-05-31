@@ -2,7 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
-import { ItemsService, LoadingService } from '../../providers/providers';
+import { ItemsService, LoadingService, UploadService } from '../../providers/providers';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators/mergeMap';
 
 @IonicPage()
 @Component({
@@ -18,17 +20,31 @@ export class ItemCreatePage {
 
   form: FormGroup;
 
+  // TODO
+  categories: any = [
+    {value: 'videos', name: 'Videos'},
+    {value: 'play', name: 'Play'},
+    {value: 'camells', name: 'Camellos'},
+    {value: 'cabra', name: 'Cabra'},
+    {value: 'melfa', name: 'Melfa'},
+    {value: 'coche', name: 'coche'},
+    {value: 'otro', name: 'Otro'},
+  ]
+
   constructor(
     public navCtrl: NavController,
     public viewCtrl: ViewController,
     public formBuilder: FormBuilder,
     private itemsService: ItemsService,
     private loadingService: LoadingService,
+    private uploadService: UploadService,
   ) {
     this.form = formBuilder.group({
-      profilePic: [''],
+      imagesItem: [[], Validators.required],
       name: ['', Validators.required],
-      about: ['']
+      price: ['', Validators.required],
+      category: ['', Validators.required],
+      about: [''],
     });
 
     // Watch the form for changes, and
@@ -43,23 +59,8 @@ export class ItemCreatePage {
 
   handlePictureBtn(event) {
     console.log(event)
-    this.form.patchValue({ 'profilePic': event.data });
+    this.form.controls['imagesItem'].setValue(event.data);
   }
-
-  // processWebImage(event) {
-  //   let reader = new FileReader();
-  //   reader.onload = (readerEvent) => {
-
-  //     let imageData = (readerEvent.target as any).result;
-  //     this.form.patchValue({ 'profilePic': imageData });
-  //   };
-
-  //   reader.readAsDataURL(event.target.files[0]);
-  // }
-
-  // getProfileImageStyle() {
-  //   return 'url(' + this.form.controls['profilePic'].value + ')'
-  // }
 
   /**
    * The user cancelled, so we dismiss without sending data back.
@@ -69,19 +70,30 @@ export class ItemCreatePage {
   }
 
   /**
-   * The user can create and item and return to the las page
+   * The user can create and item and return to the last page
    * back to the presenter.
    */
   createItem() {
     if (!this.form.valid) { return; }
+    let base64List = this.form.controls['imagesItem'].value;
+    delete this.form.value['imagesItem'];
     this.loadingService.showLoading();
-    this.itemsService.addItem(this.form.value).subscribe((data) => {
-      this.loadingService.hideLoading();
-      this.viewCtrl.dismiss(this.form.value);
-    },
-    (error) => {
-      this.loadingService.hideLoading();
-      console.error(error);
-    });
+    let sourceCreateItem = this.itemsService.addItem(this.form.value);
+    let sourceItemImages = sourceCreateItem.pipe(mergeMap(val =>
+      this.itemsService.uploadImages({uidItem: val.uidItem, base64List: base64List})
+    ));
+    sourceItemImages.subscribe(
+      data => {
+        // TODO: This data not return any data
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        this.loadingService.hideLoading();
+        this.viewCtrl.dismiss(this.form.value);
+      }
+    );
   }
 }

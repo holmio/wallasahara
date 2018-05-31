@@ -2,7 +2,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Translate Core and Loader
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -24,7 +24,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from './environments/environment';
 
 // Providers
-import { AuthService, ToastService, LoadingService, SettingsService, ItemsService, UploadService, Api } from '../providers/providers';
+import { AuthService, ToastService, LoadingService, SettingsService, UploadService, ItemsService, Api } from '../providers/providers';
 import { MyApp } from './app.component';
 
 // Shared Module
@@ -61,6 +61,7 @@ export function provideSettings(storage: Storage) {
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
     AngularFireStorageModule, // imports firebase/storage only needed for storage features
     HttpClientModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

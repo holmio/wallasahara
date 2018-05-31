@@ -1,8 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ 'ITEM_CREATE_TITLE' | translate }}</ion-title>
-    <ion-buttons start>
+    <ion-buttons left>
       <button ion-button (click)="cancel()">
         <span color="primary" showWhen="ios">
           {{ 'CANCEL_BUTTON' | translate }}
@@ -10,7 +9,8 @@
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-buttons end>
+    <ion-title>{{ 'ITEM_CREATE_TITLE' | translate }}</ion-title>
+    <ion-buttons right>
       <button ion-button (click)="createItem()" [disabled]="!isReadyToSave" strong>
         <span color="primary" showWhen="ios">
           {{ 'DONE_BUTTON' | translate }}
@@ -28,10 +28,22 @@
     <take-picture (dataToEmmit)="handlePictureBtn($event)"></take-picture>
     <ion-list>
       <ion-item>
-        <ion-input type="text" placeholder="{{ 'ITEM_NAME_PLACEHOLDER' | translate }}" formControlName="name"></ion-input>
+        <ion-label floating>{{ 'ITEM_NAME_PLACEHOLDER' | translate }}</ion-label>
+        <ion-input type="text" formControlName="name"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input type="text" placeholder="{{ 'ITEM_ABOUT_PLACEHOLDER' | translate }}" formControlName="about"></ion-input>
+        <ion-label floating>{{ 'ITEM_ABOUT_PLACEHOLDER' | translate }}</ion-label>
+        <ion-textarea type="text" formControlName="about"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{ 'ITEM_PRICE_PLACEHOLDER' | translate }}</ion-label>
+        <ion-input type="number" formControlName="price"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{ 'ITEM_CATEGORY_PLACEHOLDER' | translate }}</ion-label>
+        <ion-select interface="action-sheet" formControlName="category">
+          <ion-option *ngFor="let category of categories" [value]="category.value">{{category.name}}</ion-option>
+        </ion-select>
       </ion-item>
     </ion-list>
   </form>

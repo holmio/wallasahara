@@ -1,35 +1,42 @@
 take-picture {
   .gallery-images {
-    // margin: 0px 20px 0px 15px;
-    // @include margin(0px, 20px, 0px, 0px);
-    display: inline-flex;
-    .profile-image-wrapper {
-      @include margin(0px, 18px, 0px, 0px);
-      // margin-right: 18px;
-      .profile-image {
-        width: 66px;
-        height: 66px;
+    .product-image-wrapper {
+      display: flex;
+      .product-image {
+        transform: translate3d(0, 0, 0);
+        position: relative;
+        width: 60px;
+        height: 60px;
+        overflow: hidden;
         border-radius: 10%;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
+        @include margin(0px, 2%, 0px, 0px);
+        .product-hidder {
+          top: 50%;
+          left: 50%;
+          -webkit-transform: translate(-50%,-50%);
+          -moz-transform: translate(-50%,-50%);
+          -ms-transform: translate(-50%,-50%);
+          -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+          width: 115px;
+          position: absolute;
+        }
+      }
+      .product-image:last-child {
+        @include margin(0px);
       }
 
-      .profile-image-placeholder {
-        background-color: color($colors, secondary);
-        width: 66px;
-        height: 66px;
+      .product-image-placeholder {
+        @include margin(0px, 2%, 0px, 0px);
+        width: 60px;
+        height: 60px;
         border-radius: 10%;
         font-size: 12px;
         ion-icon {
           font-size: 40px;
-          @include margin(24%, 0, 0, 24%);
+          @include margin(20%, 0, 0, 20%);
         }
       }
-    }
-    .profile-image-wrapper:last-child {
-      @include margin(0px);
-
     }
   }
 }

@@ -17,7 +17,16 @@ export class AuthService {
 	signInWithEmail(credentials) {
     let subscription = Observable.fromPromise(this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password));
 		return subscription;
-	}
+  }
+
+  getUid() {
+    let uidUser: string;
+    this.afAuth.authState.subscribe(
+      (res) => { uidUser = res.uid },
+      (error) => { console.log(error)},
+      () => { return uidUser }
+    );
+  }
 
 	signUp(credentials) {
     let subscription = Observable.fromPromise(this.afAuth.auth.createUserWithEmailAndPassword(credentials.email,credentials.password));

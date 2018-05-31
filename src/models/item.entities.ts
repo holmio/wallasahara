@@ -14,18 +14,18 @@ export class Item {
   constructor() {}
 
 }
-
-export type TypeExtra = 'price_negotiable' | 'changeable';
+// *Future feature
+// export type TypeExtra = 'price_negotiable' | 'changeable';
 export interface CreateItem {
   name: string;
   description: string;
   category: Array<string>;
   price: number;
-  extraStatus: TypeExtra;
   timestamp?: any;
+  // extraStatus: TypeExtra;
 }
 
 export interface ItemImage {
-  base64: string;
-  idItem: string;
+  base64List: Array<string>;
+  uidItem: string;
 }
