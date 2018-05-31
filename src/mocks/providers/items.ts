@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Item } from '../../models/item';
+import { Item } from '../../models/item.entities';
 
 @Injectable()
 export class Items {
@@ -53,7 +53,7 @@ export class Items {
     ];
 
     for (let item of items) {
-      this.items.push(new Item(item));
+      // this.items.push(new Item(item));
     }
   }
 

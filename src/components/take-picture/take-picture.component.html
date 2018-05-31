@@ -1,0 +1,13 @@
+<!-- <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)" /> -->
+<div class="gallery-images">
+  <div class="product-image-wrapper">
+    <div class="product-image-placeholder" (click)="presentMethodToUploadPictures()">
+      <ion-icon name="camera"></ion-icon>
+    </div>
+    <div *ngFor="let picture of picturesList; let i = index" [@flyInOut]="picture.state" class="product-image" (click)="deletePicture(i)">
+      <div class="product-hidder">
+        <img [src] = picture.base64Image >
+      </div>
+    </div>
+  </div>
+</div>

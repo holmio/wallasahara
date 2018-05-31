@@ -1,0 +1,31 @@
+import { FieldValue } from "@firebase/firestore-types";
+
+/**
+ * A generic model that our Master-Detail pages list, create, and delete.
+ *
+ * Change "Item" to the noun your app will use. For example, a "Contact," or a
+ * "Customer," or a "Animal," or something like that.
+ *
+ * The Items service manages creating instances of Item, so go ahead and rename
+ * that something that fits your app as well.
+ */
+export class Item {
+
+  constructor() {}
+
+}
+// *Future feature
+// export type TypeExtra = 'price_negotiable' | 'changeable';
+export interface CreateItem {
+  name: string;
+  description: string;
+  category: Array<string>;
+  price: number;
+  timestamp?: any;
+  // extraStatus: TypeExtra;
+}
+
+export interface ItemImage {
+  base64List: Array<string>;
+  uidItem: string;
+}

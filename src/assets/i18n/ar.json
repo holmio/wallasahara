@@ -1,5 +1,6 @@
 {
   "BACK_BUTTON_TEXT": "رجوع",
+  "COMMON_BUTTON_CANCEL": "CANCELAR [AR]",
 
   "NAME": "الاسم",
   "EMAIL": "البريد الإلكتروني",
@@ -67,5 +68,8 @@
   "SEARCH_TITLE": "بحث",
   "SEARCH_PLACEHOLDER": "ابحث في قائمة العناصر، مثل \"Donald Duck\"",
 
-  "TUTORIAL_ARABIC_BUTTON": "العربية"
+  "TUTORIAL_ARABIC_BUTTON": "العربية",
+  "TAKE_PICTURE_SELECT_METHOD_OF_IMAGE_TITEL": "Seleccionar modo de subida [AR]",
+  "TAKE_PICTURE_BUTTON_IMAGE": "GALLERIA [AR]",
+  "TAKE_PICTURE_BUTTON_CAMERA": "CAMARA [AR]"
 }

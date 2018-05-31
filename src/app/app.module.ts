@@ -2,7 +2,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Translate Core and Loader
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -13,6 +13,8 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Camera } from '@ionic-native/camera';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 // Angular FireBase
 import { AngularFireModule } from 'angularfire2';
@@ -22,16 +24,11 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from './environments/environment';
 
 // Providers
-import { Items } from '../mocks/providers/items';
-import { User, Api } from '../providers/providers';
+import { AuthService, ToastService, LoadingService, SettingsService, UploadService, ItemsService, Api } from '../providers/providers';
 import { MyApp } from './app.component';
 
 // Shared Module
 import { SharedModule } from './shared/shared.module';
-
-// Services
-import { AuthService, ToastService, LoadingService, SettingsService, ItemsService } from '../services/services';
-import { LoginPage } from '../pages/login/login';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -64,6 +61,7 @@ export function provideSettings(storage: Storage) {
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
     AngularFireStorageModule, // imports firebase/storage only needed for storage features
     HttpClientModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -81,13 +79,14 @@ export function provideSettings(storage: Storage) {
   ],
   providers: [
     Api,
-    Items,
-    User,
     AuthService,
     ItemsService,
     ToastService,
     LoadingService,
+    UploadService,
     Camera,
+    AndroidPermissions,
+    Diagnostic,
     SplashScreen,
     StatusBar,
     { provide: SettingsService, useFactory: provideSettings, deps: [Storage] },

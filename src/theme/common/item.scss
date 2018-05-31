@@ -1,5 +1,10 @@
 ion-item {
+  @include padding(0, !important);
   .item-inner {
-    border-bottom: 1px solid color($colors, primary) !important;
+    border-color: color($colors, primary) !important;
+  }
+  &.item:first-child,
+  &.item:last-child {
+    border: none;
   }
 }

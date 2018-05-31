@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController } from 'ionic-angular';
 
-import { Item } from '../../models/item';
-import { Items } from '../../providers/providers';
+import { Item } from '../../models/item.entities';
 import { ItemCreatePage } from '../pages';
+import { ItemsService, LoadingService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -13,14 +13,23 @@ import { ItemCreatePage } from '../pages';
 export class ListMasterPage {
   currentItems: Item[];
 
-  constructor(public navCtrl: NavController, public items: Items, public modalCtrl: ModalController) {
-    this.currentItems = this.items.query();
+  constructor(
+    public navCtrl: NavController,
+    public modalCtrl: ModalController,
+    public itemsService: ItemsService,
+    public loadingService: LoadingService,
+  ) {
+
   }
 
   /**
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
+    // this.itemsService.getListOfItems().subscribe((itemsList) => {
+    //   console.log(itemsList);
+    // });
+    // this.currentItems = this.items.query();
   }
 
   /**
@@ -37,7 +46,7 @@ export class ListMasterPage {
    * Delete an item from the list of items.
    */
   deleteItem(item) {
-    this.items.delete(item);
+    // this.items.delete(item);
   }
 
   /**

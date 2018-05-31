@@ -81,4 +81,7 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^1.2.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-whitelist" spec="https://github.com/apache/cordova-plugin-whitelist.git" />
+    <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+    <plugin name="cordova.plugins.diagnostic" spec="^4.0.7" />
+    <plugin name="cordova-plugin-camera" spec="^4.0.3" />
 </widget>

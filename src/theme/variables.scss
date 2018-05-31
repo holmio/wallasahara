@@ -22,6 +22,7 @@ $colors: (
   light:          #FAE2AA,
   light-second:   #FAE7B9,
   dark:           #00262C,
+  info:           #00262C,
   box-shadow:     rgba(0, 0, 0, 0.58),
 );
 
@@ -37,9 +38,6 @@ $app-background:      linear-gradient(to right, color($colors, light) 0%, color(
 $background-color:    transparent;
 $toolbar-background:  transparent;
 $text-input-highlight-color-valid: color($colors, success);
-$text-input-highlight-color-invalid: color($colors, danger);
-$text-input-md-show-focus-highlight: false;
-$text-input-highlight-color: color($colors, success);
 
 
 // App iOS Variables
@@ -53,13 +51,13 @@ $text-input-highlight-color: color($colors, success);
 // --------------------------------------------------
 // Material Design only Sass variables can go here
 $box-shadow-md: 0px 1px 14px color($colors, box-shadow);
+// $text-input-highlight-color-invalid: color($colors, danger);
+// $text-input-md-show-focus-highlight: true;
 
 
 // App Windows Variables
 // --------------------------------------------------
 // Windows only Sass variables can go here
-
-
 
 
 // App Theme

@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController } from 'ionic-angular';
-
-import { User } from '../../providers/providers';
 import { MainPage } from '../pages';
-import { AuthService, ToastService } from '../../services/services';
+import { AuthService, ToastService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -20,11 +18,11 @@ export class SignupPage {
   // Our translated text strings
   private signupErrorString: string;
 
-  constructor(public navCtrl: NavController,
-    public user: User,
-    public toastService: ToastService,
-    public translateService: TranslateService,
-    public auth: AuthService,
+  constructor(
+    public navCtrl: NavController,
+    private toastService: ToastService,
+    private translateService: TranslateService,
+    private auth: AuthService,
   ) {
 
     this.translateService.get('SIGNUP_ERROR').subscribe((value) => {
