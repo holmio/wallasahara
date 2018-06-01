@@ -5,6 +5,7 @@ import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { ItemsService, LoadingService, UploadService } from '../../providers/providers';
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators/mergeMap';
+import { CreateItem } from '../../models/item.entities';
 
 @IonicPage()
 @Component({
@@ -75,20 +76,16 @@ export class ItemCreatePage {
    */
   createItem() {
     if (!this.form.valid) { return; }
-    let base64List = this.form.controls['imagesItem'].value;
-    delete this.form.value['imagesItem'];
+    let dataItem: CreateItem = this.form.value;
     this.loadingService.showLoading();
-    let sourceCreateItem = this.itemsService.addItem(this.form.value);
-    let sourceItemImages = sourceCreateItem.pipe(mergeMap(val =>
-      this.itemsService.uploadImages({uidItem: val.uidItem, base64List: base64List})
-    ));
-    sourceItemImages.subscribe(
+    this.itemsService.addItem(dataItem).subscribe(
       data => {
         // TODO: This data not return any data
         console.log(data);
       },
       (error) => {
         console.log(error);
+        this.loadingService.hideLoading();
       },
       () => {
         this.loadingService.hideLoading();

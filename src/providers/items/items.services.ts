@@ -3,18 +3,18 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import * as firebase from 'firebase/app';
 import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
-import { DocumentReference } from '@firebase/firestore-types';
-import { CreateItem, ItemImage } from '../../models/item.entities';
+import { CreateItem, ItemImage, UpdateItem } from '../../models/item.entities';
 import { UploadService } from '../upload/upload.services';
-import { mergeMap } from 'rxjs/operators';
 
+/**
+ * Service with the necessary elements to add, update and delete and Item
+ */
 
 @Injectable()
 export class ItemsService {
-  private itemCollectionRef: AngularFirestoreCollection<any>;
-  private imagesCollectionRef: AngularFirestoreCollection<any>;
+  private itemCollectionRef: AngularFirestoreCollection<CreateItem>;
+  private imagesCollectionRef: AngularFirestoreCollection<ItemImage>;
   private item$: Observable<any>;
-
 	constructor(
     private afStore: AngularFirestore,
     private uploadService: UploadService,
@@ -23,35 +23,79 @@ export class ItemsService {
     this.imagesCollectionRef = afStore.collection<any>('images');
 	}
 
+  /**
+   * Register the data of the item within of base data.
+   * @param dataItem data of Item
+   */
 	addItem(dataItem: CreateItem): Observable<any> {
+    // Uuid generated automatic
+    let uuidItem: string = this.uuidv4();
+    // Bath of the images
+    let basePath: string = `images/items/${uuidItem}`;
     // create a parameter to set the time of creation
     dataItem.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    return Observable.fromPromise(this.itemCollectionRef.add(dataItem))
-    .map((data) => { return {uidItem: data.id }})
+    return new Observable<any>((observer: any) => {
+      let sourceUpload = this.uploadService.uploadFiles(dataItem.imagesItem, basePath);
+      Observable.concat(sourceUpload)
+      .flatMap((response) => {
+        return Observable.fromPromise(this.imagesCollectionRef.doc(uuidItem).set(
+          {
+            pathOfImages: response.listOfUrlsImages,
+            pathOfBucket: response.pathOfBucket,
+          })).map((item) => { return { profileItem: response.listOfUrlsImages[response.listOfUrlsImages.length] }; });
+      })
+      .flatMap((response) => {
+        dataItem.profileItem = response.profileItem;
+        delete dataItem.imagesItem;
+        return this.itemCollectionRef.doc(uuidItem).set(dataItem)
+      })
+      .subscribe(
+        (response: any) => {
+          // Nothing TODO
+        }, (error) => {
+          observer.error(error);
+        }, () => {
+          observer.next('Success!!');
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  /**
+   * Update item
+   * @param updateData data of item
+   */
+  updateItem(updateData: UpdateItem, uuidItem: string): Observable<any> {
+    return Observable.fromPromise(this.itemCollectionRef.doc(uuidItem).update(updateData))
     .catch((error) => { return error });
   }
 
-  uploadImages(dataImages: ItemImage): Observable<any> {
-    let basePath: string = `images/items/${dataImages.uidItem}`;
-    let sourceUpload = this.uploadService.uploadFile(dataImages, basePath);
-    let sourceImageTotal = sourceUpload.pipe(mergeMap(val => this.imagesCollectionRef.doc(dataImages.uidItem).set({
-      pathOfImages: val.listOfUrlsImages
-    })));
-    return sourceImageTotal;
-  }
-
-  updateItem(updateData: any): Observable<any> {
-    return Observable.fromPromise(this.itemCollectionRef.doc(updateData.id).update(updateData.dataItem))
+  /**
+   * Delete and item
+   * @param uuidItem unique code of item
+   */
+  deleteItem(uuidItem: any): Observable<any> {
+    return Observable.fromPromise(this.itemCollectionRef.doc(uuidItem).delete())
     .catch((error) => { return error });
   }
 
-  deleteItem(itemId: any): Observable<any> {
-    return Observable.fromPromise(this.itemCollectionRef.doc(itemId).delete())
-    .catch((error) => { return error });
-  }
-
+  /**
+   * Get the list of items.
+   */
   getListOfItems() {
     return this.itemCollectionRef.valueChanges();
+  }
+
+  getImagesFromURL (url) {
+    let storageRef = firebase.storage().ref();
+  }
+
+  private uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 
 }

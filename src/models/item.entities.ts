@@ -21,11 +21,21 @@ export interface CreateItem {
   description: string;
   category: Array<string>;
   price: number;
+  profileItem?: string;
   timestamp?: any;
+  imagesItem: Array<string>;
   // extraStatus: TypeExtra;
+}
+
+export interface UpdateItem {
+  name: string;
+  description: string;
+  category: Array<string>;
+  price: number;
+  profileItem?: string;
 }
 
 export interface ItemImage {
   base64List: Array<string>;
-  uidItem: string;
+  uidItem?: string;
 }

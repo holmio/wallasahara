@@ -4,6 +4,7 @@ import { IonicPage, ModalController, NavController } from 'ionic-angular';
 import { Item } from '../../models/item.entities';
 import { ItemCreatePage } from '../pages';
 import { ItemsService, LoadingService } from '../../providers/providers';
+export const URL_BASE = 'gs://wallah-sahara.appspot.com/';
 
 @IonicPage()
 @Component({
@@ -12,7 +13,7 @@ import { ItemsService, LoadingService } from '../../providers/providers';
 })
 export class ListMasterPage {
   currentItems: Item[];
-
+  urlBase = 'gs://wallah-sahara.appspot.com/';
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
@@ -26,10 +27,10 @@ export class ListMasterPage {
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
-    // this.itemsService.getListOfItems().subscribe((itemsList) => {
-    //   console.log(itemsList);
-    // });
-    // this.currentItems = this.items.query();
+    this.itemsService.getListOfItems().subscribe((itemsList) => {
+      this.currentItems = itemsList;
+      console.log(itemsList);
+    });
   }
 
   /**
@@ -38,7 +39,6 @@ export class ListMasterPage {
    */
   addItem() {
     let addModal = this.modalCtrl.create(ItemCreatePage);
-
     addModal.present();
   }
 

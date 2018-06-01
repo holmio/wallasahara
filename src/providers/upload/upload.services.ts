@@ -15,23 +15,54 @@ export class UploadService {
   // Main task
 	constructor() {}
 
-  uploadFile(filesToUpload: ItemImage, pathRoute: string): Observable<any> {
-    let urlOfImages: Array<string> = [];
-    if (filesToUpload.base64List.length !== 0) {
-      filesToUpload.base64List.forEach(element => {
-        let basePath: string = `${pathRoute}/${new Date().getTime()}.jpg`;
-        urlOfImages.push(basePath);
-        this.uploadFileString(basePath, element);
-      });
-    }
-    return Observable.of({listOfUrlsImages: urlOfImages})
-    .catch((error) => { return error });
+  /**
+   * Upload files in the data base and the storage
+   * @param filesToUpload Array of the files to upload
+   * @param pathRoute Route of the storage
+   */
+  uploadFiles(filesToUpload: Array<string>, pathRoute: string): Observable<any> {
+    return new Observable<any>((observer) => {
+      let urlOfImages: Array<string> = [];
+      if (filesToUpload.length !== 0) {
+        filesToUpload.forEach((element, index) => {
+          let basePath: string = `${pathRoute}/${new Date().getTime()}.jpg`;
+          this.uploadFileString(basePath, element).subscribe(
+            (response) => {
+              urlOfImages.push(response.urlOfImage);
+            },
+            error => console.log(error),
+            () => {
+              if (filesToUpload.length === index + 1) {
+                observer.next({
+                  listOfUrlsImages: urlOfImages,
+                  pathOfBucket: basePath
+                })
+                observer.complete();
+              }
+            }
+          );
+        });
+      }
+    })
   }
 
-  private async uploadFileString(path:string, file:string) {
-    let storageRef = firebase.storage().ref();
-    let uploadTask = storageRef.child(path).putString(file, 'data_url');
-    await uploadTask;
+  /**
+   * Upload the files one by one
+   * @param path path of the file
+   * @param file base64 of file
+   */
+  private uploadFileString(path:string, file:string) {
+    return new Observable<any>((observer) => {
+      let storageRef = firebase.storage().ref();
+      let uploadTask = storageRef.child(path).putString(file, 'data_url');
+      uploadTask.then(
+        data => {
+          observer.next({urlOfImage: uploadTask.snapshot.downloadURL})
+          observer.complete();
+        },
+        error => observer.error(error),
+      )
+    })
   }
 
   private async deleteFile(path:string){
