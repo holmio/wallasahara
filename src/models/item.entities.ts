@@ -14,6 +14,14 @@ export class Item {
   constructor() {}
 
 }
+export interface ItemList {
+  name: string;
+  price: number;
+  profileItem?: string;
+  timestamp?: any;
+  // extraStatus: TypeExtra;
+}
+
 // *Future feature
 // export type TypeExtra = 'price_negotiable' | 'changeable';
 export interface CreateItem {

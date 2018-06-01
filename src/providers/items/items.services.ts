@@ -5,6 +5,7 @@ import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
 import { CreateItem, ItemImage, UpdateItem } from '../../models/item.entities';
 import { UploadService } from '../upload/upload.services';
+import * as _ from 'lodash';
 
 /**
  * Service with the necessary elements to add, update and delete and Item
@@ -42,7 +43,7 @@ export class ItemsService {
           {
             pathOfImages: response.listOfUrlsImages,
             pathOfBucket: response.pathOfBucket,
-          })).map((item) => { return { profileItem: response.listOfUrlsImages[response.listOfUrlsImages.length] }; });
+          })).map((item) => { return { profileItem: _.last(response.listOfUrlsImages) }; });
       })
       .flatMap((response) => {
         dataItem.profileItem = response.profileItem;

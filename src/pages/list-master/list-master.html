@@ -15,7 +15,7 @@
 <ion-content scroll="false">
   <div class="card-background-page">
     <ion-card *ngFor="let item of currentItems">
-      <span (click)="openItem(item)">
+      <span (click)="openItem()">
         <img [src]="item.profileItem"/>
         <div class="description">
           <div class="card-title">{{item.price}}</div>

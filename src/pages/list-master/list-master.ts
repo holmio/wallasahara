@@ -1,19 +1,16 @@
 import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController } from 'ionic-angular';
-
-import { Item } from '../../models/item.entities';
 import { ItemCreatePage } from '../pages';
 import { ItemsService, LoadingService } from '../../providers/providers';
-export const URL_BASE = 'gs://wallah-sahara.appspot.com/';
-
+import { ItemList } from '../../models/item.entities';
+import * as _ from 'lodash';
 @IonicPage()
 @Component({
   selector: 'page-list-master',
   templateUrl: 'list-master.html'
 })
 export class ListMasterPage {
-  currentItems: Item[];
-  urlBase = 'gs://wallah-sahara.appspot.com/';
+  currentItems: ItemList[];
   constructor(
     public navCtrl: NavController,
     public modalCtrl: ModalController,
@@ -27,10 +24,14 @@ export class ListMasterPage {
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
-    this.itemsService.getListOfItems().subscribe((itemsList) => {
-      this.currentItems = itemsList;
-      console.log(itemsList);
-    });
+    this.loadingService.showLoading();
+    this.itemsService.getListOfItems().subscribe(
+      (itemsList) => {
+        this.currentItems = _.reverse(itemsList);
+        this.loadingService.showLoading();
+      },
+      error => console.log(error)
+    );
   }
 
   /**
@@ -52,9 +53,8 @@ export class ListMasterPage {
   /**
    * Navigate to the detail page for this item.
    */
-  openItem(item: Item) {
+  openItem() {
     this.navCtrl.push('ItemDetailPage', {
-      item: item
     });
   }
 }
