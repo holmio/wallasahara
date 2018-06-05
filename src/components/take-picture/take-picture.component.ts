@@ -6,7 +6,7 @@ import { Platform, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // Interfaces
-export interface ListPictures { base64Image: string, state: string };
+export interface ListPictures { base64Image: string, state?: string };
 
 /**
  * Component to generate a gallery of pictures.
@@ -37,7 +37,7 @@ export interface ListPictures { base64Image: string, state: string };
 })
 
 export class TakePictureComponent {
-  @Input() numberOfPicture?: number = 4;
+  @Input() numberOfPictures?: number = 4;
   @Output() dataToEmmit: EventEmitter<any> = new EventEmitter<any>();
 
   sourceType: any;
@@ -55,9 +55,10 @@ export class TakePictureComponent {
   /** */
   takePicture() {
     if ( this.platform.is('android') ) {
-      let configCamera: CameraOptions = {
+      const configCamera: CameraOptions = {
         destinationType: this.camera.DestinationType.DATA_URL,
-        targetWidth: 700,
+        targetWidth: 400,
+        targetHeight: 400,
         correctOrientation: true,
         quality: 70,
         encodingType: this.camera.EncodingType.JPEG,
@@ -67,14 +68,13 @@ export class TakePictureComponent {
       this.loadingService.showLoading();
       this.camera.getPicture(configCamera).then((data) => {
         this.loadingService.hideLoading();
-        let base64Image = 'data:image/jpeg;base64,' + data;
+        const base64Image = 'data:image/jpeg;base64,' + data;
         this.picturesList.push({base64Image: base64Image, state: 'active'});
         this.setObjectPecures(this.picturesList);
       },
       (error) => {
         this.loadingService.hideLoading();
-        this.toastService.show(error, 'error');
-        this.dataToEmmit.emit(error);
+        this.toastService.show(this.translate.instant('TAKE_PICTURE_ERROR_CAMERA'), 'error');
       });
     }
   }
@@ -86,7 +86,7 @@ export class TakePictureComponent {
     if (this.picturesList.length === 4) {
       this.toastService.show(this.translate.instant('TAKE_PICTURE_MAX_NUMBER_PICTURES'), 'info');
     } else {
-      let actionSheet = this.actionSheetCtrl.create({
+      const actionSheet = this.actionSheetCtrl.create({
         title: this.translate.instant('TAKE_PICTURE_SELECT_METHOD_OF_IMAGE_TITEL'),
         buttons: [
           {
@@ -130,23 +130,7 @@ export class TakePictureComponent {
    * @param arrayPictures list of pictures
    */
   private setObjectPecures(arrayPictures: Array<ListPictures>): void {
-    let listOfPicture: Array<string> = arrayPictures.map(value => value.base64Image);
+    const listOfPicture: Array<string> = arrayPictures.map(value => value.base64Image);
     this.dataToEmmit.emit({ data: listOfPicture });
   }
-  // getProfileImageStyle(index: number) {
-  //   return 'url(' + this.profilePic + ')'
-  // }
-
-  // processWebImage(event) {
-  //   if (event.target.files.length !== 0) {
-  //     let reader = new FileReader();
-  //     reader.onload = (readerEvent) => {
-  //       let imageData = (readerEvent.target as any).result;
-  //       this.profilePic[this.index] = imageData;
-  //       this.dataToEmmit.next({ data: this.profilePic[this.index] });
-  //     };
-
-  //     reader.readAsDataURL(event.target.files[this.index]);
-  //   }
-  // }
 }

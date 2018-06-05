@@ -1,6 +1,6 @@
 {
   "rules": {
- // -- Strict errors --
+    // -- Strict errors --
     // These lint rules are likely always a good idea.
 
     // Force function overloads to be declared together. This ensures readers understand APIs.
@@ -116,7 +116,6 @@
     // Multi-line object liiterals and function calls should have a trailing comma. This helps avoid merge conflicts.
     "trailing-comma": {"severity": "warning"}
   },
-  "rulesDirectory": [
-    "node_modules/tslint-eslint-rules/dist/rules"
-  ]
+
+  "defaultSeverity": "error"
 }

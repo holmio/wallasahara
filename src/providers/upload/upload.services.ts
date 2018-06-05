@@ -4,7 +4,6 @@ import { AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask 
 import * as firebase from 'firebase/app';
 import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
-import { DocumentReference } from '@firebase/firestore-types';
 import { CreateItem, ItemImage } from '../../models/item.entities';
 import { AuthService } from '../providers';
 import { ObserveOnMessage } from 'rxjs/operators/observeOn';
@@ -12,8 +11,6 @@ import { Observer } from 'rxjs';
 
 @Injectable()
 export class UploadService {
-  // Main task
-	constructor() {}
 
   /**
    * Upload files in the data base and the storage
@@ -22,20 +19,23 @@ export class UploadService {
    */
   uploadFiles(filesToUpload: Array<string>, pathRoute: string): Observable<any> {
     return new Observable<any>((observer) => {
-      let urlOfImages: Array<string> = [];
+      const urlOfImages: Array<string> = [];
+      const basePathList: Array<string> = [];
       if (filesToUpload.length !== 0) {
-        filesToUpload.forEach((element, index) => {
-          let basePath: string = `${pathRoute}/${new Date().getTime()}.jpg`;
+        filesToUpload.forEach((element) => {
+          const basePath: string = `${pathRoute}/${new Date().getTime()}.jpg`;
+          basePathList.push(basePath);
           this.uploadFileString(basePath, element).subscribe(
             (response) => {
               urlOfImages.push(response.urlOfImage);
             },
             error => console.log(error),
             () => {
-              if (filesToUpload.length === index + 1) {
+              // Need to complete the array and finish the observable
+              if (filesToUpload.length === urlOfImages.length) {
                 observer.next({
                   listOfUrlsImages: urlOfImages,
-                  pathOfBucket: basePath
+                  pathOfBucket: basePathList
                 })
                 observer.complete();
               }
@@ -53,8 +53,8 @@ export class UploadService {
    */
   private uploadFileString(path:string, file:string) {
     return new Observable<any>((observer) => {
-      let storageRef = firebase.storage().ref();
-      let uploadTask = storageRef.child(path).putString(file, 'data_url');
+      const storageRef = firebase.storage().ref();
+      const uploadTask = storageRef.child(path).putString(file, 'data_url');
       uploadTask.then(
         data => {
           observer.next({urlOfImage: uploadTask.snapshot.downloadURL})
@@ -66,7 +66,7 @@ export class UploadService {
   }
 
   private async deleteFile(path:string){
-    let storageRef = firebase.storage().ref();
+    const storageRef = firebase.storage().ref();
     return await storageRef.child(path).delete();
   }
 

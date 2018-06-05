@@ -2,10 +2,11 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
-import { ItemsService, LoadingService, UploadService } from '../../providers/providers';
+import { ItemsService, LoadingService, UploadService, ToastService } from '../../providers/providers';
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators/mergeMap';
 import { CreateItem } from '../../models/item.entities';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -39,6 +40,8 @@ export class ItemCreatePage {
     private itemsService: ItemsService,
     private loadingService: LoadingService,
     private uploadService: UploadService,
+    private translate: TranslateService,
+    private toastService: ToastService,
   ) {
     this.form = formBuilder.group({
       imagesItem: [[], Validators.required],
@@ -54,9 +57,7 @@ export class ItemCreatePage {
     });
   }
 
-  ionViewDidLoad() {
-
-  }
+  // ionViewDidLoad() { }
 
   handlePictureBtn(event) {
     console.log(event)
@@ -76,16 +77,17 @@ export class ItemCreatePage {
    */
   createItem() {
     if (!this.form.valid) { return; }
-    let dataItem: CreateItem = this.form.value;
+    const dataItem: CreateItem = this.form.value;
     this.loadingService.showLoading();
     this.itemsService.addItem(dataItem).subscribe(
       data => {
-        // TODO: This data not return any data
+        // TODO: This data not return UNDEFINED
         console.log(data);
       },
       (error) => {
         console.log(error);
         this.loadingService.hideLoading();
+        this.toastService.show(this.translate.instant('TAKE_PICTURE_ERROR_CAMERA'), 'error');
       },
       () => {
         this.loadingService.hideLoading();
