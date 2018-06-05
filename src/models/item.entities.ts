@@ -1,4 +1,3 @@
-import { FieldValue } from "@firebase/firestore-types";
 
 /**
  * A generic model that our Master-Detail pages list, create, and delete.
@@ -9,23 +8,50 @@ import { FieldValue } from "@firebase/firestore-types";
  * The Items service manages creating instances of Item, so go ahead and rename
  * that something that fits your app as well.
  */
-export class Item {
-
-  constructor() {}
-
-}
-// *Future feature
-// export type TypeExtra = 'price_negotiable' | 'changeable';
-export interface CreateItem {
+// export class Item {
+// {}  constructor()
+// }
+export interface ItemList {
   name: string;
-  description: string;
-  category: Array<string>;
+  uuid: string;
   price: number;
+  profileItem?: string;
   timestamp?: any;
   // extraStatus: TypeExtra;
 }
 
+// *Future feature
+// export type TypeExtra = 'price_negotiable' | 'changeable';
+export interface CreateItem {
+  uuid?: string;
+  name: string;
+  about: string;
+  category: Array<string>;
+  price: number;
+  profileItem?: string;
+  timestamp?: any;
+  imagesItem: Array<string>;
+  // extraStatus: TypeExtra;
+}
+
+export interface DetailsItem {
+  uuid?: string;
+  name: string;
+  about: string;
+  price: number;
+  timestamp?: any;
+  imagesItem: Array<string>;
+}
+
+export interface UpdateItem {
+  name: string;
+  about: string;
+  category: Array<string>;
+  price: number;
+  profileItem?: string;
+}
+
 export interface ItemImage {
   base64List: Array<string>;
-  uidItem: string;
+  uidItem?: string;
 }

@@ -109,7 +109,7 @@ export class MyApp {
      */
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       console.log("onLangChange", event.translations)
-      if (event.lang == LANG_AR) {
+      if (event.lang === LANG_AR) {
         this.settingsService.setValue('optionLang', LANG_AR);
         this.platform.setDir('rtl', true);
         this.platform.setDir('ltr', false);

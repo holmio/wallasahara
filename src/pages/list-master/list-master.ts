@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController } from 'ionic-angular';
-
-import { Item } from '../../models/item.entities';
 import { ItemCreatePage } from '../pages';
 import { ItemsService, LoadingService } from '../../providers/providers';
+import { ItemList } from '../../models/item.entities';
+import * as _ from 'lodash';
 
 @IonicPage()
 @Component({
@@ -11,13 +11,12 @@ import { ItemsService, LoadingService } from '../../providers/providers';
   templateUrl: 'list-master.html'
 })
 export class ListMasterPage {
-  currentItems: Item[];
-
+  currentItems: ItemList[];
   constructor(
     public navCtrl: NavController,
-    public modalCtrl: ModalController,
-    public itemsService: ItemsService,
-    public loadingService: LoadingService,
+    private modalCtrl: ModalController,
+    private itemsService: ItemsService,
+    private loadingService: LoadingService,
   ) {
 
   }
@@ -26,10 +25,15 @@ export class ListMasterPage {
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
-    // this.itemsService.getListOfItems().subscribe((itemsList) => {
-    //   console.log(itemsList);
-    // });
-    // this.currentItems = this.items.query();
+    this.loadingService.showLoading();
+    this.itemsService.getListOfItems().subscribe(
+      (itemsList) => {
+        console.log(itemsList);
+        this.currentItems = _.reverse(itemsList);
+        this.loadingService.showLoading();
+      },
+      error => console.log(error),
+    );
   }
 
   /**
@@ -37,8 +41,7 @@ export class ListMasterPage {
    * modal and then adds the new item to our data source if the user created one.
    */
   addItem() {
-    let addModal = this.modalCtrl.create(ItemCreatePage);
-
+    const addModal = this.modalCtrl.create(ItemCreatePage);
     addModal.present();
   }
 
@@ -52,9 +55,7 @@ export class ListMasterPage {
   /**
    * Navigate to the detail page for this item.
    */
-  openItem(item: Item) {
-    this.navCtrl.push('ItemDetailPage', {
-      item: item
-    });
+  openItem(uuidItem: string) {
+    this.navCtrl.push('ItemDetailPage', { uuidItem: uuidItem});
   }
 }

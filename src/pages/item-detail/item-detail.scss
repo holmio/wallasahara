@@ -1,9 +1,15 @@
 page-item-detail {
+  .scroll-content {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+  }
   .item-profile {
     width: 100%;
     background-position: center center;
     background-size: cover;
     height: 250px;
+    background-color: color($colors, dark);
   }
 
   .item-detail {

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { Item } from '../../models/item.entities';
 import { ItemsService } from '../../providers/providers';
 
 @IonicPage()
@@ -36,10 +35,10 @@ export class SearchPage {
   /**
    * Navigate to the detail page for this item.
    */
-  openItem(item: Item) {
-    this.navCtrl.push('ItemDetailPage', {
-      item: item
-    });
-  }
+  // openItem(item: Item) {
+  //   this.navCtrl.push('ItemDetailPage', {
+  //     item: item
+  //   });
+  // }
 
 }
