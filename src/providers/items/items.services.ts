@@ -3,9 +3,11 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import * as firebase from 'firebase/app';
 import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
-import { CreateItem, ItemImage, UpdateItem, DetailsItem } from '../../models/item.entities';
+import { CreateItem, ItemImage, UpdateItem, DetailsItem, ItemList } from '../../models/item.entities';
 import { UploadService } from '../upload/upload.services';
 import * as _ from 'lodash';
+import { Subject, BehaviorSubject } from 'rxjs';
+import { combineLatest, switchMap } from 'rxjs/operators';
 
 /**
  * Service with the necessary elements to add, update and delete and Item
@@ -13,15 +15,17 @@ import * as _ from 'lodash';
 
 @Injectable()
 export class ItemsService {
-  private itemCollectionRef: AngularFirestoreCollection<CreateItem>;
+  private itemCollectionRef: AngularFirestoreCollection<any>;
   private imagesCollectionRef: AngularFirestoreCollection<ItemImage>;
-  private item$: Observable<any>;
+  // private items$: Observable<ItemList[]>;
+  // private priceFilter$: BehaviorSubject<string|null>;
+  // private nameFilter$: BehaviorSubject<string|null>;
 	constructor(
     private afStore: AngularFirestore,
     private uploadService: UploadService,
   ) {
     this.itemCollectionRef = afStore.collection<any>('items');
-    this.imagesCollectionRef = afStore.collection<any>('galleryItems');
+    this.imagesCollectionRef = afStore.collection<ItemImage>('galleryItems');
 	}
 
   /**
@@ -85,14 +89,46 @@ export class ItemsService {
   /**
    * Get the list of items.
    */
+  getListOfItemsByFilter(filter: any = {}) {
+    console.log(filter);
+    // this.items$ = Observable.combineLatest(
+    //   this.priceFilter$,
+    //   this.nameFilter$
+    // ).switchMap(([size, color]) =>
+    //   this.afStore.collection<ItemList>('items', ref => {
+    //     let query: any;
+    //     if (filter.price) { query = query.where('price', '==', filter.price) };
+    //     if (filter.name) { query = query.where('name', '==', filter.name) };
+    //     return query;
+    //   }).valueChanges()
+    // );
+    // return this.items$;
+    // const queryObservable = size$.pipe(
+    //   switchMap(size =>
+    //     this.afStore.collection('items', ref => ref.where('size', '==', size)).valueChanges()
+    //   )
+    // );
+
+    return this.afStore.collection('items', (ref: any) => {
+      let query: any = ref;
+      if (filter.price) { query = query.where('price', '>=', filter.price) };
+      if (filter.name) { query = query.where('name', '==', '%'+filter.name+'%') };
+      return query
+    }).valueChanges();
+  }
+
+    /**
+   * Get the list of items.
+   */
   getListOfItems() {
-    return this.itemCollectionRef.valueChanges();
+    return this.afStore.collection('items', ref => ref.orderBy('timestamp', 'asc')).valueChanges();
   }
 
   /**
    * Get the data of item.
+   * @param uuidItem uuid of item
    */
-  getItem(uuidItem: string): Observable<DetailsItem> {
+  getItemByUuid(uuidItem: string): Observable<DetailsItem> {
     let itemDetails: DetailsItem;
     return new Observable((observer) => {
       const sourceItem = Observable.zip(
@@ -107,6 +143,7 @@ export class ItemsService {
             price: response[0].price,
             imagesItem: response[1].pathOfImages,
             timestamp: response[0].timestamp,
+            currency: response[0].currency,
             uuid: response[0].uuid,
           };
           observer.next(itemDetails);
@@ -121,6 +158,9 @@ export class ItemsService {
     const storageRef = firebase.storage().ref();
   }
 
+  /**
+   * Method to generate Unique Key
+   */
   private uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
