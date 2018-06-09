@@ -27,24 +27,31 @@
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="createItem()">
     <take-picture (dataToEmmit)="handlePictureBtn($event)"></take-picture>
     <ion-list>
-      <ion-item>
-        <ion-label floating>{{ 'ITEM_NAME_PLACEHOLDER' | translate }}</ion-label>
-        <ion-input type="text" formControlName="name"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>{{ 'ITEM_ABOUT_PLACEHOLDER' | translate }}</ion-label>
-        <ion-textarea type="text" formControlName="about"></ion-textarea>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>{{ 'ITEM_PRICE_PLACEHOLDER' | translate }}</ion-label>
-        <ion-input type="number" formControlName="price"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>{{ 'ITEM_CATEGORY_PLACEHOLDER' | translate }}</ion-label>
-        <ion-select interface="action-sheet" formControlName="category">
-          <ion-option *ngFor="let category of categories" [value]="category.value">{{category.name}}</ion-option>
-        </ion-select>
-      </ion-item>
+      <ion-row>
+        <ion-item col-12>
+          <ion-label floating>{{ 'ITEM_NAME_PLACEHOLDER' | translate }}</ion-label>
+          <ion-input type="text" formControlName="name"></ion-input>
+        </ion-item>
+        <ion-item col-12>
+          <ion-label floating>{{ 'ITEM_ABOUT_PLACEHOLDER' | translate }}</ion-label>
+          <ion-textarea type="text" formControlName="about"></ion-textarea>
+        </ion-item>
+        <ion-item class="selec-currency" col-4>
+          <ion-select interface="popover" formControlName="currency">
+            <ion-option *ngFor="let currency of currencies" [value]="currency.value">{{currency.nameAr}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item col-8>
+          <ion-label floating>{{ 'ITEM_PRICE_PLACEHOLDER' | translate }}</ion-label>
+          <ion-input type="number" max="9" formControlName="price"></ion-input>
+        </ion-item>
+        <ion-item col-12>
+          <ion-label floating>{{ 'ITEM_CATEGORY_PLACEHOLDER' | translate }}</ion-label>
+          <ion-select interface="action-sheet" formControlName="category">
+            <ion-option *ngFor="let category of categories" [value]="category.value">{{category.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-row>
     </ion-list>
   </form>
 </ion-content>
