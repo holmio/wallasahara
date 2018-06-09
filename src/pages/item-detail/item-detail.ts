@@ -32,7 +32,7 @@ export class ItemDetailPage {
    */
   ionViewDidLoad() {
     this.loadingService.showLoading();
-    this.itemsService.getItem(this.itemUuid).subscribe(
+    this.itemsService.getItemByUuid(this.itemUuid).subscribe(
       (data) => {
         console.log(data);
         this.itemDetails = data;

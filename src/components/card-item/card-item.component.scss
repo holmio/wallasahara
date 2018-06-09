@@ -1,0 +1,29 @@
+card-item {
+  .card-background-page {
+    position: relative;
+    column-count: 2;
+    column-gap: 0.5em;
+    ion-card {
+      position: relative;
+      display: inline-block;
+      margin: 0px 0px 4px 0px !important;
+      width: 100%;
+      border-radius: 6px;
+      .description {
+        background-color: color($colors, primary);
+        position: absolute;
+        opacity: 0.8;
+        padding: 2px 5px 0px 5px;
+        color: color($colors, light-second);
+        bottom: 2%;
+        right: 2%;
+        border-radius: 2px;
+        .card-title {
+          font-size: 1em;
+          width: 100%;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

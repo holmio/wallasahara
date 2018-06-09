@@ -23,7 +23,7 @@
 
   <div *ngIf="itemDetails" class="item-detail" padding>
     <p>{{'DETAILS_ITEM_LAST_UPDATE' | translate}} : {{itemDetails.timestamp | date:'shortDate'}}</p>
-    <h2>{{itemDetails.price}}</h2>
+    <h2>{{itemDetails.price | number}} {{itemDetails.currency}}</h2>
     <p>{{itemDetails.about}}</p>
   </div>
 </ion-content>

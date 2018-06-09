@@ -15,6 +15,7 @@ export interface ItemList {
   name: string;
   uuid: string;
   price: number;
+  currency: string;
   profileItem?: string;
   timestamp?: any;
   // extraStatus: TypeExtra;
@@ -28,6 +29,7 @@ export interface CreateItem {
   about: string;
   category: Array<string>;
   price: number;
+  currency: string;
   profileItem?: string;
   timestamp?: any;
   imagesItem: Array<string>;
@@ -39,6 +41,7 @@ export interface DetailsItem {
   name: string;
   about: string;
   price: number;
+  currency: string;
   timestamp?: any;
   imagesItem: Array<string>;
 }
@@ -47,6 +50,7 @@ export interface UpdateItem {
   name: string;
   about: string;
   category: Array<string>;
+  currency: string;
   price: number;
   profileItem?: string;
 }
