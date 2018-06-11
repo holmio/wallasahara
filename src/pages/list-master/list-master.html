@@ -1,26 +1,21 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
-
-    <ion-buttons end>
-      <button ion-button icon-only (click)="addItem()">
-        <ion-icon name="add"></ion-icon>
+    <ion-buttons left>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="filterItems()">
+        <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content scroll="false">
-  <div class="card-background-page">
-    <ion-card *ngFor="let item of currentItems">
-      <span (click)="openItem(item.uuid)">
-        <img [src]="item.profileItem"/>
-        <div class="description">
-          <div class="card-title">{{item.price}}</div>
-        </div>
-      </span>
-    </ion-card>
-  </div>
+  <ion-fab center bottom>
+    <button ion-fab color="primary" (click)="addItem()"><ion-icon name="add" color="light"></ion-icon></button>
+  </ion-fab>
+  <card-item [dataItems] = "currentItems" (dataToEmmit)="handleItemBtn($event)"></card-item>
 </ion-content>

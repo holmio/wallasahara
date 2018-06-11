@@ -1,2 +1,10 @@
-// page-item-create {
-// }
+page-item-create {
+  .selec-currency.item {
+      .select-md {
+        padding: 38px 12px 0px 8px !important;
+      }
+      ion-select {
+        max-width: 100%;
+      }
+  }
+}

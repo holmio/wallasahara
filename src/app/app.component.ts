@@ -16,7 +16,7 @@ export const LANG_AR: string = 'ar';
   template: `<ion-menu [content]="content">
     <ion-header no-border>
       <ion-toolbar>
-        <ion-title>Pages</ion-title>
+        <ion-title>Menu</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -136,7 +136,7 @@ export class MyApp {
   private requestAllPermissions() {
     const permissions = Object.keys(this.PERMISSION).map(k => this.PERMISSION[k]);
     this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.CAMERA, this.androidPermissions.PERMISSION.GET_ACCOUNTS]).then((status) => {
-      alert(JSON.stringify(status));
+      // alert(JSON.stringify(status));
     }, error => {
       console.error('permission error:', error);
     });
@@ -145,7 +145,7 @@ export class MyApp {
   private initLoginUser() {
 
     this.loadingService.showLoading();
-    let source = Observable.zip(
+    const source = Observable.zip(
       this.settingsService.getValue('initialRun'),
       this.auth.afAuth.authState,
     )
@@ -168,7 +168,7 @@ export class MyApp {
   }
 
   private selectLanguage() {
-    let addModal = this.modalCtrl.create(FirstRunPage);
+    const addModal = this.modalCtrl.create(FirstRunPage);
     addModal.present();
   }
 }

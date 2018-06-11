@@ -1,0 +1,10 @@
+<div class="card-background-page" *ngIf="dataItems">
+  <ion-card *ngFor="let item of dataItems">
+    <span (click)="openItem(item.uuid)">
+      <img [src]="item.profileItem"/>
+      <div class="description">
+        <div class="card-title">{{item.price | number}} {{item.currency}}</div>
+      </div>
+    </span>
+  </ion-card>
+</div>

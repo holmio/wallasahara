@@ -14,7 +14,6 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: 'item-create.html'
 })
 export class ItemCreatePage {
-  @ViewChild('fileInput') fileInput;
 
   isReadyToSave: boolean;
 
@@ -32,6 +31,10 @@ export class ItemCreatePage {
     {value: 'coche', name: 'coche'},
     {value: 'otro', name: 'Otro'},
   ]
+  currencies: any = [
+    {value: 'dza', nameAr: 'دينار', nameEn: 'Dinar'},
+    {value: 'eur', nameAr: 'اليورو', nameEn: 'Euro'},
+  ]
 
   constructor(
     public navCtrl: NavController,
@@ -46,7 +49,8 @@ export class ItemCreatePage {
     this.form = formBuilder.group({
       imagesItem: [[], Validators.required],
       name: ['', Validators.required],
-      price: ['', Validators.required],
+      price: ['', Validators.compose([Validators.required, Validators.pattern(/^\d+.\d{1}$/)])],
+      currency: ['dza', Validators.required],
       category: ['', Validators.required],
       about: [''],
     });
