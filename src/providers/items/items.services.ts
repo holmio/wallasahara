@@ -8,9 +8,11 @@ import { UploadService } from '../upload/upload.services';
 import * as _ from 'lodash';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { combineLatest, switchMap } from 'rxjs/operators';
+import { PaginationService } from '../pagination/pagination.services';
+import { DocumentSnapshot } from '@firebase/firestore-types';
 
 /**
- * Service with the necessary elements to add, update and delete and Item
+ * Service with the necessary elements to add, update and delete a Item
  */
 
 @Injectable()
@@ -23,6 +25,7 @@ export class ItemsService {
 	constructor(
     private afStore: AngularFirestore,
     private uploadService: UploadService,
+    private paginationService: PaginationService,
   ) {
     this.itemCollectionRef = afStore.collection<any>('items');
     this.imagesCollectionRef = afStore.collection<ItemImage>('galleryItems');
@@ -90,6 +93,7 @@ export class ItemsService {
    * Get the list of items.
    */
   getListOfItemsByFilter(filter: any = {}) {
+
     console.log(filter);
     // this.items$ = Observable.combineLatest(
     //   this.priceFilter$,
@@ -117,11 +121,17 @@ export class ItemsService {
     }).valueChanges();
   }
 
-    /**
+  /**
    * Get the list of items.
    */
-  getListOfItems() {
-    return this.afStore.collection('items', ref => ref.orderBy('timestamp', 'asc')).valueChanges();
+  getListOfItems(limit: number, last: string) {
+    return this.paginationService.init('items', 'timestamp');
+    // return this.afStore.collection('items', ref => (
+    //   ref
+    //     .where('id', '<', last)
+    //     .orderBy('id', 'desc')
+    //     .limit(limit)
+    //  )).snapshotChanges();
   }
 
   /**

@@ -5,6 +5,7 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
+    <ion-title>{{'APLICATION_NAME' | translate}}</ion-title>
     <ion-buttons right>
       <button ion-button icon-only (click)="filterItems()">
         <ion-icon name="search"></ion-icon>
@@ -14,8 +15,16 @@
 </ion-header>
 
 <ion-content scroll="false">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <card-item [dataItems] = "paginationService.itemsData$" (dataToEmmit)="handleItemBtn($event)"></card-item>
+  <ion-infinite-scroll (ionInfinite)="infiniteScrolling($event)">
+    <ion-infinite-scroll-content
+    loadingText="{{'LOADING_DATA' | translate}}">
+  </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
   <ion-fab center bottom>
     <button ion-fab color="primary" (click)="addItem()"><ion-icon name="add" color="light"></ion-icon></button>
   </ion-fab>
-  <card-item [dataItems] = "currentItems" (dataToEmmit)="handleItemBtn($event)"></card-item>
 </ion-content>

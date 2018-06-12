@@ -1,12 +1,20 @@
 <ion-header>
   <ion-navbar>
     <ion-title>{{ 'SEARCH_TITLE' | translate }}</ion-title>
-    <ion-buttons right>
+    <ion-buttons *ngIf="!statusSearch" right>
       <button ion-button (click)="acceptFilter()">
         <span color="primary" showWhen="ios">
           {{ 'DONE_BUTTON' | translate }}
         </span>
         <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons *ngIf="statusSearch" right>
+      <button ion-button (click)="backToFilter()">
+        <span color="primary" showWhen="ios">
+          {{ 'SEARCH_BUTTON' | translate }}
+        </span>
+        <ion-icon name="md-search" showWhen="core,android,windows"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>

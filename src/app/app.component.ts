@@ -7,7 +7,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { Diagnostic } from '@ionic-native/diagnostic';
 
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
-import { AuthService, LoadingService, SettingsService } from '../providers/providers';
+import { AuthService, LoadingService, SettingsServices } from '../providers/providers';
 import { Observable } from 'rxjs';
 export const LANG_ES: string = 'es';
 export const LANG_AR: string = 'ar';
@@ -64,7 +64,7 @@ export class MyApp {
     public auth: AuthService,
     public modalCtrl: ModalController,
     private loadingService: LoadingService,
-    private settingsService: SettingsService,
+    private settingsServices: SettingsServices,
     private translate: TranslateService,
     private config: Config,
     private statusBar: StatusBar,
@@ -97,7 +97,7 @@ export class MyApp {
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.
-    this.settingsService.getValue('optionLang').then((lang) => {
+    this.settingsServices.getValue('optionLang').then((lang) => {
       if (lang === LANG_AR) this.translate.setDefaultLang(LANG_AR);
     });
 
@@ -110,11 +110,11 @@ export class MyApp {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       console.log("onLangChange", event.translations)
       if (event.lang === LANG_AR) {
-        this.settingsService.setValue('optionLang', LANG_AR);
+        this.settingsServices.setValue('optionLang', LANG_AR);
         this.platform.setDir('rtl', true);
         this.platform.setDir('ltr', false);
       } else {
-        this.settingsService.setValue('optionLang', LANG_ES);
+        this.settingsServices.setValue('optionLang', LANG_ES);
         this.platform.setDir('ltr', true);
         this.platform.setDir('rtl', false);
       }
@@ -146,7 +146,7 @@ export class MyApp {
 
     this.loadingService.showLoading();
     const source = Observable.zip(
-      this.settingsService.getValue('initialRun'),
+      this.settingsServices.getValue('initialRun'),
       this.auth.afAuth.authState,
     )
     source.subscribe(
@@ -154,7 +154,7 @@ export class MyApp {
         console.log(res);
         if (res[0]) {
           if (res[1]) {
-            this.settingsService.setValue('uuid', res[1].uid);
+            this.settingsServices.setValue('uuid', res[1].uid);
             this.rootPage = MainPage;
           } else {
             this.rootPage = LoginPage;

@@ -58,6 +58,13 @@ export class SearchPage {
     this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem });
   }
 
+  /**
+   * Reset status of showing filter
+   */
+  backToFilter() {
+    this.statusSearch = false;
+  }
+
   private getListOfItemsByFilter(filter?: any) {
     this.loadingService.showLoading();
     this.itemsService.getListOfItemsByFilter(filter).subscribe(
@@ -65,9 +72,12 @@ export class SearchPage {
         console.log(itemsList);
         this.currentItems = _.reverse(itemsList);
         this.statusSearch = true;
-        this.loadingService.showLoading();
+        this.loadingService.hideLoading();
       },
-      error => console.log(error),
+      error => {
+        console.log(error);
+        this.loadingService.hideLoading();
+      }
     );
   }
 

@@ -15,10 +15,12 @@ export class AuthService {
 	}
 
 	signInWithEmail(credentials) {
-    let subscription = Observable.fromPromise(this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password));
-		return subscription;
+    return Observable.fromPromise(this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password));
   }
 
+  /**
+   * Get Uuid of current user
+   */
   getUid() {
     let uidUser: string;
     this.afAuth.authState.subscribe(
@@ -29,8 +31,7 @@ export class AuthService {
   }
 
 	signUp(credentials) {
-    let subscription = Observable.fromPromise(this.afAuth.auth.createUserWithEmailAndPassword(credentials.email,credentials.password));
-		return subscription;
+    return Observable.fromPromise(this.afAuth.auth.createUserWithEmailAndPassword(credentials.email,credentials.password));
 	}
 
 	get authenticated(): boolean {
@@ -59,9 +60,9 @@ export class AuthService {
 				return this.afAuth.auth.getRedirectResult().then( result => {
 					// This gives you a Google Access Token.
 					// You can use it to access the Google API.
-					let token = result.credential.accessToken;
+					const token = result.credential.accessToken;
 					// The signed-in user info.
-					let user = result.user;
+					const user = result.user;
 					console.log(token, user);
 				}).catch(function(error) {
 					// Handle Errors here.

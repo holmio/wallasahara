@@ -1,5 +1,5 @@
 <div class="card-background-page" *ngIf="dataItems">
-  <ion-card *ngFor="let item of dataItems">
+  <ion-card *ngFor="let item of dataItems | async">
     <span (click)="openItem(item.uuid)">
       <img [src]="item.profileItem"/>
       <div class="description">

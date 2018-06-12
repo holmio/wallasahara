@@ -24,7 +24,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from './environments/environment';
 
 // Providers
-import { AuthService, ToastService, LoadingService, SettingsService, UploadService, ItemsService, Api } from '../providers/providers';
+import { AuthService, ToastService, LoadingService, SettingsServices, UploadService, ItemsService, PaginationService, Api } from '../providers/providers';
 import { MyApp } from './app.component';
 
 // Shared Module
@@ -43,7 +43,7 @@ export function provideSettings(storage: Storage) {
    * You can add new settings options at any time. Once the settings are saved,
    * these values will not overwrite the saved values (this can be done manually if desired).
    */
-  return new SettingsService(storage, {
+  return new SettingsServices(storage, {
     option1: true,
     option2: 'Ionitron J. Framework',
     option4: 'Hello'
@@ -84,12 +84,13 @@ export function provideSettings(storage: Storage) {
     ToastService,
     LoadingService,
     UploadService,
+    PaginationService,
     Camera,
     AndroidPermissions,
     Diagnostic,
     SplashScreen,
     StatusBar,
-    { provide: SettingsService, useFactory: provideSettings, deps: [Storage] },
+    { provide: SettingsServices, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]

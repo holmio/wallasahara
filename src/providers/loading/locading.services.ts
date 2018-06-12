@@ -12,7 +12,6 @@ export class LoadingService {
   showLoading() {
     if(!this.loading) {
       this.loading = this.loadingCtrl.create({
-        spinner: 'circles',
         duration: 5000,
       });
       this.loading.present();

@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController } from 'ionic-angular';
 import { ItemCreatePage, FilterPage } from '../pages';
-import { ItemsService, LoadingService } from '../../providers/providers';
+import { ItemsService, LoadingService, PaginationService } from '../../providers/providers';
 import { ItemList } from '../../models/item.entities';
 import * as _ from 'lodash';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 
 @IonicPage()
 @Component({
@@ -11,9 +14,13 @@ import * as _ from 'lodash';
   templateUrl: 'list-master.html'
 })
 export class ListMasterPage {
-  currentItems: ItemList[];
+  currentItems: ItemList[] = [];
+  infiniteScrolling$: BehaviorSubject<any>;
+  batch: number = 4;
+  last: any = Date.now();
   constructor(
     public navCtrl: NavController,
+    public paginationService: PaginationService,
     private modalCtrl: ModalController,
     private itemsService: ItemsService,
     private loadingService: LoadingService,
@@ -25,7 +32,48 @@ export class ListMasterPage {
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
-    this.getListOfItems();
+    // this.infiniteScrolling$ = this.itemsService.getListOfItems;
+    // this.infiniteScrolling$ = this.itemsService.getListOfItems().subscribe(
+    //   (itemsList: ItemList[]) => {
+    //     console.log(itemsList);
+    //     this.currentItems = itemsList;
+    //   },
+    //   error => {
+    //     console.error(error);
+    //   }
+    // );
+    this.paginationService.init('items', 'timestamp');
+    this.paginationService.itemsData$.subscribe(data => {
+      this.currentItems = data;
+    })
+  }
+
+  infiniteScrolling (infiniteScroll) {
+    this.paginationService.more();
+    this.paginationService.stateLoading$.subscribe(data => {
+      if (!data) infiniteScroll.complete()
+    })
+  }
+
+  doRefresh (refresher) {
+    this.paginationService.upload();
+    // const source = Observable.concat(
+    //   this.paginationService.stateLoading$.map(data => {return {loading: data}}),
+    //   this.paginationService.itemsData$.map(data => {return {listOfItems: data}}),
+    // );
+    // source.subscribe((data: any) => {
+    //   if (!data.loading) {
+    //     refresher.complete()
+    //   } else if(data.listOfItems) {
+    //     this.currentItems = data;
+    //   }
+    // })
+    this.paginationService.itemsData$.subscribe(data => {
+      this.currentItems = data;
+    })
+    this.paginationService.stateLoading$.subscribe(data => {
+      if (!data) refresher.complete()
+    })
   }
 
   /**
@@ -56,14 +104,6 @@ export class ListMasterPage {
   }
 
   private getListOfItems() {
-    this.loadingService.showLoading();
-    this.itemsService.getListOfItems().subscribe(
-      (itemsList) => {
-        console.log(itemsList);
-        this.currentItems = _.reverse(itemsList);
-        this.loadingService.showLoading();
-      },
-      error => console.log(error),
-    );
+    this.itemsService.getListOfItems(this.batch, this.last);
   }
 }
