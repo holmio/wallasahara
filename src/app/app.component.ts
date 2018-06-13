@@ -9,6 +9,8 @@ import { Diagnostic } from '@ionic-native/diagnostic';
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
 import { AuthService, LoadingService, SettingsServices } from '../providers/providers';
 import { Observable } from 'rxjs';
+import * as _ from 'lodash';
+
 export const LANG_ES: string = 'es';
 export const LANG_AR: string = 'ar';
 
@@ -42,15 +44,14 @@ export class MyApp {
 
   pages: any[] = [
     { title: 'Login', component: 'LoginPage' },
+    { title: 'List of Items', component: 'ListMasterPage' },
+    { title: 'Search', component: 'SearchPage' },
+    { title: 'Signup', component: 'SignupPage' },
+    { title: 'Settings', component: 'SettingsPage' },
     { title: 'Tutorial', component: 'TutorialPage' },
     { title: 'Tabs', component: 'TabsPage' },
-    { title: 'Cards', component: 'CardsPage' },
     { title: 'Content', component: 'ContentPage' },
-    { title: 'Signup', component: 'SignupPage' },
-    { title: 'Master Detail', component: 'ListMasterPage' },
     { title: 'Menu', component: 'MenuPage' },
-    { title: 'Settings', component: 'SettingsPage' },
-    { title: 'Search', component: 'SearchPage' },
   ];
   PERMISSION = {
     WRITE_EXTERNAL: this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
@@ -97,7 +98,7 @@ export class MyApp {
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.
-    this.settingsServices.getValue('optionLang').then((lang) => {
+    this.settingsServices.getValue('optionLang').subscribe((lang) => {
       if (lang === LANG_AR) this.translate.setDefaultLang(LANG_AR);
     });
 
@@ -145,26 +146,29 @@ export class MyApp {
   private initLoginUser() {
 
     this.loadingService.showLoading();
-    const source = Observable.zip(
-      this.settingsServices.getValue('initialRun'),
-      this.auth.afAuth.authState,
-    )
-    source.subscribe(
-      (res) => {
-        console.log(res);
-        if (res[0]) {
-          if (res[1]) {
-            this.settingsServices.setValue('uuid', res[1].uid);
-            this.rootPage = MainPage;
-          } else {
-            this.rootPage = LoginPage;
-          }
-          this.loadingService.hideLoading();
+    this.settingsServices.getValue('initialRun')
+    .switchMap(status => {
+      if (!_.isUndefined(status)) {
+        return this.auth.afAuth.authState;
+      } else {
+        this.rootPage = LoginPage;
+        // this.selectLanguage();
+        this.loadingService.hideLoading();
+      }
+    }).subscribe(
+      authState => {
+        if (authState) {
+          this.rootPage = MainPage;
         } else {
-          // this.selectLanguage();
-          this.loadingService.hideLoading();
+          this.rootPage = LoginPage;
         }
-      });
+        this.loadingService.hideLoading();
+      },
+      error => {
+        console.error(error);
+        this.loadingService.hideLoading();
+      }
+    )
   }
 
   private selectLanguage() {

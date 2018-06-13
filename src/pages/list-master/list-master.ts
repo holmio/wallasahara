@@ -43,9 +43,6 @@ export class ListMasterPage {
     //   }
     // );
     this.paginationService.init('items', 'timestamp');
-    this.paginationService.itemsData$.subscribe(data => {
-      this.currentItems = data;
-    })
   }
 
   infiniteScrolling (infiniteScroll) {
@@ -56,7 +53,7 @@ export class ListMasterPage {
   }
 
   doRefresh (refresher) {
-    this.paginationService.upload();
+    this.paginationService.update();
     // const source = Observable.concat(
     //   this.paginationService.stateLoading$.map(data => {return {loading: data}}),
     //   this.paginationService.itemsData$.map(data => {return {listOfItems: data}}),
@@ -68,9 +65,6 @@ export class ListMasterPage {
     //     this.currentItems = data;
     //   }
     // })
-    this.paginationService.itemsData$.subscribe(data => {
-      this.currentItems = data;
-    })
     this.paginationService.stateLoading$.subscribe(data => {
       if (!data) refresher.complete()
     })

@@ -17,14 +17,12 @@ export class PaginationService {
   private done = new BehaviorSubject(false);
   private loading = new BehaviorSubject(false);
   private data = new BehaviorSubject([]);
-  private currentItems: Array<ItemList> = [];
-
   private query: QueryConfig;
 
   // Observable data
   itemsData$: Observable<any>;
   stateLoading$: Observable<boolean> = this.loading.asObservable();
-  observableDone$: Observable<boolean> = this.done.asObservable();
+  requestDone$: Observable<boolean> = this.done.asObservable();
 
 
   constructor(private afs: AngularFirestore) { }
@@ -52,7 +50,7 @@ export class PaginationService {
     // Create the observable array for consumption in components
     this.itemsData$ = this.data.asObservable()
         .scan( (acc, val) => {
-          return this.query.prepend ? val.concat(acc) : acc.concat(val);
+          return this.query.prepend ? _.uniqBy(_.concat(val, acc), 'uuid') :  _.uniqBy(_.concat(acc, val), 'uuid');
         });
   }
 
@@ -71,15 +69,13 @@ export class PaginationService {
   }
 
   // Retrieves additional data from firestores
-  upload() {
-    this.done.next(false);
-    this.data = new BehaviorSubject([]);
-    const upload = this.afs.collection(this.query.path, ref => {
+  update() {
+    const update = this.afs.collection(this.query.path, ref => {
       return ref
       .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
       .limit(this.query.limit)
     })
-    this.mapAndUpdate(upload);
+    this.mapAndUpdate(update, true);
   }
 
   // Determines the doc snapshot to paginate query
@@ -93,9 +89,9 @@ export class PaginationService {
 
 
   // Maps the snapshot to usable format the updates source
-  private mapAndUpdate(col: AngularFirestoreCollection<any>) {
+  private mapAndUpdate(col: AngularFirestoreCollection<any>, updating: boolean =  false) {
 
-    if (this.done.value || this.loading.value) { return };
+    if (!updating && (this.done.value || this.loading.value)) { return };
 
     // loading
     this.loading.next(true);
@@ -113,10 +109,7 @@ export class PaginationService {
         values = this.query.prepend ? values.reverse() : values;
 
         // update source with new values, done loading
-        // TODO: I have to see a better wai to avoid the duplicate content.
-        values.map(item => this.currentItems.push(item as any));
-        this.currentItems = _.uniqBy(this.currentItems, 'uuid');
-        this.data.next(this.currentItems);
+        this.data.next(values);
         this.loading.next(false);
 
         // no more values, mark done

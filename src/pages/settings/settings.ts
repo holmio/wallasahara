@@ -44,7 +44,7 @@ export class SettingsPage {
     public platform: Platform,
   ) {
     // setting current value of lang
-    this.settingsServices.getValue('optionLang').then((lang) => this.currentLang = lang);
+    this.settingsServices.getValue('optionLang').subscribe((lang) => this.currentLang = lang);
   }
 
   ionViewDidLoad() {

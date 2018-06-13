@@ -19,7 +19,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <card-item [dataItems] = "paginationService.itemsData$" (dataToEmmit)="handleItemBtn($event)"></card-item>
-  <ion-infinite-scroll (ionInfinite)="infiniteScrolling($event)">
+  <ion-infinite-scroll enabled="paginationService.requestDone$" (ionInfinite)="infiniteScrolling($event)">
     <ion-infinite-scroll-content
     loadingText="{{'LOADING_DATA' | translate}}">
   </ion-infinite-scroll-content>

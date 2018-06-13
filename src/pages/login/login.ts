@@ -40,7 +40,8 @@ export class LoginPage {
   doLogin() {
     this.loadingService.showLoading();
     this.auth.signInWithEmail(this.account).subscribe((resp) => {
-      this.settingsServices.setValue('uuid', resp.uuid);
+      this.settingsServices.setValue('uuid', resp.uid);
+      this.settingsServices.setValue('initialRun', true);
       // this.toastService.show(this.loginSuccessString, 'success');
       this.navCtrl.push(MainPage);
     }, (err) => {

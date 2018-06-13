@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * A simple settings/config class for storing key/value pairs with persistence.
@@ -56,10 +57,10 @@ export class SettingsServices {
   }
 
   getValue(key: string) {
-    return this.storage.get(this.SETTINGS_KEY)
+    return Observable.fromPromise(this.storage.get(this.SETTINGS_KEY)
       .then(settings => {
         return settings ? settings[key] : undefined;
-      });
+      }));
   }
 
   save() {
