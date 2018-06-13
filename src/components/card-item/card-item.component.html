@@ -1,7 +1,7 @@
-<div class="card-background-page" *ngIf="dataItems">
+<div #container class="card-background-page" *ngIf="dataItems">
   <ion-card *ngFor="let item of dataItems | async">
     <span (click)="openItem(item.uuid)">
-      <img [src]="item.profileItem"/>
+      <img [defaultImage]="'./assets/imgs/thumb-lazy.jpg'" [lazyLoad]="item.profileItem" [scrollObservable]="container.ionScroll"/>
       <div class="description">
         <div class="card-title">{{item.price | number}} {{item.currency}}</div>
       </div>

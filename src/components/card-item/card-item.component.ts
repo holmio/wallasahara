@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ItemList } from '../../models/item.entities';
+import { Observable } from 'rxjs';
 
 /**
  * Generated class for the CardItemComponent component.
@@ -13,7 +14,7 @@ import { ItemList } from '../../models/item.entities';
 })
 export class CardItemComponent {
 
-  @Input() dataItems: ItemList[] = [];
+  @Input() dataItems: Observable<any>;
   @Output() dataToEmmit: EventEmitter<any> = new EventEmitter<any>();
 
   // constructor() {}

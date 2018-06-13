@@ -27,6 +27,9 @@ import { environment } from './environments/environment';
 import { AuthService, ToastService, LoadingService, SettingsServices, UploadService, ItemsService, PaginationService, Api } from '../providers/providers';
 import { MyApp } from './app.component';
 
+// Lazy loader images plugin
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+
 // Shared Module
 import { SharedModule } from './shared/shared.module';
 
@@ -62,6 +65,7 @@ export function provideSettings(storage: Storage) {
     AngularFireStorageModule, // imports firebase/storage only needed for storage features
     HttpClientModule,
     BrowserAnimationsModule,
+    LazyLoadImageModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
