@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Slides, ModalController } from 'ionic-angular';
 
 import { ItemsService, LoadingService } from '../../providers/providers';
 import { DetailsItem } from '../../models/item.entities';
+import { FirstRunPage } from '../pages';
 
 @IonicPage()
 @Component({
@@ -10,6 +11,8 @@ import { DetailsItem } from '../../models/item.entities';
   templateUrl: 'item-detail.html',
 })
 export class ItemDetailPage {
+  @ViewChild(Slides) slidesChild: Slides;
+
   slides:any[];
   mySlideOptions = {
     pager:true
@@ -22,6 +25,7 @@ export class ItemDetailPage {
     public navParams: NavParams,
     private itemsService: ItemsService,
     private loadingService: LoadingService,
+    private modalCtrl: ModalController,
   ) {
     console.log(navParams.get('uuidItem'));
     this.itemUuid = navParams.get('uuidItem') || undefined;
@@ -45,6 +49,11 @@ export class ItemDetailPage {
         this.loadingService.hideLoading();
       }
     );
+  }
+
+  goToSlide() {
+    const addModal = this.modalCtrl.create('SlideGalleryPage', { gallery: this.itemDetails.imagesItem });
+    addModal.present();
   }
 
 }

@@ -9,7 +9,7 @@ import LazyLoadImageModule from 'ng-lazyload-image';
     CardItemComponent
   ],
 	imports: [
-    IonicPageModule.forChild([CardItemComponent, TakePictureComponent]),
+    IonicModule,
     LazyLoadImageModule,
   ],
 	exports: [

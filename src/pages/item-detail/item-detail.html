@@ -14,7 +14,7 @@
 
 <ion-content>
   <div class="item-profile" *ngIf="itemDetails" spaceBetween="10px">
-    <ion-slides paginationType="bullets" pager="true" dir="rtl" centeredSlides="true">
+    <ion-slides paginationType="bullets" pager="true" dir="rtl" centeredSlides="true" (click) = "goToSlide()">
       <ion-slide *ngFor="let slide of itemDetails.imagesItem">
         <img [src]="slide">
       </ion-slide>
