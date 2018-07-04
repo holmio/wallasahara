@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask } from 'angularfire2/storage';
 import * as firebase from 'firebase/app';
-import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
-import { CreateItem, ItemImage } from '../../models/item.entities';
-import { AuthService } from '../providers';
-import { ObserveOnMessage } from 'rxjs/operators/observeOn';
-import { Observer } from 'rxjs';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UploadService {
@@ -35,7 +29,7 @@ export class UploadService {
               if (filesToUpload.length === urlOfImages.length) {
                 observer.next({
                   listOfUrlsImages: urlOfImages,
-                  pathOfBucket: basePathList
+                  pathOfBucket: _.reverse(basePathList)
                 })
                 observer.complete();
               }

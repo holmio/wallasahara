@@ -24,7 +24,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from './environments/environment';
 
 // Providers
-import { AuthService, ToastService, LoadingService, SettingsServices, UploadService, ItemsService, PaginationService, Api } from '../providers/providers';
+import { AuthService, ToastService, LoadingService, SettingsServices, UploadService, ItemsService, PaginationService, Api, DeleteFileService } from '../providers/providers';
 import { MyApp } from './app.component';
 
 // Lazy loader images plugin
@@ -88,6 +88,7 @@ export function provideSettings(storage: Storage) {
     ToastService,
     LoadingService,
     UploadService,
+    DeleteFileService,
     PaginationService,
     Camera,
     AndroidPermissions,

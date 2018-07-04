@@ -37,6 +37,7 @@ export interface DetailsItem {
   currency: string;
   timestamp?: any;
   imagesItem: Array<string>;
+  imagesPathDirectory: Array<string>;
 }
 
 export interface UpdateItem {

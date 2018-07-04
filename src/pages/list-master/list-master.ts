@@ -14,10 +14,6 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'list-master.html'
 })
 export class ListMasterPage {
-  currentItems: ItemList[] = [];
-  infiniteScrolling$: BehaviorSubject<any>;
-  batch: number = 4;
-  last: any = Date.now();
   constructor(
     public navCtrl: NavController,
     public paginationService: PaginationService,
@@ -32,16 +28,6 @@ export class ListMasterPage {
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
-    // this.infiniteScrolling$ = this.itemsService.getListOfItems;
-    // this.infiniteScrolling$ = this.itemsService.getListOfItems().subscribe(
-    //   (itemsList: ItemList[]) => {
-    //     console.log(itemsList);
-    //     this.currentItems = itemsList;
-    //   },
-    //   error => {
-    //     console.error(error);
-    //   }
-    // );
     this.paginationService.init('items', 'timestamp');
   }
 
@@ -54,17 +40,6 @@ export class ListMasterPage {
 
   doRefresh (refresher) {
     this.paginationService.update();
-    // const source = Observable.concat(
-    //   this.paginationService.stateLoading$.map(data => {return {loading: data}}),
-    //   this.paginationService.itemsData$.map(data => {return {listOfItems: data}}),
-    // );
-    // source.subscribe((data: any) => {
-    //   if (!data.loading) {
-    //     refresher.complete()
-    //   } else if(data.listOfItems) {
-    //     this.currentItems = data;
-    //   }
-    // })
     this.paginationService.stateLoading$.subscribe(data => {
       if (!data) refresher.complete()
     })
@@ -84,20 +59,10 @@ export class ListMasterPage {
   }
 
   /**
-   * Delete an item from the list of items.
-   */
-  deleteItem(item) {
-    // this.items.delete(item);
-  }
-
-  /**
    * Navigate to the detail page for this item.
    */
   handleItemBtn(event) {
     this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem });
   }
 
-  private getListOfItems() {
-    this.itemsService.getListOfItems(this.batch, this.last);
-  }
 }

@@ -6,6 +6,7 @@ import { SettingsServices } from './settings/settings.services';
 import { LoadingService } from './loading/locading.services';
 import { AuthService } from './auth/auth.services';
 import { PaginationService } from './pagination/pagination.services';
+import { DeleteFileService } from './delete-file/delete-file.services';
 
 export {
     Api,
@@ -16,4 +17,5 @@ export {
     ItemsService,
     AuthService,
     PaginationService,
+    DeleteFileService,
 };

@@ -1,8 +1,14 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-buttons right>
-      <button ion-button>
+    <ion-buttons class="options" right>
+      <button icon-only ion-button>
+        <ion-icon name="heart"></ion-icon>
+      </button>
+      <button icon-only ion-button>
+        <ion-icon name="share"></ion-icon>
+      </button>
+      <button icon-only ion-button (click)="presentPopover($event)">
         <ion-icon name="more"></ion-icon>
       </button>
     </ion-buttons>

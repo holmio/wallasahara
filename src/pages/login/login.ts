@@ -54,9 +54,21 @@ export class LoginPage {
   signup() {
     this.navCtrl.push('SignupPage');
   }
-  // facebookUp() {
-
-  // }
+  facebookUp() {
+    this.loadingService.showLoading();
+    this.auth.signInWithFacebook().subscribe((response) => {
+      console.log(response)
+      this.settingsServices.setValue('uuid', response.uid);
+      this.settingsServices.setValue('initialRun', true);
+      this.navCtrl.push(MainPage);
+    }, (err) => {
+      this.loadingService.hideLoading();
+      // Unable to log in
+      debugger
+      console.log(err);
+      this.toastService.show(this.loginErrorString, 'error');
+    });
+  }
   // twitterUp() {
 
   // }

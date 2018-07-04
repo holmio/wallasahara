@@ -17,3 +17,6 @@ export const Tab3Root = 'SettingsPage';
 
 // Item pages
 export const ItemCreatePage = 'ItemCreatePage';
+
+// Popover page
+export const PopoverPage = 'PopoverPage';

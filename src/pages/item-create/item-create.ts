@@ -1,10 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { ItemsService, LoadingService, UploadService, ToastService } from '../../providers/providers';
-import { Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators/mergeMap';
 import { CreateItem } from '../../models/item.entities';
 import { TranslateService } from '@ngx-translate/core';
 

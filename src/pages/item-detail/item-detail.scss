@@ -17,4 +17,9 @@ page-item-detail {
     background: white;
     position: absolute;
   }
+  .options {
+    .bar-button-md {
+      margin-right: 6px !important;
+    }
+  }
 }

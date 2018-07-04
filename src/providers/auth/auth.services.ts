@@ -49,7 +49,15 @@ export class AuthService {
 	signInWithGoogle() {
 		console.log('Sign in with google');
 		return this.oauthSignIn(new firebase.auth.GoogleAuthProvider());
-	}
+  }
+
+  signInWithFacebook() {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    provider.setCustomParameters({
+      'display': 'popup',
+    });
+    return Observable.fromPromise(this.afAuth.auth.signInWithPopup(provider));
+  }
 
 	private oauthSignIn(provider: AuthProvider) {
 		if (!(<any>window).cordova) {

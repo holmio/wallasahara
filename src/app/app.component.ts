@@ -38,7 +38,7 @@ export const LANG_AR: string = 'ar';
 })
 export class MyApp {
 
-  rootPage = LoginPage;
+  rootPage = MainPage;
 
   @ViewChild(Nav) nav: Nav;
 
