@@ -9,7 +9,7 @@ export class ToastService {
 
   }
   show (message: string, cssClass?: string, duration: number = 4000) {
-    let toast = this.toastController.create({
+    const toast = this.toastController.create({
       message: message,
       duration: 3000,
       position: 'top',

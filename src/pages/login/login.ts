@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { MainPage } from '../pages';
-import { AuthService, ToastService, LoadingService, SettingsService } from '../../providers/providers';
+import { AuthService, ToastService, LoadingService, SettingsServices } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -27,7 +27,7 @@ export class LoginPage {
     private auth: AuthService,
     private toastService: ToastService,
     private loadingService: LoadingService,
-    private settingsService: SettingsService,
+    private settingsServices: SettingsServices,
   ) {
 
     this.translateService.get(['LOGIN_ERROR', 'LOGIN_SUCCESS']).subscribe((value) => {
@@ -40,8 +40,8 @@ export class LoginPage {
   doLogin() {
     this.loadingService.showLoading();
     this.auth.signInWithEmail(this.account).subscribe((resp) => {
-      this.settingsService.setValue('uuid', resp.uuid);
-      this.loadingService.hideLoading();
+      this.settingsServices.setValue('uuid', resp.uid);
+      this.settingsServices.setValue('initialRun', true);
       // this.toastService.show(this.loginSuccessString, 'success');
       this.navCtrl.push(MainPage);
     }, (err) => {
@@ -55,12 +55,24 @@ export class LoginPage {
     this.navCtrl.push('SignupPage');
   }
   facebookUp() {
-
+    this.loadingService.showLoading();
+    this.auth.signInWithFacebook().subscribe((response) => {
+      console.log(response)
+      this.settingsServices.setValue('uuid', response.uid);
+      this.settingsServices.setValue('initialRun', true);
+      this.navCtrl.push(MainPage);
+    }, (err) => {
+      this.loadingService.hideLoading();
+      // Unable to log in
+      debugger
+      console.log(err);
+      this.toastService.show(this.loginErrorString, 'error');
+    });
   }
-  twitterUp() {
+  // twitterUp() {
 
-  }
-  googleUp() {
+  // }
+  // googleUp() {
 
-  }
+  // }
 }

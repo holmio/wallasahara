@@ -2,6 +2,7 @@ ion-content {
   background: $app-background;
   .scroll-content {
     padding: 16px;
+    border-top: none !important;
   }
   .custom-spinner-container {
     background-color: red;

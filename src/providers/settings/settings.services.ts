@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * A simple settings/config class for storing key/value pairs with persistence.
  */
 @Injectable()
-export class SettingsService {
+export class SettingsServices {
   private SETTINGS_KEY: string = '_settings';
 
   settings: any = {};
@@ -31,7 +32,7 @@ export class SettingsService {
   }
 
   private mergeDefaults(defaults: any) {
-    for (let k in defaults) {
+    for (const k in defaults) {
       if (!(k in this.settings)) {
         this.settings[k] = defaults[k];
       }
@@ -40,7 +41,7 @@ export class SettingsService {
   }
 
   merge(settings: any) {
-    for (let k in settings) {
+    for (const k in settings) {
       this.settings[k] = settings[k];
     }
     return this.save();
@@ -56,10 +57,10 @@ export class SettingsService {
   }
 
   getValue(key: string) {
-    return this.storage.get(this.SETTINGS_KEY)
+    return Observable.fromPromise(this.storage.get(this.SETTINGS_KEY)
       .then(settings => {
         return settings ? settings[key] : undefined;
-      });
+      }));
   }
 
   save() {

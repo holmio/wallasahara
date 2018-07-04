@@ -1,8 +1,14 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-buttons right>
-      <button ion-button>
+    <ion-buttons class="options" right>
+      <button icon-only ion-button>
+        <ion-icon name="heart"></ion-icon>
+      </button>
+      <button icon-only ion-button>
+        <ion-icon name="share"></ion-icon>
+      </button>
+      <button icon-only ion-button (click)="presentPopover($event)">
         <ion-icon name="more"></ion-icon>
       </button>
     </ion-buttons>
@@ -14,7 +20,7 @@
 
 <ion-content>
   <div class="item-profile" *ngIf="itemDetails" spaceBetween="10px">
-    <ion-slides paginationType="bullets" pager="true" dir="rtl" centeredSlides="true">
+    <ion-slides paginationType="bullets" pager="true" dir="rtl" centeredSlides="true" (click) = "goToSlide()">
       <ion-slide *ngFor="let slide of itemDetails.imagesItem">
         <img [src]="slide">
       </ion-slide>

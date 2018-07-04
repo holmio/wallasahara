@@ -1,11 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { ItemList } from '../../models/item.entities';
+import { Observable } from 'rxjs';
 
 /**
- * Generated class for the CardItemComponent component.
+ * Component to show a gallery of items
  *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
  */
 @Component({
   selector: 'card-item',
@@ -13,10 +12,8 @@ import { ItemList } from '../../models/item.entities';
 })
 export class CardItemComponent {
 
-  @Input() dataItems: ItemList[] = [];
+  @Input() dataItems: Observable<any>;
   @Output() dataToEmmit: EventEmitter<any> = new EventEmitter<any>();
-
-  // constructor() {}
 
   private openItem (uuidItem: string) {
     this.dataToEmmit.emit({ uuidItem: uuidItem });

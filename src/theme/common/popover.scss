@@ -4,4 +4,7 @@ ion-popover {
       padding-right: 8px !important;
     }
   }
+  .popover-content {
+    background: color($colors, light) !important;
+  }
 }

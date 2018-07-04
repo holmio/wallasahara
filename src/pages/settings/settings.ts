@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 
-import { SettingsService, LoadingService } from '../../providers/providers';
+import { SettingsServices, LoadingService } from '../../providers/providers';
 
 /**
  * The Settings page is a simple form that syncs with a Settings provider
@@ -37,14 +37,14 @@ export class SettingsPage {
   private currentLang: string;
 
   constructor(public navCtrl: NavController,
-    public settingsService: SettingsService,
+    public settingsServices: SettingsServices,
     public formBuilder: FormBuilder,
     public navParams: NavParams,
     public translate: TranslateService,
     public platform: Platform,
   ) {
     // setting current value of lang
-    this.settingsService.getValue('optionLang').then((lang) => this.currentLang = lang);
+    this.settingsServices.getValue('optionLang').subscribe((lang) => this.currentLang = lang);
   }
 
   ionViewDidLoad() {
@@ -58,9 +58,9 @@ export class SettingsPage {
 
     this.page = this.navParams.get('page') || this.page;
 
-    this.settingsService.load().then(() => {
+    this.settingsServices.load().then(() => {
       this.settingsReady = true;
-      this.options = this.settingsService.allSettings;
+      this.options = this.settingsServices.allSettings;
 
       this.buildForm();
     });
@@ -93,7 +93,7 @@ export class SettingsPage {
         this.currentLang = formData.optionLang;
         this.changeLanguage(formData.optionLang)
       }
-      this.settingsService.merge(this.form.value);
+      this.settingsServices.merge(this.form.value);
     });
   }
 

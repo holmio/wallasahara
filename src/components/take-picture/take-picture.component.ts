@@ -4,9 +4,10 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { LoadingService, ToastService } from '../../providers/providers';
 import { Platform, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
+import * as _ from 'lodash';
 
 // Interfaces
-export interface ListPictures { base64Image: string, state?: string };
+export interface ListPictures { base64Image: string, state?: string, isThumbnail?: boolean };
 
 /**
  * Component to generate a gallery of pictures.
@@ -43,6 +44,7 @@ export class TakePictureComponent {
   sourceType: any;
   selectSourceType: any;
   picturesList: Array<ListPictures> = [];
+  private imageThumb: string;
   constructor(
     private camera: Camera,
     private loadingService: LoadingService,
@@ -52,13 +54,15 @@ export class TakePictureComponent {
     private translate: TranslateService,
   ) {
   }
-  /** */
+  /**
+   * Method to take a picture with cordova plugin
+   */
   takePicture() {
     if ( this.platform.is('android') ) {
       const configCamera: CameraOptions = {
         destinationType: this.camera.DestinationType.DATA_URL,
-        targetWidth: 400,
-        targetHeight: 400,
+        targetWidth: 700,
+        targetHeight: 700,
         correctOrientation: true,
         quality: 70,
         encodingType: this.camera.EncodingType.JPEG,
@@ -70,7 +74,11 @@ export class TakePictureComponent {
         this.loadingService.hideLoading();
         const base64Image = 'data:image/jpeg;base64,' + data;
         this.picturesList.push({base64Image: base64Image, state: 'active'});
-        this.setObjectPecures(this.picturesList);
+        if(this.picturesList.length === 1) {
+          this.generateTumbnail(base64Image);
+        } else {
+          this.setObjectPecures(this.picturesList);
+        }
       },
       (error) => {
         this.loadingService.hideLoading();
@@ -83,7 +91,7 @@ export class TakePictureComponent {
    * Present an action sheet to slelect the mode to upload the picture
    */
   presentMethodToUploadPictures() {
-    if (this.picturesList.length === 4) {
+    if (this.picturesList.length === 5) {
       this.toastService.show(this.translate.instant('TAKE_PICTURE_MAX_NUMBER_PICTURES'), 'info');
     } else {
       const actionSheet = this.actionSheetCtrl.create({
@@ -121,8 +129,20 @@ export class TakePictureComponent {
    * @param index number of picture
    */
   deletePicture (index: number) {
-    this.picturesList.splice(index, 1);
-    this.setObjectPecures(this.picturesList);
+    // If the picture deleted is the thumbnail then we generate a new thumbnail of the second picture of the gallery
+    if (index === 1 && this.picturesList.length > 2) {
+      this.picturesList.splice(index, 1);
+      // Delete first element of array that is thumbnail.
+      this.picturesList.shift();
+      // Method to generate the thumnail
+      this.generateTumbnail(this.picturesList[0].base64Image)
+    } else {
+      if (this.picturesList.length === 2) {
+        this.picturesList = [];
+      } else {
+        this.picturesList.splice(index, 1);
+      }
+    }
   }
 
   /**
@@ -132,5 +152,61 @@ export class TakePictureComponent {
   private setObjectPecures(arrayPictures: Array<ListPictures>): void {
     const listOfPicture: Array<string> = arrayPictures.map(value => value.base64Image);
     this.dataToEmmit.emit({ data: listOfPicture });
+  }
+
+  /**
+   * Generate a thumbnail
+   * @param base64Image url image
+   */
+  private generateTumbnail(base64Image) {
+    this.generateFromImage(base64Image, 300, 300, 0.5, (data) => {
+      this.picturesList.unshift({base64Image: data, isThumbnail: true});
+      this.setObjectPecures(this.picturesList);
+    })
+  }
+
+  /**
+   * Set a new image with custom size and quality and generate
+   * @param img
+   * @param MAX_WIDTH
+   * @param MAX_HEIGHT
+   * @param quality
+   * @param callback
+   */
+  private generateFromImage(img, MAX_WIDTH: number = 200, MAX_HEIGHT: number = 200, quality: number = 1, callback) {
+    const canvas: any = document.createElement('canvas');
+    const image = new Image();
+    image.onload = () => {
+      let width = image.width;
+      let height = image.height
+
+      if (width > height) {
+        if(width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if(height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(image, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      callback(dataUrl);
+    }
+    image.src = img
+  }
+
+  /**
+   * Get the size of the image
+   * @param data_url data of image
+   */
+  private getImageSize(data_url) {
+    const base64data = 'data:image/jpeg;base64,';
+    return ((data_url.length - base64data.length) * 3 / 4 / (1024*1024)).toFixed(4);
   }
 }

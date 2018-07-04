@@ -3,7 +3,7 @@ import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { Platform } from 'ionic-angular/platform/platform';
 import { TranslateService } from '@ngx-translate/core';
 import { LoginPage } from '../login/login';
-import { SettingsService, LoadingService } from '../../providers/providers';
+import { SettingsServices, LoadingService } from '../../providers/providers';
 
 /**
  * Generated class for the SelectLanguagePage page.
@@ -24,7 +24,7 @@ export class SelectLanguagePage {
     public translate: TranslateService,
     public platform: Platform,
     public viewCtrl: ViewController,
-    public settingsService: SettingsService,
+    public settingsServices: SettingsServices,
     private loadingService: LoadingService,
   ) {
   }
@@ -35,7 +35,7 @@ export class SelectLanguagePage {
 
   changeLanguage(language: string) {
     this.translate.use(language)
-    this.settingsService.setValue('initialRun', 'true');
+    this.settingsServices.setValue('initialRun', 'true');
     this.viewCtrl.dismiss();
   }
 

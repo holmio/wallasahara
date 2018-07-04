@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import * as firebase from 'firebase/app';
-import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
 import { CreateItem, ItemImage, UpdateItem, DetailsItem, ItemList } from '../../models/item.entities';
 import { UploadService } from '../upload/upload.services';
 import * as _ from 'lodash';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { combineLatest, switchMap } from 'rxjs/operators';
+import { PaginationService } from '../pagination/pagination.services';
+import { DeleteFileService } from '../delete-file/delete-file.services';
 
 /**
- * Service with the necessary elements to add, update and delete and Item
+ * Service with the necessary elements to add, update and delete a Item
  */
 
 @Injectable()
@@ -23,6 +24,8 @@ export class ItemsService {
 	constructor(
     private afStore: AngularFirestore,
     private uploadService: UploadService,
+    private paginationService: PaginationService,
+    private deleteService: DeleteFileService,
   ) {
     this.itemCollectionRef = afStore.collection<any>('items');
     this.imagesCollectionRef = afStore.collection<ItemImage>('galleryItems');
@@ -37,7 +40,7 @@ export class ItemsService {
     const uuidItem: string = this.uuidv4();
     // Bath of the images
     const basePath: string = `images/items/${uuidItem}`;
-    // create a parameter to set the time of creation
+    // Set the time of creation
     dataItem.timestamp = firebase.firestore.FieldValue.serverTimestamp();
     dataItem.uuid = uuidItem;
     return new Observable<any>((observer: any) => {
@@ -48,7 +51,7 @@ export class ItemsService {
           {
             pathOfImages: response.listOfUrlsImages,
             pathOfBucket: response.pathOfBucket,
-          })).map((item) => { return { profileItem: _.last(response.listOfUrlsImages) }; });
+          })).map((item) => { return { profileItem: _.head(response.listOfUrlsImages) }; });
       })
       .flatMap((response: any) => {
         dataItem.profileItem = response.profileItem;
@@ -78,18 +81,36 @@ export class ItemsService {
   }
 
   /**
-   * Delete and item
-   * @param uuidItem unique code of item
+   * Delete an item and the collections of the item
+   * @param itemDetails object with item data
+   * @returns No return any data
    */
-  deleteItem(uuidItem: any): Observable<any> {
-    return Observable.fromPromise(this.itemCollectionRef.doc(uuidItem).delete())
-    .catch((error) => { return error });
+  deleteItem(itemDetails: DetailsItem): Observable<any> {
+    return new Observable<any>((observer: any) => {
+      const sourceItem = Observable.concat(
+        this.deleteService.deleteFiles(itemDetails.imagesPathDirectory),
+        this.itemCollectionRef.doc(itemDetails.uuid).delete(),
+        this.imagesCollectionRef.doc(itemDetails.uuid).delete(),
+      );
+
+      sourceItem.subscribe(
+        () => {
+          observer.next();
+          observer.complete();
+        },
+        (error) => {
+          observer.error(error);
+        },
+      );
+
+    });
   }
 
   /**
    * Get the list of items.
    */
   getListOfItemsByFilter(filter: any = {}) {
+
     console.log(filter);
     // this.items$ = Observable.combineLatest(
     //   this.priceFilter$,
@@ -117,16 +138,23 @@ export class ItemsService {
     }).valueChanges();
   }
 
-    /**
+  /**
    * Get the list of items.
    */
-  getListOfItems() {
-    return this.afStore.collection('items', ref => ref.orderBy('timestamp', 'asc')).valueChanges();
+  getListOfItems(limit: number, last: string) {
+    return this.paginationService.init('items', 'timestamp');
+    // return this.afStore.collection('items', ref => (
+    //   ref
+    //     .where('id', '<', last)
+    //     .orderBy('id', 'desc')
+    //     .limit(limit)
+    //  )).snapshotChanges();
   }
 
   /**
    * Get the data of item.
    * @param uuidItem uuid of item
+   * @returns itemDetails
    */
   getItemByUuid(uuidItem: string): Observable<DetailsItem> {
     let itemDetails: DetailsItem;
@@ -137,25 +165,24 @@ export class ItemsService {
       );
       sourceItem.subscribe(
         (response: any) => {
-          itemDetails = {
-            name: response[0].name,
-            about: response[0].about,
-            price: response[0].price,
-            imagesItem: response[1].pathOfImages,
-            timestamp: response[0].timestamp,
-            currency: response[0].currency,
-            uuid: response[0].uuid,
-          };
-          observer.next(itemDetails);
-          observer.complete();
+          if(response[0] !== null || response[1] !== null) {
+            itemDetails = {
+              name: response[0].name,
+              about: response[0].about,
+              price: response[0].price,
+              imagesItem: response[1].pathOfImages,
+              imagesPathDirectory: response[1].pathOfBucket,
+              timestamp: response[0].timestamp,
+              currency: response[0].currency,
+              uuid: response[0].uuid,
+            };
+            observer.next(itemDetails);
+            observer.complete();
+          }
         },
         (error) => observer.error(error),
       )
     });
-  }
-
-  getImagesFromURL (url) {
-    const storageRef = firebase.storage().ref();
   }
 
   /**
