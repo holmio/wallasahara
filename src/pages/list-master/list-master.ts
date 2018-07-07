@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, MenuController } from 'ionic-angular';
 import { ItemCreatePage, FilterPage } from '../pages';
 import { ItemsService, LoadingService, PaginationService } from '../../providers/providers';
 import { ItemList } from '../../models/item.entities';
@@ -18,10 +18,12 @@ export class ListMasterPage {
     public navCtrl: NavController,
     public paginationService: PaginationService,
     private modalCtrl: ModalController,
+    private menuController: MenuController,
     private itemsService: ItemsService,
     private loadingService: LoadingService,
   ) {
-
+    // Enable menu
+    this.menuController.enable(true, 'myMenu');
   }
 
   /**

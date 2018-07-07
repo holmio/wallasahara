@@ -8,14 +8,13 @@ import { Diagnostic } from '@ionic-native/diagnostic';
 
 import { FirstRunPage, MainPage, LoginPage } from '../pages/pages';
 import { AuthService, LoadingService, SettingsServices } from '../providers/providers';
-import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 
 export const LANG_ES: string = 'es';
 export const LANG_AR: string = 'ar';
 
 @Component({
-  template: `<ion-menu [content]="content">
+  template: `<ion-menu id="myMenu" [content]="content">
     <ion-header no-border>
       <ion-toolbar>
         <ion-title>Menu</ion-title>
@@ -58,8 +57,6 @@ export class MyApp {
     READ_EXTERNAL: this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE,
     CAMERA: this.androidPermissions.PERMISSION.CAMERA,
   };
-  private menu: MenuController;
-
   constructor(
     public platform: Platform,
     public auth: AuthService,
@@ -77,7 +74,6 @@ export class MyApp {
     /** TODO */
     this.translate.setDefaultLang(LANG_AR);
     this.platform.setDir('rtl', true);
-    this.menu = menuController;
     this.initializeApp();
   }
 
@@ -129,7 +125,7 @@ export class MyApp {
   }
 
   logout() {
-    this.menu.close();
+    this.menuController.close();
     this.auth.signOut();
     this.nav.setRoot(LoginPage);
   }
