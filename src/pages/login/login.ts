@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, MenuController } from 'ionic-angular';
 import { MainPage } from '../pages';
 import { AuthService, ToastService, LoadingService, SettingsServices } from '../../providers/providers';
 
@@ -28,8 +28,10 @@ export class LoginPage {
     private toastService: ToastService,
     private loadingService: LoadingService,
     private settingsServices: SettingsServices,
+    private menuController: MenuController,
   ) {
-
+    // Disable menu for login page
+    this.menuController.enable(false, 'myMenu');
     this.translateService.get(['LOGIN_ERROR', 'LOGIN_SUCCESS']).subscribe((value) => {
       this.loginErrorString = value.LOGIN_ERROR;
       this.loginSuccessString = value.LOGIN_SUCCESS;
@@ -58,7 +60,7 @@ export class LoginPage {
     this.loadingService.showLoading();
     this.auth.signInWithFacebook().subscribe((response) => {
       console.log(response)
-      this.settingsServices.setValue('uuid', response.uid);
+      this.settingsServices.setValue('uuid', response.user.uid);
       this.settingsServices.setValue('initialRun', true);
       this.navCtrl.push(MainPage);
     }, (err) => {
