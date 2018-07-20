@@ -1,10 +1,9 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { trigger,state, style, transition, animate, keyframes } from '@angular/animations';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { LoadingService, ToastService } from '../../providers/providers';
 import { Platform, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
-import * as _ from 'lodash';
 
 // Interfaces
 export interface ListPictures { base64Image: string, state?: string, isThumbnail?: boolean };

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController } from 'ionic-angular';
 import { ItemCreatePage, FilterPage } from '../pages';
-import { ItemsService, LoadingService, PaginationService } from '../../providers/providers';
-import { ItemList } from '../../models/item.entities';
+import { ItemsService, LoadingService, PaginationService, AuthService } from '../../providers/providers';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,6 +16,7 @@ export class ListMasterPage {
   constructor(
     public navCtrl: NavController,
     public paginationService: PaginationService,
+    public auth: AuthService,
     private modalCtrl: ModalController,
     private menuController: MenuController,
     private itemsService: ItemsService,

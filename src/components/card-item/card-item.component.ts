@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
-import { ItemList } from '../../models/item.entities';
 import { Observable } from 'rxjs';
 
 /**

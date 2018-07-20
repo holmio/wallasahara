@@ -1,4 +1,3 @@
-import { Api } from './api/api';
 import { UploadService } from './upload/upload.services';
 import { ItemsService } from './items/items.services';
 import { ToastService } from './toast/toast.services';
@@ -7,9 +6,9 @@ import { LoadingService } from './loading/locading.services';
 import { AuthService } from './auth/auth.services';
 import { PaginationService } from './pagination/pagination.services';
 import { DeleteFileService } from './delete-file/delete-file.services';
+import { UsersService } from './users/users.services';
 
 export {
-    Api,
     ToastService,
     SettingsServices,
     LoadingService,
@@ -18,4 +17,5 @@ export {
     AuthService,
     PaginationService,
     DeleteFileService,
+    UsersService,
 };

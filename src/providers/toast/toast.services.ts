@@ -8,10 +8,10 @@ export class ToastService {
   ) {
 
   }
-  show (message: string, cssClass?: string, duration: number = 4000) {
+  show (message: string, cssClass?: string, duration: number = 3000) {
     const toast = this.toastController.create({
       message: message,
-      duration: 3000,
+      duration: duration,
       position: 'top',
       cssClass: cssClass
     });

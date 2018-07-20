@@ -24,7 +24,17 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from './environments/environment';
 
 // Providers
-import { AuthService, ToastService, LoadingService, SettingsServices, UploadService, ItemsService, PaginationService, Api, DeleteFileService } from '../providers/providers';
+import {
+  AuthService,
+  ToastService,
+  LoadingService,
+  SettingsServices,
+  UploadService,
+  ItemsService,
+  PaginationService,
+  DeleteFileService,
+  UsersService,
+} from '../providers/providers';
 import { MyApp } from './app.component';
 
 // Lazy loader images plugin
@@ -82,8 +92,8 @@ export function provideSettings(storage: Storage) {
     MyApp,
   ],
   providers: [
-    Api,
     AuthService,
+    UsersService,
     ItemsService,
     ToastService,
     LoadingService,
@@ -97,7 +107,7 @@ export function provideSettings(storage: Storage) {
     StatusBar,
     { provide: SettingsServices, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
   ]
 })
 export class AppModule { }
