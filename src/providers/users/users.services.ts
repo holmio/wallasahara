@@ -10,22 +10,27 @@ import { SettingsServices } from '../settings/settings.services';
 export class UsersService {
 
   private userCollectionRef: AngularFirestoreCollection<any>;
-  private userInformation;
   constructor(
-    private afAuth: AngularFireAuth,
-    private afStore: AngularFirestore,
+    public afStore: AngularFirestore,
     private settingsServices: SettingsServices,
   ) {
     this.userCollectionRef = afStore.collection<UserDetail>('users');
-    this.userInformation = afAuth.auth.currentUser;
   }
 
-  getUserInformation(): Observable<UserDetail> {
+  getUserInformationStorage(): Observable<UserDetail> {
     return this.settingsServices.getValue('userInformation');
   }
 
   setUserInformation(userInformation: UserDetail): Observable<UserDetail> {
     return Observable.fromPromise(this.settingsServices.setValue('userInformation', userInformation));
+  }
+
+  updateUserData(user: UserDetail): Observable<any> {
+    return Observable.fromPromise(this.userCollectionRef.doc(user.uuid).set(user))
+  }
+
+  getUserInformationFireStore(uuid) {
+    return this.userCollectionRef.doc(uuid).valueChanges()
   }
 
 }

@@ -178,7 +178,7 @@ export class MyApp {
     if (!this.auth.authenticated) {
       this.rootPage = LoginPage;
     } else {
-      this.userService.getUserInformation().subscribe(
+      this.userService.getUserInformationStorage().subscribe(
         (response: UserDetail) => {
           this.userDetails = response;
         }

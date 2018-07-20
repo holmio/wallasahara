@@ -24,7 +24,7 @@ export class ProfileUserPage {
   }
 
   ionViewDidLoad() {
-    this.usersService.getUserInformation().subscribe(data  => {
+    this.usersService.getUserInformationStorage().subscribe(data  => {
       this.userInformation = data;
     });
   }

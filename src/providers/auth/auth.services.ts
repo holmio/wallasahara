@@ -5,20 +5,19 @@ import * as firebase from 'firebase/app';
 import AuthProvider = firebase.auth.AuthProvider;
 import { Observable } from "rxjs/Observable";
 import { UserDetail } from '../../models/user.entities';
+import { UsersService } from '../users/users.services';
 
 @Injectable()
 export class AuthService {
   private user: firebase.User;
-  private userCollectionRef: AngularFirestoreCollection<any>;
 
 	constructor(
-    private afAuth: AngularFireAuth,
-    private afStore: AngularFirestore,
+    public afAuth: AngularFireAuth,
+    private userService: UsersService,
   ) {
 		afAuth.authState.subscribe(user => {
 			this.user = user;
     });
-    this.userCollectionRef = afStore.collection<UserDetail>('users');
   }
 
   get authenticated(): boolean {
@@ -30,7 +29,7 @@ export class AuthService {
       const sourceLoginUser = this.afAuth.auth.signInWithEmailAndPassword(credentials.email,credentials.password);
       Observable.concat(sourceLoginUser)
       .flatMap((response) => {
-        return this.userCollectionRef.doc(response.uid).valueChanges();
+        return this.userService.getUserInformationFireStore(response.uid);
       })
       .subscribe(
         (response) => {
@@ -57,14 +56,17 @@ export class AuthService {
           photoURL: response.photoURL || './assets/img/speakers/bear.jpg',
           email: response.email,
         }
-        return this.updateUserData(userInformation);
+        return this.userService.updateUserData(userInformation);
       })
       .subscribe(
         (response) => {
-          observer.next(userInformation);
-          observer.complete();
+          // Nothing todo
         }, (error) => {
           observer.error(error);
+        },
+        () => {
+          observer.next(userInformation);
+          observer.complete();
         }
       );
     });
@@ -101,22 +103,21 @@ export class AuthService {
         }
         // If it is a new user we register in the date base
         if (response.additionalUserInfo.isNewUser) {
-          return this.updateUserData(userInformation);
+          return this.userService.updateUserData(userInformation);
         }
         return Observable.empty();
       }).subscribe(
         (response) => {
-          observer.next(userInformation);
-          observer.complete();
+          // Nothing todo
         }, (error) => {
           observer.error(error);
+        },
+        () => {
+          observer.next(userInformation);
+          observer.complete();
         }
       );
     })
-  }
-
-  updateUserData(user: UserDetail): Observable<any> {
-    return Observable.fromPromise(this.userCollectionRef.doc(user.uuid).set(user))
   }
 
 	private oauthSignIn(provider: AuthProvider): Observable<any> {
