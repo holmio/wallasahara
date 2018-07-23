@@ -13,8 +13,8 @@ export interface ListPictures { base64Image: string, state?: string, isThumbnail
  *
  */
 @Component({
-  selector: 'take-picture',
-  templateUrl: 'take-picture.component.html',
+  selector: 'gallery-item',
+  templateUrl: 'gallery-item.component.html',
   animations: [
     trigger('flyInOut', [
       state('in', style({transform: 'translateX(0)'})),
@@ -36,7 +36,7 @@ export interface ListPictures { base64Image: string, state?: string, isThumbnail
   ]
 })
 
-export class TakePictureComponent {
+export class GalleryItemComponent {
   @Input() numberOfPictures?: number = 4;
   @Output() dataToEmmit: EventEmitter<any> = new EventEmitter<any>();
 
