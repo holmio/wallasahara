@@ -9,6 +9,9 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { combineLatest, switchMap } from 'rxjs/operators';
 import { PaginationService } from '../pagination/pagination.services';
 import { DeleteFileService } from '../delete-file/delete-file.services';
+import { AuthService } from '../auth/auth.services';
+import { UserDetail, ItemOfUser } from '../../models/user.entities';
+import { UsersService } from '../users/users.services';
 
 /**
  * Service with the necessary elements to add, update and delete a Item
@@ -18,6 +21,7 @@ import { DeleteFileService } from '../delete-file/delete-file.services';
 export class ItemsService {
   private itemCollectionRef: AngularFirestoreCollection<any>;
   private imagesCollectionRef: AngularFirestoreCollection<ItemImage>;
+  private userCollectionRef: AngularFirestoreCollection<any>;
   // private items$: Observable<ItemList[]>;
   // private priceFilter$: BehaviorSubject<string|null>;
   // private nameFilter$: BehaviorSubject<string|null>;
@@ -26,9 +30,12 @@ export class ItemsService {
     private uploadService: UploadService,
     private paginationService: PaginationService,
     private deleteService: DeleteFileService,
+    private authService: AuthService,
+    private userService: UsersService,
   ) {
     this.itemCollectionRef = afStore.collection<any>('items');
     this.imagesCollectionRef = afStore.collection<ItemImage>('galleryItems');
+    this.userCollectionRef = this.afStore.collection<UserDetail>('users');
 	}
 
   /**
@@ -43,20 +50,41 @@ export class ItemsService {
     // Set the time of creation
     dataItem.timestamp = firebase.firestore.FieldValue.serverTimestamp();
     dataItem.uuid = uuidItem;
+    dataItem.uuidUser = this.authService.getUuid;
+    dataItem.isEnabled = true;
+    dataItem.isSold = false;
     return new Observable<any>((observer: any) => {
       const sourceUpload = this.uploadService.uploadFiles(dataItem.imagesItem, basePath);
       Observable.concat(sourceUpload)
-      .flatMap((response) => {
+      .concatMap((response) => {
         return Observable.fromPromise(this.imagesCollectionRef.doc(uuidItem).set(
           {
             pathOfImages: response.listOfUrlsImages,
             pathOfBucket: response.pathOfBucket,
           })).map((item) => { return { profileItem: _.head(response.listOfUrlsImages) }; });
       })
-      .flatMap((response: any) => {
+      .concatMap((response) => {
         dataItem.profileItem = response.profileItem;
         delete dataItem.imagesItem;
         return this.itemCollectionRef.doc(uuidItem).set(dataItem)
+      })
+      .concatMap(() => {
+        return this.userService.getUserInformationStorage();
+      })
+      .concatMap((response) => {
+        const dataUserStorage = response;
+        const infoItemToUser: ItemOfUser = {
+          uuid: dataItem.uuid,
+          isSold: dataItem.isSold,
+          price: dataItem.price,
+          profileItem: dataItem.profileItem,
+          currency: dataItem.currency,
+        }
+        dataUserStorage.listOfItems.push(infoItemToUser);
+        this.userService.setUserInformationStorage(dataUserStorage);
+        return this.userCollectionRef.doc(dataUserStorage.uuid).update({
+          listOfItems: dataUserStorage.listOfItems
+        })
       })
       .subscribe(
         (response: any) => {
@@ -87,13 +115,27 @@ export class ItemsService {
    */
   deleteItem(itemDetails: DetailsItem): Observable<any> {
     return new Observable<any>((observer: any) => {
-      const sourceItem = Observable.concat(
-        this.deleteService.deleteFiles(itemDetails.imagesPathDirectory),
-        this.itemCollectionRef.doc(itemDetails.uuid).delete(),
-        this.imagesCollectionRef.doc(itemDetails.uuid).delete(),
-      );
-
-      sourceItem.subscribe(
+      const sourceItemToDelete = this.deleteService.deleteFiles(itemDetails.imagesPathDirectory);
+      Observable.concat(sourceItemToDelete)
+      this.deleteService.deleteFiles(itemDetails.imagesPathDirectory)
+      .concatMap(() => {
+        return this.itemCollectionRef.doc(itemDetails.uuid).delete()
+      })
+      .concatMap(() => {
+        return this.imagesCollectionRef.doc(itemDetails.uuid).delete()
+      })
+      .concatMap(() => {
+        return this.userService.getUserInformationStorage();
+      })
+      .concatMap((response) => {
+        const dataUserStorage = response;
+        dataUserStorage.listOfItems.splice(_.indexOf(dataUserStorage.listOfItems, itemDetails.uuid), 1);
+        this.userService.setUserInformationStorage(dataUserStorage);
+        return this.userCollectionRef.doc(dataUserStorage.uuid).update({
+          listOfItems: dataUserStorage.listOfItems
+        })
+      })
+      .subscribe(
         () => {
           observer.next();
           observer.complete();

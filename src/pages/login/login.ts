@@ -29,7 +29,6 @@ export class LoginPage {
     private auth: AuthService,
     private toastService: ToastService,
     private loadingService: LoadingService,
-    private settingsServices: SettingsServices,
     private menuController: MenuController,
   ) {
     // Disable menu for login page

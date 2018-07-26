@@ -35,9 +35,10 @@ export class SignupPage {
     this.auth.signUp(this.userToRegister).subscribe((response) => {
       this.events.publish('user:logged', response);
       this.navCtrl.setRoot(MainPage);
-    }, (err) => {
+    }, (error) => {
       // Unable to sign up
       this.toastService.show(this.signupErrorString, 'error');
+      console.log(error)
     });
   }
 }

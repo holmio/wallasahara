@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
-import { ItemsService, LoadingService, UploadService, ToastService } from '../../providers/providers';
+import { ItemsService, LoadingService, UploadService, ToastService, UsersService } from '../../providers/providers';
 import { CreateItem } from '../../models/item.entities';
 import { TranslateService } from '@ngx-translate/core';
+import { UserDetail } from '../../models/user.entities';
 
 @IonicPage()
 @Component({
@@ -39,7 +40,6 @@ export class ItemCreatePage {
     public formBuilder: FormBuilder,
     private itemsService: ItemsService,
     private loadingService: LoadingService,
-    private uploadService: UploadService,
     private translate: TranslateService,
     private toastService: ToastService,
   ) {

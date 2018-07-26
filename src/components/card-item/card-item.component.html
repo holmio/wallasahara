@@ -1,5 +1,5 @@
 <div #container class="card-background-page" *ngIf="dataItems">
-  <ion-card *ngFor="let item of dataItems | async; let i = index" [attr.id]="'element' + i" (load)="resizeElementById('element')">
+  <ion-card *ngFor="let item of dataItems | async; let i = index" [attr.id]="'element' + i">
     <span (click)="openItem(item.uuid)">
       <img [defaultImage]="'./assets/imgs/thumb-spinner.gif'" [lazyLoad]="item.profileItem" [scrollObservable]="container.ionScroll"/>
       <div class="description">

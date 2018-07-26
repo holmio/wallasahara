@@ -1,31 +1,19 @@
-take-picture {
+gallery-item {
   .gallery-images {
     .product-image-wrapper {
       display: flex;
       .product-image {
-        transform: translate3d(0, 0, 0);
-        position: relative;
         width: 60px;
         height: 60px;
-        overflow: hidden;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
         border-radius: 10%;
-        @include margin(0px, 2%, 0px, 0px);
-        .product-hidder {
-          top: 50%;
-          left: 50%;
-          -webkit-transform: translate(-50%,-50%);
-          -moz-transform: translate(-50%,-50%);
-          -ms-transform: translate(-50%,-50%);
-          -o-transform: translate(-50%,-50%);
-          transform: translate(-50%,-50%);
-          width: 115px;
-          position: absolute;
-        }
+        @include margin(1px);
       }
       .product-image:last-child {
-        @include margin(0px);
+        @include margin(0 0 0 5px !important);
       }
-
       .product-image-placeholder {
         @include margin(0px, 2%, 0px, 0px);
         width: 60px;

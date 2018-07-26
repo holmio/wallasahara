@@ -1,4 +1,9 @@
 page-profile-user {
+  .segment-info {
+    .list {
+      padding: 10px 0;
+    }
+  }
   .item {
     ion-avatar {
       img {
@@ -10,7 +15,7 @@ page-profile-user {
       font-size: 14px;
       margin: 0px !important;
       h2 {
-        font-size: 30px;
+        font-size: 4vh;
       }
       ul {
         margin: 0;

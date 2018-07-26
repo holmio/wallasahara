@@ -20,7 +20,7 @@ export class SlideGalleryPage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
   ) {
-    this.gallery = navParams.get('gallery');
+    this.gallery = this.navParams.get('gallery');
   }
 
   dismiss() {

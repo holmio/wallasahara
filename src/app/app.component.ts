@@ -19,9 +19,9 @@ export const LANG_AR: string = 'ar';
     <ion-content>
       <ion-list-header *ngIf="userDetails" no-lines>
         <ion-item (click)="goToOtherPage('ProfileUserPage')">
-          <ion-avatar item-start>
-            <img [src]="userDetails.photoURL">
-          </ion-avatar>
+          <div item-start>
+          <div class="avatar-img-60" [style.background-image]="'url(' + userDetails.pictureURL?.pathOfImage + ')'"></div>
+          </div>
           <h2>{{userDetails.firsName}}</h2>
         </ion-item>
       </ion-list-header>
@@ -153,7 +153,7 @@ export class MyApp {
     this.events.subscribe('user:logged', (response) => {
       if (!_.isUndefined(response)) {
         this.userDetails = response;
-        this.userService.setUserInformation(this.userDetails);
+        this.userService.setUserInformationStorage(this.userDetails);
         this.settingsServices.setValue('initialRun', true);
       }
     });

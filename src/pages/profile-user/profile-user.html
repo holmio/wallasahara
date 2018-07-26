@@ -1,17 +1,11 @@
-<!--
-  Generated template for the ProfileUserPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
   <ion-navbar>
-    <ion-buttons class="options" right>
+    <ion-buttons class="options" right (click)="editUser()">
       <button icon-only ion-button>
         <ion-icon name="create"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>ProfileUser</ion-title>
+    <ion-title>Profile</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -20,9 +14,9 @@
   <ion-list *ngIf="userInformation">
     <ion-list-header no-lines>
       <ion-item>
-        <ion-avatar item-start>
-          <img [src]="userInformation.photoURL">
-        </ion-avatar>
+        <div item-start>
+          <div class="avatar-img-80" [style.background-image]="'url(' + userInformation.pictureURL?.pathOfImage + ')'"></div>
+        </div>
         <div class="counter-sales" item-end>
           <h2>{{userInformation.firsName}} {{userInformation.lastName}}</h2>
           <ul>
@@ -43,14 +37,9 @@
       </ion-segment>
     </div>
 
-    <div [ngSwitch]="productInformation">
+    <div class="segment-info" [ngSwitch]="productInformation">
       <ion-list *ngSwitchCase="'products'">
-        <ion-item>
-          <ion-thumbnail item-start>
-            <img src="img/thumbnail-puppy-1.jpg">
-          </ion-thumbnail>
-          <h2>Ruby</h2>
-        </ion-item>
+        <card-item [dataItems] = "listOfItems" (dataToEmmit)="handleItemBtn($event)"></card-item>
       </ion-list>
 
       <ion-list *ngSwitchCase="'favourite'">

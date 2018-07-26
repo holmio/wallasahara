@@ -41,9 +41,7 @@ export class GalleryItemComponent {
   @Output() dataToEmmit: EventEmitter<any> = new EventEmitter<any>();
 
   sourceType: any;
-  selectSourceType: any;
   picturesList: Array<ListPictures> = [];
-  private imageThumb: string;
   constructor(
     private camera: Camera,
     private loadingService: LoadingService,

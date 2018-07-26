@@ -1,21 +1,24 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import * as firebase from 'firebase/app';
 import AuthProvider = firebase.auth.AuthProvider;
+
 import { Observable } from "rxjs/Observable";
+
 import { UserDetail } from '../../models/user.entities';
-import { UsersService } from '../users/users.services';
 
 @Injectable()
 export class AuthService {
   private user: firebase.User;
+  private userCollectionRef: AngularFirestoreCollection<any>;
 
 	constructor(
-    public afAuth: AngularFireAuth,
-    private userService: UsersService,
+    private afAuth: AngularFireAuth,
+    private afStore: AngularFirestore,
   ) {
-		afAuth.authState.subscribe(user => {
+    this.userCollectionRef = this.afStore.collection<UserDetail>('users');
+		this.afAuth.authState.subscribe(user => {
 			this.user = user;
     });
   }
@@ -24,12 +27,20 @@ export class AuthService {
     return this.user !== null;
   }
 
+  get getEmail() {
+		return this.user && this.user.email;
+  }
+
+  get getUuid() {
+		return this.user && this.user.uid;
+	}
+
 	signInWithEmail(credentials) {
     return new Observable<any>((observer: any) => {
       const sourceLoginUser = this.afAuth.auth.signInWithEmailAndPassword(credentials.email,credentials.password);
       Observable.concat(sourceLoginUser)
-      .flatMap((response) => {
-        return this.userService.getUserInformationFireStore(response.uid);
+      .concatMap((response) => {
+        return this.userCollectionRef.doc(response.uid).valueChanges();
       })
       .subscribe(
         (response) => {
@@ -47,16 +58,20 @@ export class AuthService {
       let userInformation: UserDetail;
       const sourceCreateUser = this.afAuth.auth.createUserWithEmailAndPassword(credentials.email,credentials.password);
       Observable.concat(sourceCreateUser)
-      .flatMap((response) => {
+      .concatMap((response) => {
         userInformation = {
+          uuid: response.uid,
           firsName: credentials.firsName,
           lastName: null,
-          uuid: response.uid,
           lastSignInTime: response.metadata.lastSignInTime,
-          photoURL: response.photoURL || './assets/img/speakers/bear.jpg',
+          pictureURL: {
+            pathOfImage: response.photoURL || './assets/img/speakers/bear.jpg',
+            pathOfBucket: '',
+          },
           email: response.email,
+          listOfItems: [],
         }
-        return this.userService.updateUserData(userInformation);
+        return Observable.fromPromise(this.userCollectionRef.doc(response.uid).set(userInformation));
       })
       .subscribe(
         (response) => {
@@ -70,11 +85,6 @@ export class AuthService {
         }
       );
     });
-	}
-
-
-	getEmail() {
-		return this.user && this.user.email;
 	}
 
 	signOut(): Promise<void> {
@@ -92,20 +102,23 @@ export class AuthService {
       let userInformation: UserDetail;
       const sourceFacebook = this.oauthSignIn(new firebase.auth.FacebookAuthProvider());
       Observable.concat(sourceFacebook)
-      .flatMap((response) => {
+      .concatMap((response) => {
         userInformation = {
+          uuid: response.user.uid,
           firsName: response.additionalUserInfo.profile.first_name,
           lastName: response.additionalUserInfo.profile.last_name,
-          uuid: response.user.uid,
           lastSignInTime: response.user.metadata.lastSignInTime,
-          photoURL: response.user.photoURL,
+          pictureURL: {
+            pathOfImage: response.user.photoURL,
+            pathOfBucket: '',
+          },
           email: response.user.email,
+          listOfItems: [],
         }
         // If it is a new user we register in the date base
         if (response.additionalUserInfo.isNewUser) {
-          return this.userService.updateUserData(userInformation);
+          return Observable.fromPromise(this.userCollectionRef.doc(response.user.uid).set(userInformation));
         }
-        return Observable.empty();
       }).subscribe(
         (response) => {
           // Nothing todo

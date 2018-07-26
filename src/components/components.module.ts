@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
-import { GalleryItemComponent } from './gallery-item/gallery-item.component';
 import { IonicModule } from 'ionic-angular';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { CardItemComponent } from './card-item/card-item.component';
-import LazyLoadImageModule from 'ng-lazyload-image';
+import { GalleryItemComponent } from './gallery-item/gallery-item.component';
+import { TakePictureComponent } from './take-picture/take-picture';
 @NgModule({
 	declarations: [
     GalleryItemComponent,
-    CardItemComponent
+    CardItemComponent,
+    TakePictureComponent
   ],
 	imports: [
     IonicModule,
@@ -14,7 +16,8 @@ import LazyLoadImageModule from 'ng-lazyload-image';
   ],
 	exports: [
     GalleryItemComponent,
-    CardItemComponent
+    CardItemComponent,
+    TakePictureComponent
   ]
 })
 export class ComponentsModule {}
