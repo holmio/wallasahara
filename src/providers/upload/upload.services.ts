@@ -9,7 +9,7 @@ export class UploadService {
   /**
    * Upload files in the data base and the storage
    * @param filesToUpload Array of the files to upload
-   * @param pathRoute Route of the storage
+   * @param pathRoute Route of the storage e.g.: 'profile/avatar'
    */
   uploadFiles(filesToUpload: Array<string>, pathRoute: string): Observable<any> {
     return new Observable<any>((observer) => {
@@ -58,11 +58,4 @@ export class UploadService {
       )
     })
   }
-
-  private async deleteFile(path:string){
-    const storageRef = firebase.storage().ref();
-    return await storageRef.child(path).delete();
-  }
-
-
 }

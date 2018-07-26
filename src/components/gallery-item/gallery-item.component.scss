@@ -1,0 +1,30 @@
+gallery-item {
+  .gallery-images {
+    .product-image-wrapper {
+      display: flex;
+      .product-image {
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        border-radius: 10%;
+        @include margin(1px);
+      }
+      .product-image:last-child {
+        @include margin(0 0 0 5px !important);
+      }
+      .product-image-placeholder {
+        @include margin(0px, 2%, 0px, 0px);
+        width: 60px;
+        height: 60px;
+        border-radius: 10%;
+        font-size: 12px;
+        ion-icon {
+          font-size: 40px;
+          @include margin(20%, 0, 0, 20%);
+        }
+      }
+    }
+  }
+}

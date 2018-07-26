@@ -25,7 +25,7 @@
 
 <ion-content>
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="createItem()">
-    <take-picture (dataToEmmit)="handlePictureBtn($event)"></take-picture>
+    <gallery-item (dataToEmmit)="handlePictureBtn($event)"></gallery-item>
     <ion-list>
       <ion-row>
         <ion-item col-12>

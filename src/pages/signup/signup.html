@@ -7,20 +7,25 @@
 </ion-header>
 
 
-<ion-content scroll="false" no-bounce>
+<ion-content scroll="false">
     <ion-grid>
       <ion-row>
         <form (submit)="doSignup()">
           <ion-list>
 
             <ion-item>
+              <ion-label fixed>{{ 'FIRST_NAME' | translate }}</ion-label>
+              <ion-input type="text" [(ngModel)]="userToRegister.firsName" name="firsName"></ion-input>
+            </ion-item>
+
+            <ion-item>
               <ion-label fixed>{{ 'EMAIL' | translate }}</ion-label>
-              <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
+              <ion-input type="email" [(ngModel)]="userToRegister.email" name="email"></ion-input>
             </ion-item>
 
             <ion-item>
               <ion-label fixed>{{ 'PASSWORD' | translate }}</ion-label>
-              <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
+              <ion-input type="password" [(ngModel)]="userToRegister.password" name="password"></ion-input>
             </ion-item>
 
             <div padding>

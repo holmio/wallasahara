@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, MenuController, Events } from 'ionic-angular';
 import { MainPage } from '../pages';
 import { AuthService, ToastService, LoadingService, SettingsServices } from '../../providers/providers';
+import { UserDetail } from '../../models/user.entities';
 
 @IonicPage()
 @Component({
@@ -24,10 +25,10 @@ export class LoginPage {
 
   constructor(public navCtrl: NavController,
     public translateService: TranslateService,
+    private events: Events,
     private auth: AuthService,
     private toastService: ToastService,
     private loadingService: LoadingService,
-    private settingsServices: SettingsServices,
     private menuController: MenuController,
   ) {
     // Disable menu for login page
@@ -41,11 +42,10 @@ export class LoginPage {
   // Attempt to login in through our User service
   doLogin() {
     this.loadingService.showLoading();
-    this.auth.signInWithEmail(this.account).subscribe((resp) => {
-      this.settingsServices.setValue('uuid', resp.uid);
-      this.settingsServices.setValue('initialRun', true);
-      // this.toastService.show(this.loginSuccessString, 'success');
-      this.navCtrl.push(MainPage);
+    this.auth.signInWithEmail(this.account).subscribe((response) => {
+      this.events.publish('user:logged', response);
+      this.navCtrl.setRoot(MainPage);
+      this.loadingService.hideLoading();
     }, (err) => {
       this.loadingService.hideLoading();
       // Unable to log in
@@ -58,17 +58,15 @@ export class LoginPage {
   }
   facebookUp() {
     this.loadingService.showLoading();
-    this.auth.signInWithFacebook().subscribe((response) => {
+    this.auth.signInWithFacebook().subscribe((response: UserDetail) => {
       console.log(response)
-      this.settingsServices.setValue('uuid', response.user.uid);
-      this.settingsServices.setValue('initialRun', true);
-      this.navCtrl.push(MainPage);
+      this.events.publish('user:logged', response);
+      this.navCtrl.setRoot(MainPage);
+      this.loadingService.hideLoading();
     }, (err) => {
       this.loadingService.hideLoading();
       // Unable to log in
-      debugger
       console.log(err);
-      this.toastService.show(this.loginErrorString, 'error');
     });
   }
   // twitterUp() {

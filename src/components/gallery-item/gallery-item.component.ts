@@ -1,10 +1,9 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { trigger,state, style, transition, animate, keyframes } from '@angular/animations';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { LoadingService, ToastService } from '../../providers/providers';
 import { Platform, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
-import * as _ from 'lodash';
 
 // Interfaces
 export interface ListPictures { base64Image: string, state?: string, isThumbnail?: boolean };
@@ -14,8 +13,8 @@ export interface ListPictures { base64Image: string, state?: string, isThumbnail
  *
  */
 @Component({
-  selector: 'take-picture',
-  templateUrl: 'take-picture.component.html',
+  selector: 'gallery-item',
+  templateUrl: 'gallery-item.component.html',
   animations: [
     trigger('flyInOut', [
       state('in', style({transform: 'translateX(0)'})),
@@ -37,14 +36,12 @@ export interface ListPictures { base64Image: string, state?: string, isThumbnail
   ]
 })
 
-export class TakePictureComponent {
+export class GalleryItemComponent {
   @Input() numberOfPictures?: number = 4;
   @Output() dataToEmmit: EventEmitter<any> = new EventEmitter<any>();
 
   sourceType: any;
-  selectSourceType: any;
   picturesList: Array<ListPictures> = [];
-  private imageThumb: string;
   constructor(
     private camera: Camera,
     private loadingService: LoadingService,

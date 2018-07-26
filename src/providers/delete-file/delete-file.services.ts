@@ -28,7 +28,7 @@ export class DeleteFileService {
    * Delete image from firebase storage is take a string path of the image
    * @param path
    */
-  private fileToDelete(path: string) {
+  fileToDelete(path: string) {
 
     // first delete the image
     const storageRef = firebase.storage().ref();

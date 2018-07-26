@@ -1,0 +1,31 @@
+.container-avatar-80 {
+  position: relative;
+  .avatar-text_edit {
+    position: absolute;
+    font-size: 2vh;
+    width: 80px;
+    padding: 8px 0px;
+    background-color: color($colors, light);
+    opacity: 0.8;
+    bottom: 0px;
+    right: 0px;
+    text-align: center;
+    color: color($colors, box-shadow);
+  }
+}
+.avatar-img-80 {
+  width: 80px;
+  height: 80px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+}
+.avatar-img-60 {
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+}

@@ -1,0 +1,54 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button (click)="cancel()">
+        <span color="primary" showWhen="ios">
+          {{ 'CANCEL_BUTTON' | translate }}
+        </span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>{{ 'USER_EDIT_TITLE' | translate }}</ion-title>
+    <ion-buttons right>
+      <button ion-button (click)="saveData()" [disabled]="!isReadyToSave" strong>
+        <span color="primary" showWhen="ios">
+          {{ 'DONE_BUTTON' | translate }}
+        </span>
+        <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding scroll="false">
+  <form *ngIf="form" [formGroup]="form">
+      <div class="avatar">
+        <take-picture [urlImage] = "userInformation.pictureURL?.pathOfImage" (dataToEmmit) = "handlePictureBtn($event)"></take-picture>
+      </div>
+      <ion-list>
+        <ion-item>
+          <ion-label floating>{{ 'FIRST_NAME' | translate }}</ion-label>
+          <ion-input type="text" formControlName="firsName"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label floating>{{ 'LAST_NAME' | translate }}</ion-label>
+          <ion-input type="text" formControlName="lastName"></ion-input>
+        </ion-item>
+
+        <ion-item disabled>
+          <ion-label floating>{{ 'EMAIL' | translate }}</ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>
+
+        <!-- <ion-item>
+          <ion-label floating>{{ 'NEW_PASSWORD' | translate }}</ion-label>
+          <ion-input type="password" formControlName="password"></ion-input>
+        </ion-item> -->
+      </ion-list>
+    </form>
+</ion-content>

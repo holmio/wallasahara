@@ -18,6 +18,7 @@ export interface ItemList {
 // export type TypeExtra = 'price_negotiable' | 'changeable';
 export interface CreateItem {
   uuid?: string;
+  uuidUser?: string;
   name: string;
   about: string;
   category: Array<string>;
@@ -25,6 +26,8 @@ export interface CreateItem {
   currency: string;
   profileItem?: string;
   timestamp?: any;
+  isSold: boolean;
+  isEnabled: boolean;
   imagesItem: Array<string>;
   // extraStatus: TypeExtra;
 }
@@ -36,6 +39,8 @@ export interface DetailsItem {
   price: number;
   currency: string;
   timestamp?: any;
+  isSold?: boolean;
+  isEnabled?: boolean;
   imagesItem: Array<string>;
   imagesPathDirectory: Array<string>;
 }
@@ -46,6 +51,8 @@ export interface UpdateItem {
   category: Array<string>;
   currency: string;
   price: number;
+  isSold?: boolean;
+  isEnabled?: boolean;
   profileItem?: string;
 }
 

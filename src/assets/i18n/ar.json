@@ -10,6 +10,7 @@
   "EMAIL": "البريد الإلكتروني",
   "USERNAME": "اسم المستخدم",
   "PASSWORD": "كلمة السر",
+  "NEW_PASSWORD": "New Password [AR]",
   "LOGIN": "تسجيل الدخول",
   "SIGNUP": "انشاء الحساب",
 
@@ -76,11 +77,22 @@
   "TAKE_PICTURE_SELECT_METHOD_OF_IMAGE_TITEL": "Seleccionar modo de subida [AR]",
   "TAKE_PICTURE_BUTTON_IMAGE": "GALLERIA [AR]",
   "TAKE_PICTURE_BUTTON_CAMERA": "CAMARA [AR]",
+  "TAKE_PICTURE_EDIT_TEXT": "EDIT [AR]",
+
+  "USER_EDIT_TITLE": "Edit User [AR]",
 
   "CONFIRM_DELETE_ITEM_TITLE": "Eliminar artículo [AR]",
   "CONFIRM_DELETE_ITEM_MESSAGE": "Se eliminará tu artículo si aceptas [AR]",
   "YES": "نعم",
   "NO": "لا",
 
-  "DELETE_ITEM": "حذف"
+  "DELETE_ITEM": "حذف",
+
+  "PROFILE_USER_DETAIL_COUNTER_SHOPPING": "التسوق",
+  "PROFILE_USER_DETAIL_COUNTER_SALES": "مبيعات",
+  "PROFILE_USER_DETAIL_INFORMATION_PRODUCTS": "Products [AR]",
+  "PROFILE_USER_DETAIL_INFORMATION_FAVOURITES": "Favourites [AR]",
+
+  "FIRST_NAME": "First Name [AR]",
+  "LAST_NAME": "Last Name [AR]"
 }
