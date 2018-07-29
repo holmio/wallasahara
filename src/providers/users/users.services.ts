@@ -45,7 +45,7 @@ export class UsersService {
         Observable.concat(sourceUpdateUser)
         .concatMap((response) => {
           const updateUser: any = {
-            firsName: user.firsName,
+            firstName: user.firstName,
             lastName: user.lastName,
             pictureURL: {
               pathOfBucket: response.pathOfBucket[0],
@@ -72,7 +72,7 @@ export class UsersService {
         );
       } else {
         const updateUser: any = {
-          firsName: user.firsName,
+          firstName: user.firstName,
           lastName: user.lastName,
         }
         const sourceUpdateUser = this.userCollectionRef.doc(user.uuid).update(updateUser)

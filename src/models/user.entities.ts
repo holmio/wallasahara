@@ -1,5 +1,5 @@
 export interface UserDetail {
-  firsName: string;
+  firstName: string;
   lastName: string;
   uuid: string;
   pictureURL: RoutePicture;
@@ -9,7 +9,7 @@ export interface UserDetail {
 }
 
 export interface UserUpdate {
-  firsName: string;
+  firstName: string;
   lastName: string;
   uuid: string;
   pictureURL: RoutePictureToUpdate;

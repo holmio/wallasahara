@@ -22,7 +22,7 @@ export const LANG_AR: string = 'ar';
           <div item-start>
           <div class="avatar-img-60" [style.background-image]="'url(' + userDetails.pictureURL?.pathOfImage + ')'"></div>
           </div>
-          <h2>{{userDetails.firsName}}</h2>
+          <h2>{{userDetails.firstName}}</h2>
         </ion-item>
       </ion-list-header>
       <ion-list>

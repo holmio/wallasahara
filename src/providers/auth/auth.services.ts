@@ -61,7 +61,7 @@ export class AuthService {
       .concatMap((response) => {
         userInformation = {
           uuid: response.uid,
-          firsName: credentials.firsName,
+          firstName: credentials.firstName,
           lastName: null,
           lastSignInTime: response.metadata.lastSignInTime,
           pictureURL: {
@@ -105,7 +105,7 @@ export class AuthService {
       .concatMap((response) => {
         userInformation = {
           uuid: response.user.uid,
-          firsName: response.additionalUserInfo.profile.first_name,
+          firstName: response.additionalUserInfo.profile.first_name,
           lastName: response.additionalUserInfo.profile.last_name,
           lastSignInTime: response.user.metadata.lastSignInTime,
           pictureURL: {

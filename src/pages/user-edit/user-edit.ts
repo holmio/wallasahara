@@ -28,7 +28,7 @@ export class UserEditPage {
     this.userInformation = this.navParams.get('userInformation');
 
     this.form = this.formBuilder.group({
-      firsName: [this.userInformation.firsName, Validators.required],
+      firstName: [this.userInformation.firstName, Validators.required],
       lastName: [this.userInformation.lastName, Validators.required],
       email: [this.userInformation.email],
     });
@@ -46,7 +46,7 @@ export class UserEditPage {
   saveData() {
     const dataUser: UserUpdate = {
       email: this.form.value.email,
-      firsName: this.form.value.firsName,
+      firstName: this.form.value.firstName,
       lastName: this.form.value.lastName,
       uuid: this.userInformation.uuid,
       pictureURL: {

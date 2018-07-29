@@ -2,10 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController } from 'ionic-angular';
 import { ItemCreatePage, FilterPage } from '../pages';
 import { ItemsService, LoadingService, PaginationService, AuthService } from '../../providers/providers';
-import * as _ from 'lodash';
-import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
 
 @IonicPage()
 @Component({
