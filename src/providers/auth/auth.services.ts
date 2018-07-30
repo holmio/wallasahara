@@ -103,25 +103,29 @@ export class AuthService {
       const sourceFacebook = this.oauthSignIn(new firebase.auth.FacebookAuthProvider());
       Observable.concat(sourceFacebook)
       .concatMap((response) => {
-        userInformation = {
-          uuid: response.user.uid,
-          firstName: response.additionalUserInfo.profile.first_name,
-          lastName: response.additionalUserInfo.profile.last_name,
-          lastSignInTime: response.user.metadata.lastSignInTime,
-          pictureURL: {
-            pathOfImage: response.user.photoURL,
-            pathOfBucket: '',
-          },
-          email: response.user.email,
-          listOfItems: [],
-        }
         // If it is a new user we register in the date base
         if (response.additionalUserInfo.isNewUser) {
+          userInformation = {
+            uuid: response.user.uid,
+            firstName: response.additionalUserInfo.profile.first_name,
+            lastName: response.additionalUserInfo.profile.last_name,
+            lastSignInTime: response.user.metadata.lastSignInTime,
+            pictureURL: {
+              pathOfImage: response.user.photoURL,
+              pathOfBucket: '',
+            },
+            email: response.user.email,
+            listOfItems: [],
+          }
           return Observable.fromPromise(this.userCollectionRef.doc(response.user.uid).set(userInformation));
         }
-      }).subscribe(
-        (response) => {
-          // Nothing todo
+        // Return data of user
+        return this.userCollectionRef.doc(response.user.uid).valueChanges() as any;
+      })
+      .take(1)
+      .subscribe(
+        (response: any) => {
+          if (response) userInformation = response;
         }, (error) => {
           observer.error(error);
         },

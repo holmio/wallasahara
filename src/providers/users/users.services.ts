@@ -30,14 +30,6 @@ export class UsersService {
     return Observable.fromPromise(this.storage.set(this.USER_INFORMATION_KEY, userInformation));
   }
 
-  setUserDataInFireStore(user: UserDetail): Observable<any> {
-    return Observable.fromPromise(this.userCollectionRef.doc(user.uuid).set(user))
-  }
-
-  getUserInformationFireStore(uuid): Observable<any> {
-    return this.userCollectionRef.doc(uuid).valueChanges()
-  }
-
   updateUserData(user: UserUpdate): Observable<any> {
     return new Observable<any>((observer: any) => {
       if (user.pictureURL.base64Image) {
@@ -62,6 +54,7 @@ export class UsersService {
         .concatMap(() => {
           return this.getUserInformationFireStore(user.uuid)
         })
+        .take(1)
         .subscribe(
           (response: any) => {
             observer.next(response);
@@ -80,6 +73,7 @@ export class UsersService {
         .concatMap(() => {
           return this.getUserInformationFireStore(user.uuid)
         })
+        .take(1)
         .subscribe(
           (response: any) => {
             observer.next(response);
@@ -90,6 +84,10 @@ export class UsersService {
         );
       }
     });
+  }
+
+  private getUserInformationFireStore(uuid): Observable<any> {
+    return this.userCollectionRef.doc(uuid).valueChanges()
   }
 
 }
