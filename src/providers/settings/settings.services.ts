@@ -56,10 +56,6 @@ export class SettingsServices {
     return this.storage.set(this.SETTINGS_KEY, value);
   }
 
-  clearSettings() {
-    this.storage.clear();
-  }
-
   getValue(key: string) {
     return Observable.fromPromise(this.storage.get(this.SETTINGS_KEY)
       .then(settings => {

@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Events } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+// Ionic
+import { IonicPage, NavController, NavParams, ViewController, Events } from 'ionic-angular';
+
+// Entities
 import { UserDetail, UserUpdate } from '../../models/user.entities';
+
+// Services
 import { UsersService, LoadingService } from '../../providers/providers';
 
 
@@ -15,7 +21,7 @@ export class UserEditPage {
   isReadyToSave: boolean;
   form: FormGroup;
   userInformation: UserDetail;
-  private base64Image: string = '';
+  isEnabledToEdit: boolean = false;
   constructor(
     public navCtrl: NavController,
     private formBuilder: FormBuilder,
@@ -26,21 +32,18 @@ export class UserEditPage {
     private loadingService: LoadingService,
   ) {
     this.userInformation = this.navParams.get('userInformation');
-
+    // If the user was created by registration
+    this.isEnabledToEdit = this.userInformation.providerUserInfo === 'firebaseAuth';
     this.form = this.formBuilder.group({
       firstName: [this.userInformation.firstName, Validators.required],
       lastName: [this.userInformation.lastName, Validators.required],
-      email: [this.userInformation.email],
+      base64Image: [''],
     });
 
     // Watch the form for changes, and
     this.form.valueChanges.subscribe((v) => {
       this.isReadyToSave = this.form.valid;
     });
-  }
-
-  ionViewDidLoad() {
-    console.log(this.navParams.get('userInformation'));
   }
 
   saveData() {
@@ -50,7 +53,7 @@ export class UserEditPage {
       lastName: this.form.value.lastName,
       uuid: this.userInformation.uuid,
       pictureURL: {
-        base64Image: this.base64Image,
+        base64Image: this.form.value.base64Image,
         pathOfBucketOld: this.userInformation.pictureURL.pathOfBucket,
       }
     }
@@ -58,7 +61,7 @@ export class UserEditPage {
     this.userService.updateUserData(dataUser).subscribe(
       (response) => {
         this.events.publish('user:logged', response);
-        this.viewCtrl.dismiss(response);
+        this.viewCtrl.dismiss(response).catch(() => {console.error('Error ´saveData´')});
         this.loadingService.hideLoading();
       },
       (error) => {
@@ -69,14 +72,14 @@ export class UserEditPage {
   }
 
   handlePictureBtn(event) {
-    this.base64Image = event.base64Image;
+    this.form.controls['base64Image'].setValue(event.base64Image);
   }
 
   /**
    * The user cancelled, so we dismiss without sending data back.
    */
   cancel() {
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss().catch(() => {console.error('Error ´cancel´')});
   }
 
 }

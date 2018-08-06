@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Platform } from 'ionic-angular';
+import { Facebook } from '@ionic-native/facebook';
+
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import AuthProvider = firebase.auth.AuthProvider;
+
 
 import { Observable } from "rxjs/Observable";
 
@@ -16,6 +20,8 @@ export class AuthService {
 	constructor(
     private afAuth: AngularFireAuth,
     private afStore: AngularFirestore,
+    private facebook: Facebook,
+    private platform: Platform
   ) {
     this.userCollectionRef = this.afStore.collection<UserDetail>('users');
 		this.afAuth.authState.subscribe(user => {
@@ -64,6 +70,7 @@ export class AuthService {
           firstName: credentials.firstName,
           lastName: null,
           lastSignInTime: response.metadata.lastSignInTime,
+          providerUserInfo: 'email',
           pictureURL: {
             pathOfImage: response.photoURL || './assets/img/speakers/bear.jpg',
             pathOfBucket: '',
@@ -100,40 +107,83 @@ export class AuthService {
     console.log('Sign in with facebook');
     return new Observable<any>((observer: any) => {
       let userInformation: UserDetail;
-      const sourceFacebook = this.oauthSignIn(new firebase.auth.FacebookAuthProvider());
-      Observable.concat(sourceFacebook)
-      .concatMap((response) => {
-        // If it is a new user we register in the date base
-        if (response.additionalUserInfo.isNewUser) {
-          userInformation = {
-            uuid: response.user.uid,
-            firstName: response.additionalUserInfo.profile.first_name,
-            lastName: response.additionalUserInfo.profile.last_name,
-            lastSignInTime: response.user.metadata.lastSignInTime,
-            pictureURL: {
-              pathOfImage: response.user.photoURL,
-              pathOfBucket: '',
-            },
-            email: response.user.email,
-            listOfItems: [],
+      if (this.platform.is('cordova')) {
+        const sourceFacebook = this.facebook.login(['email', 'public_profile'])
+        Observable.concat(sourceFacebook)
+        .concatMap((response) => {
+          const facebookCredential = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
+          return this.afAuth.auth.signInAndRetrieveDataWithCredential(facebookCredential)
+        })
+        .concatMap((response) => {
+          // If it is a new user we register in the date base
+          if (response.additionalUserInfo.isNewUser) {
+            userInformation = {
+              uuid: response.user.uid,
+              firstName: response.additionalUserInfo.profile.first_name,
+              lastName: response.additionalUserInfo.profile.last_name,
+              lastSignInTime: response.user.metadata.lastSignInTime,
+              pictureURL: {
+                pathOfImage: response.user.photoURL,
+                pathOfBucket: '',
+              },
+              providerUserInfo: 'facebook',
+              email: response.user.email,
+              listOfItems: [],
+            }
+            return Observable.fromPromise(this.userCollectionRef.doc(response.user.uid).set(userInformation));
           }
-          return Observable.fromPromise(this.userCollectionRef.doc(response.user.uid).set(userInformation));
-        }
-        // Return data of user
-        return this.userCollectionRef.doc(response.user.uid).valueChanges() as any;
-      })
-      .take(1)
-      .subscribe(
-        (response: any) => {
-          if (response) userInformation = response;
-        }, (error) => {
-          observer.error(error);
-        },
-        () => {
-          observer.next(userInformation);
-          observer.complete();
-        }
-      );
+          // Return data of user
+          return this.userCollectionRef.doc(response.user.uid).valueChanges() as any;
+        })
+        .take(1)
+        .subscribe(
+          (response: any) => {
+            if (response) userInformation = response;
+          }, (error) => {
+            observer.error(error);
+          },
+          () => {
+            observer.next(userInformation);
+            observer.complete();
+          }
+        );
+      } else {
+        const sourceFacebook = this.oauthSignIn(new firebase.auth.FacebookAuthProvider());
+        Observable.concat(sourceFacebook)
+        .concatMap((response) => {
+          // If it is a new user we register in the date base
+          if (response.additionalUserInfo.isNewUser) {
+            userInformation = {
+              uuid: response.user.uid,
+              firstName: response.additionalUserInfo.profile.first_name,
+              lastName: response.additionalUserInfo.profile.last_name,
+              lastSignInTime: response.user.metadata.lastSignInTime,
+              providerUserInfo: 'facebook',
+              pictureURL: {
+                pathOfImage: response.user.photoURL,
+                pathOfBucket: '',
+              },
+              email: response.user.email,
+              listOfItems: [],
+            }
+            return Observable.fromPromise(this.userCollectionRef.doc(response.user.uid).set(userInformation));
+          }
+          // Return data of user
+          return this.userCollectionRef.doc(response.user.uid).valueChanges() as any;
+        })
+        .take(1)
+        .subscribe(
+          (response: any) => {
+            if (response) userInformation = response;
+          }, (error) => {
+            observer.error(error);
+          },
+          () => {
+            observer.next(userInformation);
+            observer.complete();
+          }
+        );
+      }
     })
   }
 

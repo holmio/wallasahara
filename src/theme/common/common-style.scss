@@ -29,3 +29,20 @@
   background-repeat: no-repeat;
   border-radius: 50%;
 }
+
+/*
+Validator
+*/
+.validator-error {
+  @include text-align('start');
+  color: color($colors, danger);
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.padding-top {
+  padding-top: 10px;
+}
+.padding-bottom {
+  padding-bottom: 10px;
+}

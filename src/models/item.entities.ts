@@ -20,8 +20,9 @@ export interface CreateItem {
   uuid?: string;
   uuidUser?: string;
   name: string;
-  about: string;
+  about?: string;
   category: Array<string>;
+  wilaya: string;
   price: number;
   currency: string;
   profileItem?: string;
@@ -36,6 +37,7 @@ export interface DetailsItem {
   uuid?: string;
   name: string;
   about: string;
+  wilaya: string;
   price: number;
   currency: string;
   timestamp?: any;

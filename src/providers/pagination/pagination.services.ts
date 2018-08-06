@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+// Firebase
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
+
+// Rxjs
+import { BehaviorSubject, Observable } from 'rxjs';
+
+// Entities
 import { QueryConfig } from '../../models/pagination.entities';
+
+// Lodash
 import * as _ from 'lodash';
 
 /*
@@ -39,17 +46,17 @@ export class PaginationService {
 
     const first = this.afs.collection(this.query.path, ref => {
       return ref
-              .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-              .limit(this.query.limit);
+        .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
+        .limit(this.query.limit);
     })
 
     this.mapAndUpdate(first);
 
     // Create the observable array for consumption in components
     this.itemsData$ = this.data.asObservable()
-        .scan( (acc, val) => {
-          return this.query.prepend ? _.uniqBy(_.concat(val, acc), 'uuid') :  _.uniqBy(_.concat(acc, val), 'uuid');
-        });
+      .scan( (acc, val) => {
+        return this.query.prepend ? _.uniqBy(_.concat(val, acc), 'uuid') :  _.uniqBy(_.concat(acc, val), 'uuid');
+      });
   }
 
 
@@ -59,9 +66,9 @@ export class PaginationService {
 
     const more = this.afs.collection(this.query.path, ref => {
       return ref
-              .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-              .limit(this.query.limit)
-              .startAfter(cursor);
+        .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
+        .limit(this.query.limit)
+        .startAfter(cursor);
     })
     this.mapAndUpdate(more);
   }

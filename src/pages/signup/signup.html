@@ -10,26 +10,39 @@
 <ion-content scroll="false">
     <ion-grid>
       <ion-row>
-        <form (submit)="doSignup()">
+        <form  *ngIf="form" [formGroup]="form" (submit)="doSignup()">
           <ion-list>
 
             <ion-item>
               <ion-label fixed>{{ 'FIRST_NAME' | translate }}</ion-label>
-              <ion-input type="text" [(ngModel)]="userToRegister.firstName" name="firstName"></ion-input>
+              <ion-input type="text" formControlName="firstName" name="firstName" required></ion-input>
             </ion-item>
-
+            <div *ngIf="!form.controls.firstName.valid && form.controls.firstName.dirty" class="validator-error">
+                {{ 'ERROR_FORM_NAME_LENGTH' | translate }}
+            </div>
             <ion-item>
               <ion-label fixed>{{ 'EMAIL' | translate }}</ion-label>
-              <ion-input type="email" [(ngModel)]="userToRegister.email" name="email"></ion-input>
+              <ion-input type="email" formControlName="email" name="email" required></ion-input>
             </ion-item>
-
+            <div *ngIf="!form.controls.email.valid && form.controls.email.dirty" class="validator-error">
+                {{ 'ERROR_FORM_EMAIL' | translate }}
+            </div>
             <ion-item>
               <ion-label fixed>{{ 'PASSWORD' | translate }}</ion-label>
-              <ion-input type="password" [(ngModel)]="userToRegister.password" name="password"></ion-input>
+              <ion-input type="password" formControlName="password" name="password" required></ion-input>
             </ion-item>
-
-            <div padding>
-              <button ion-button round color="primary" block>{{ 'SIGNUP_BUTTON' | translate }}</button>
+            <div *ngIf="!form.controls.password.valid && form.controls.password.dirty" class="validator-error">
+                {{ 'ERROR_FORM_PASSWORD_LENGTH' | translate }}
+            </div>
+            <ion-item>
+              <ion-label fixed>{{ 'PASSWORD' | translate }}</ion-label>
+              <ion-input type="password" formControlName="confirmPassword" name="confirmPassword"></ion-input>
+            </ion-item>
+            <div *ngIf="!form.controls.confirmPassword.valid && form.controls.confirmPassword.dirty" class="validator-error">
+                {{ 'ERROR_FORM_CONFIRM_PASSWORD' | translate }}
+            </div>
+            <div class="padding-top">
+              <button ion-button round color="primary" block [disabled]="!form.valid">{{ 'SIGNUP_BUTTON' | translate }}</button>
             </div>
 
           </ion-list>

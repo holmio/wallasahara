@@ -3,10 +3,9 @@ import { Storage } from '@ionic/storage';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { UserDetail, UserUpdate } from '../../models/user.entities';
 import { Observable } from 'rxjs/Observable';
-import { SettingsServices } from '../settings/settings.services';
 import { UploadService } from '../upload/upload.services';
 import { DeleteFileService } from '../delete-file/delete-file.services';
-
+import * as _ from 'lodash';
 @Injectable()
 export class UsersService {
 
@@ -47,8 +46,10 @@ export class UsersService {
           return this.userCollectionRef.doc(user.uuid).update(updateUser)
         })
         .concatMap(() => {
-          if(user.pictureURL.pathOfBucketOld) {
+          if(!_.isEmpty(user.pictureURL.pathOfBucketOld)) {
             return this.deleteFileService.fileToDelete(user.pictureURL.pathOfBucketOld)
+          } else {
+            return Observable.of(1)
           }
         })
         .concatMap(() => {
@@ -86,7 +87,7 @@ export class UsersService {
     });
   }
 
-  private getUserInformationFireStore(uuid): Observable<any> {
+  getUserInformationFireStore(uuid): Observable<any> {
     return this.userCollectionRef.doc(uuid).valueChanges()
   }
 

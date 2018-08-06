@@ -9,37 +9,35 @@
   <ion-grid>
       <ion-row>
         <ion-col>
-          <form>
+          <form *ngIf="form" [formGroup]="form" (submit)="doLogin()">
             <ion-list>
 
               <ion-item>
                 <ion-label floating>{{ 'EMAIL' | translate }}</ion-label>
-                <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
+                <ion-input type="email" formControlName="email" name="email"></ion-input>
               </ion-item>
+              <div *ngIf="!form.controls.email.valid && form.controls.email.dirty" class="validator-error">
+                  {{ 'ERROR_FORM_EMAIL' | translate }}
+              </div>
 
               <ion-item>
                 <ion-label floating>{{ 'PASSWORD' | translate }}</ion-label>
-                <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
+                <ion-input type="password" formControlName="password" name="password"></ion-input>
               </ion-item>
-
-              <div padding>
-                <button ion-button block round type="submit" (click)="doLogin()">{{ 'LOGIN_BUTTON' | translate }}</button>
-                <button ion-button block round outline (click)="signup()" class="signup">{{ 'SIGNUP' | translate }}</button>
+              <div *ngIf="!form.controls.password.valid && form.controls.password.dirty" class="validator-error">
+                  {{ 'ERROR_FORM_PASSWORD_LENGTH' | translate }}
               </div>
-
+              <div class="padding-top">
+                <button ion-button block round type="submit">{{ 'LOGIN_BUTTON' | translate }}</button>
+              </div>
             </ion-list>
           </form>
-        </ion-col>
-      </ion-row>
-      <ion-row class='social-icons'>
-        <ion-col>
-            <img src="../assets/img/facebook-icon.png" (click)="facebookUp()" >
-        </ion-col>
-        <ion-col>
-            <img src="../assets/img/twitter-icon.png" (click)="twitterUp()" >
-        </ion-col>
-        <ion-col>
-            <img src="../assets/img/google-plus-icon.png" (click)="googleUp()" >
+          <ion-list>
+            <div>
+              <button color="facebook" ion-button block round (click)="facebookUp()" class="facebookUp">{{ 'FACEBOOK' | translate }}</button>
+              <button ion-button block round outline (click)="signup()" class="signup">{{ 'SIGNUP' | translate }}</button>
+            </div>
+          </ion-list>
         </ion-col>
       </ion-row>
   </ion-grid>

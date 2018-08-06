@@ -1,9 +1,15 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { trigger,state, style, transition, animate, keyframes } from '@angular/animations';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { LoadingService, ToastService } from '../../providers/providers';
-import { Platform, ActionSheetController } from 'ionic-angular';
+
+// Ngx-translate
 import { TranslateService } from '@ngx-translate/core';
+
+//Ionic
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Platform, ActionSheetController } from 'ionic-angular';
+
+// Services
+import { LoadingService, ToastService } from '../../providers/providers';
 
 // Interfaces
 export interface ListPictures { base64Image: string, state?: string, isThumbnail?: boolean };
@@ -117,7 +123,7 @@ export class GalleryItemComponent {
           }
         ]
       });
-      actionSheet.present();
+      actionSheet.present().catch(() => {console.error('Error ´presentMethodToUploadPictures´')});
     }
   }
 
@@ -202,8 +208,8 @@ export class GalleryItemComponent {
    * Get the size of the image
    * @param data_url data of image
    */
-  private getImageSize(data_url) {
-    const base64data = 'data:image/jpeg;base64,';
-    return ((data_url.length - base64data.length) * 3 / 4 / (1024*1024)).toFixed(4);
-  }
+  // private getImageSize(data_url) {
+  //   const base64data = 'data:image/jpeg;base64,';
+  //   return ((data_url.length - base64data.length) * 3 / 4 / (1024*1024)).toFixed(4);
+  // }
 }

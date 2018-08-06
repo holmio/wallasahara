@@ -1,4 +1,6 @@
-import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+// Rxjs
 import { Observable } from 'rxjs';
 
 /**
@@ -14,7 +16,7 @@ export class CardItemComponent {
   @Input() dataItems: Observable<any>;
   @Output() dataToEmmit: EventEmitter<any> = new EventEmitter<any>();
 
-  private openItem (uuidItem: string) {
+  protected openItem (uuidItem: string) {
     this.dataToEmmit.emit({ uuidItem: uuidItem });
   }
 }

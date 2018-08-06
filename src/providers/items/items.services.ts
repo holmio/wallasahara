@@ -1,17 +1,24 @@
 import { Injectable } from '@angular/core';
+
+// Firebase
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import * as firebase from 'firebase/app';
+
+// Rxjs
 import { Observable } from "rxjs/Observable";
-import { CreateItem, ItemImage, UpdateItem, DetailsItem, ItemList } from '../../models/item.entities';
+
+// Services
 import { UploadService } from '../upload/upload.services';
-import * as _ from 'lodash';
-import { Subject, BehaviorSubject } from 'rxjs';
-import { combineLatest, switchMap } from 'rxjs/operators';
-import { PaginationService } from '../pagination/pagination.services';
 import { DeleteFileService } from '../delete-file/delete-file.services';
 import { AuthService } from '../auth/auth.services';
-import { UserDetail, ItemOfUser } from '../../models/user.entities';
 import { UsersService } from '../users/users.services';
+
+// Entities
+import { CreateItem, ItemImage, UpdateItem, DetailsItem } from '../../models/item.entities';
+import { UserDetail, ItemOfUser } from '../../models/user.entities';
+
+// Lodash
+import * as _ from 'lodash';
 
 /**
  * Service with the necessary elements to add, update and delete a Item
@@ -28,7 +35,6 @@ export class ItemsService {
 	constructor(
     private afStore: AngularFirestore,
     private uploadService: UploadService,
-    private paginationService: PaginationService,
     private deleteService: DeleteFileService,
     private authService: AuthService,
     private userService: UsersService,
@@ -49,10 +55,12 @@ export class ItemsService {
     const basePath: string = `images/items/${uuidItem}`;
     // Set the time of creation
     dataItem.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    // Init default params
     dataItem.uuid = uuidItem;
     dataItem.uuidUser = this.authService.getUuid;
     dataItem.isEnabled = true;
     dataItem.isSold = false;
+
     return new Observable<any>((observer: any) => {
       const sourceUpload = this.uploadService.uploadFiles(dataItem.imagesItem, basePath);
       Observable.concat(sourceUpload)
@@ -69,7 +77,7 @@ export class ItemsService {
         return this.itemCollectionRef.doc(uuidItem).set(dataItem)
       })
       .concatMap(() => {
-        return this.userService.getUserInformationStorage();
+        return this.userService.getUserInformationFireStore(dataItem.uuidUser).take(1);
       })
       .concatMap((response) => {
         const dataUserStorage = response;
@@ -129,7 +137,7 @@ export class ItemsService {
       })
       .concatMap((response) => {
         const dataUserStorage = response;
-        dataUserStorage.listOfItems.splice(_.indexOf(dataUserStorage.listOfItems, itemDetails.uuid), 1);
+        dataUserStorage.listOfItems.splice(_.findIndex(dataUserStorage.listOfItems, (o) => { return o.uuid === itemDetails.uuid; }), 1);
         this.userService.setUserInformationStorage(dataUserStorage);
         return this.userCollectionRef.doc(dataUserStorage.uuid).update({
           listOfItems: dataUserStorage.listOfItems
@@ -183,15 +191,15 @@ export class ItemsService {
   /**
    * Get the list of items.
    */
-  getListOfItems(limit: number, last: string) {
-    return this.paginationService.init('items', 'timestamp');
-    // return this.afStore.collection('items', ref => (
-    //   ref
-    //     .where('id', '<', last)
-    //     .orderBy('id', 'desc')
-    //     .limit(limit)
-    //  )).snapshotChanges();
-  }
+  // getListOfItems(limit: number, last: string) {
+  //   return this.paginationService.init('items', 'timestamp');
+  //   return this.afStore.collection('items', ref => (
+  //     ref
+  //       .where('id', '<', last)
+  //       .orderBy('id', 'desc')
+  //       .limit(limit)
+  //    )).snapshotChanges();
+  // }
 
   /**
    * Get the data of item.
@@ -199,28 +207,27 @@ export class ItemsService {
    * @returns itemDetails
    */
   getItemByUuid(uuidItem: string): Observable<DetailsItem> {
-    let itemDetails: DetailsItem;
+    let itemDetails: any;
     return new Observable((observer) => {
-      const sourceItem = Observable.zip(
-        this.itemCollectionRef.doc(uuidItem).valueChanges(),
-        this.imagesCollectionRef.doc(uuidItem).valueChanges(),
-      );
-      sourceItem.subscribe(
-        (response: any) => {
-          if(response[0] !== null || response[1] !== null) {
-            itemDetails = {
-              name: response[0].name,
-              about: response[0].about,
-              price: response[0].price,
-              imagesItem: response[1].pathOfImages,
-              imagesPathDirectory: response[1].pathOfBucket,
-              timestamp: response[0].timestamp,
-              currency: response[0].currency,
-              uuid: response[0].uuid,
-            };
+      this.itemCollectionRef.doc(uuidItem).valueChanges()
+      .take(1)
+      .concatMap((response:any) => {
+        itemDetails = {
+          name: response.name,
+          about: response.about,
+          wilaya: response.wilaya,
+          price: response.price,
+          timestamp: response.timestamp,
+          currency: response.currency,
+          uuid: response.uuid,
+        };
+        return this.imagesCollectionRef.doc(uuidItem).valueChanges().take(1)
+      }).subscribe(
+        (response:any) => {
+            itemDetails.imagesItem = response.pathOfImages;
+            itemDetails.imagesPathDirectory = response.pathOfBucket;
             observer.next(itemDetails);
             observer.complete();
-          }
         },
         (error) => observer.error(error),
       )

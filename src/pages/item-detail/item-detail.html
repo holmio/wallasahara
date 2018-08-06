@@ -2,13 +2,13 @@
 
   <ion-navbar>
     <ion-buttons class="options" right>
-      <button icon-only ion-button>
+      <button [hidden]="isEnabled" icon-only ion-button>
         <ion-icon name="heart"></ion-icon>
       </button>
       <button icon-only ion-button>
         <ion-icon name="share"></ion-icon>
       </button>
-      <button icon-only ion-button (click)="presentPopover($event)">
+      <button [hidden]="!isEnabled" icon-only ion-button (click)="presentPopover($event)">
         <ion-icon name="more"></ion-icon>
       </button>
     </ion-buttons>
@@ -30,6 +30,7 @@
   <div *ngIf="itemDetails" class="item-detail" padding>
     <p>{{'DETAILS_ITEM_LAST_UPDATE' | translate}} : {{itemDetails.timestamp | date:'shortDate'}}</p>
     <h2>{{itemDetails.price | number}} {{itemDetails.currency}}</h2>
+    <p>{{itemDetails.wilaya}}</p>
     <p>{{itemDetails.about}}</p>
   </div>
 </ion-content>

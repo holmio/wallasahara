@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, ViewController } from 'ionic-angular';
 
-/**
- * Generated class for the PopoverPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-popover',
@@ -19,7 +12,7 @@ export class PopoverPage {
   }
 
   delete() {
-    this.viewCtrl.dismiss({event: 'delete'});
+    this.viewCtrl.dismiss({event: 'delete'}).catch(() => {console.error('Error ´delete´')});
   }
 
 }

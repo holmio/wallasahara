@@ -1,8 +1,19 @@
 import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+// Ngx-translate
 import { TranslateService } from '@ngx-translate/core';
+
+// Ionic
 import { IonicPage, NavController, MenuController, Events } from 'ionic-angular';
+
+// Pages
 import { MainPage } from '../pages';
-import { AuthService, ToastService, LoadingService, SettingsServices } from '../../providers/providers';
+
+// Services
+import { AuthService, ToastService, LoadingService, UsersService } from '../../providers/providers';
+
+// Entities
 import { UserDetail } from '../../models/user.entities';
 
 @IonicPage()
@@ -11,57 +22,67 @@ import { UserDetail } from '../../models/user.entities';
   templateUrl: 'login.html'
 })
 export class LoginPage {
-  // The account fields for the login form.
-  // If you're using the username field with or without email, make
-  // sure to add it to the type
-  account: { email: string, password: string } = {
-    email: 'test@example.com',
-    password: 'test123456'
-  };
 
-  // Our translated text strings
-  private loginErrorString: string;
-  private loginSuccessString: string;
+  form: FormGroup;
 
-  constructor(public navCtrl: NavController,
-    public translateService: TranslateService,
+  constructor(
+    private navCtrl: NavController,
+    private translateService: TranslateService,
     private events: Events,
     private auth: AuthService,
     private toastService: ToastService,
     private loadingService: LoadingService,
     private menuController: MenuController,
+    private formBuilder: FormBuilder,
+    private userService: UsersService,
   ) {
     // Disable menu for login page
     this.menuController.enable(false, 'myMenu');
-    this.translateService.get(['LOGIN_ERROR', 'LOGIN_SUCCESS']).subscribe((value) => {
-      this.loginErrorString = value.LOGIN_ERROR;
-      this.loginSuccessString = value.LOGIN_SUCCESS;
-    })
+  }
+
+  ionViewWillEnter(){
+   if (this.auth.authenticated){
+     this.userService.getUserInformationStorage().subscribe((response) => {
+       if (response) {
+        this.events.publish('user:logged', response);
+        this.navCtrl.setRoot(MainPage).catch(() => {console.error('Error ´doLogin´')});
+       } else {
+         return;
+       }
+     });
+   }
+  }
+
+  ionViewDidLoad(){
+    this.form = this.formBuilder.group({
+      email: ['test@example.com', [Validators.required, Validators.email]],
+      password: ['test123456', [Validators.required, Validators.minLength(8)]],
+    });
   }
 
   // Attempt to login in through our User service
   doLogin() {
     this.loadingService.showLoading();
-    this.auth.signInWithEmail(this.account).subscribe((response) => {
+    this.auth.signInWithEmail(this.form.value).subscribe((response) => {
       this.events.publish('user:logged', response);
-      this.navCtrl.setRoot(MainPage);
+      this.navCtrl.setRoot(MainPage).catch(() => {console.error('Error ´doLogin´')});
       this.loadingService.hideLoading();
     }, (err) => {
       this.loadingService.hideLoading();
       // Unable to log in
-      this.toastService.show(this.loginErrorString, 'error');
+      this.toastService.show(this.translateService.instant('LOGIN_ERROR'), 'error');
     });
   }
 
   signup() {
-    this.navCtrl.push('SignupPage');
+    this.navCtrl.push('SignupPage').catch(() => {console.error('Error ´signup´')});
   }
   facebookUp() {
     this.loadingService.showLoading();
     this.auth.signInWithFacebook().subscribe((response: UserDetail) => {
       console.log(response)
       this.events.publish('user:logged', response);
-      this.navCtrl.setRoot(MainPage);
+      this.navCtrl.setRoot(MainPage).catch(() => {console.error('Error ´facebookUp´')});
       this.loadingService.hideLoading();
     }, (err) => {
       this.loadingService.hideLoading();

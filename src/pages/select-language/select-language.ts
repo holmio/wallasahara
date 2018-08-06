@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
+
+// ionic
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { Platform } from 'ionic-angular/platform/platform';
-import { TranslateService } from '@ngx-translate/core';
-import { LoginPage } from '../login/login';
-import { SettingsServices, LoadingService } from '../../providers/providers';
 
-/**
- * Generated class for the SelectLanguagePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+// Ngx-translate
+import { TranslateService } from '@ngx-translate/core';
+
+// Pages
+import { LoginPage } from '../pages';
+
+// Services
+import { SettingsServices } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -25,7 +26,6 @@ export class SelectLanguagePage {
     public platform: Platform,
     public viewCtrl: ViewController,
     public settingsServices: SettingsServices,
-    private loadingService: LoadingService,
   ) {
   }
 
@@ -34,9 +34,9 @@ export class SelectLanguagePage {
   }
 
   changeLanguage(language: string) {
-    this.translate.use(language)
+    this.translate.use(language);
     this.settingsServices.setValue('initialRun', 'true');
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss().catch(() => {console.error('Error ´handleItemBtn´')});
   }
 
 }

@@ -1,8 +1,17 @@
 import { Component } from '@angular/core';
+
+// Ionic
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+
+// Services
 import { UsersService } from '../../providers/providers';
-import { UserDetail, ItemOfUser } from '../../models/user.entities';
+
+// Entities
+import { UserDetail } from '../../models/user.entities';
+
+// Rxjs
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs';
 
 /**
  * Page to show and edit data of the user.
@@ -18,20 +27,27 @@ export class ProfileUserPage {
   productInformation: any = 'products';
   userInformation: UserDetail;
   listOfItems = new BehaviorSubject([]);
-
+  private unsubscribtion: Subscription;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public usersService: UsersService,
+    private usersService: UsersService,
     private modalCtrl: ModalController,
   ) {
   }
 
   ionViewDidLoad() {
-    this.usersService.getUserInformationStorage().subscribe(data  => {
+    this.unsubscribtion = this.usersService.getUserInformationStorage()
+    .concatMap(response => {
+      return this.usersService.getUserInformationFireStore(response.uuid)
+    }).subscribe(data  => {
       this.userInformation = data;
       this.listOfItems.next(this.userInformation.listOfItems);
     });
+  }
+
+  ionViewDidLeave(){
+    this.unsubscribtion.unsubscribe();
   }
 
   editUser() {
@@ -39,14 +55,14 @@ export class ProfileUserPage {
     addModal.onDidDismiss(data => {
       if(data) this.userInformation = data;
     });
-    addModal.present();
+    addModal.present().catch((error) => {console.error('Error ´editUser´: ' + error)});
   }
 
   /**
    * Navigate to the detail page for this item.
    */
   handleItemBtn(event) {
-    this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem });
+    this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem }).catch(() => {console.error('Error ´handleItemBtn´')});
   }
 
 }

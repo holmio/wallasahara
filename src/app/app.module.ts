@@ -15,6 +15,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Camera } from '@ionic-native/camera';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { Diagnostic } from '@ionic-native/diagnostic';
+import { Facebook } from '@ionic-native/facebook';
 
 // Angular FireBase
 import { AngularFireModule } from 'angularfire2';
@@ -92,6 +93,12 @@ export function provideSettings(storage: Storage) {
     MyApp,
   ],
   providers: [
+    SplashScreen,
+    StatusBar,
+    Facebook,
+    AndroidPermissions,
+    Diagnostic,
+    Camera,
     AuthService,
     UsersService,
     ItemsService,
@@ -100,11 +107,6 @@ export function provideSettings(storage: Storage) {
     UploadService,
     DeleteFileService,
     PaginationService,
-    Camera,
-    AndroidPermissions,
-    Diagnostic,
-    SplashScreen,
-    StatusBar,
     { provide: SettingsServices, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler },

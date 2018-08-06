@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController } from 'ionic-angular';
-import { ItemCreatePage, FilterPage } from '../pages';
-import { ItemsService, LoadingService, PaginationService, AuthService } from '../../providers/providers';
+import { ItemCreatePage, FilterPage, LoginPage } from '../pages';
+import { PaginationService, AuthService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -10,13 +10,11 @@ import { ItemsService, LoadingService, PaginationService, AuthService } from '..
 })
 export class ListMasterPage {
   constructor(
-    public navCtrl: NavController,
-    public paginationService: PaginationService,
-    public auth: AuthService,
+    private navCtrl: NavController,
+    private paginationService: PaginationService,
     private modalCtrl: ModalController,
     private menuController: MenuController,
-    private itemsService: ItemsService,
-    private loadingService: LoadingService,
+    private authService: AuthService,
   ) {
     // Enable menu
     this.menuController.enable(true, 'myMenu');
@@ -26,7 +24,11 @@ export class ListMasterPage {
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
-    this.paginationService.init('items', 'timestamp');
+    if (this.authService.authenticated) {
+      this.paginationService.init('items', 'timestamp');
+    } else {
+      this.navCtrl.setRoot(LoginPage).catch(() => {console.error('Error ´initLoginUser´')});
+    }
   }
 
   infiniteScrolling (infiniteScroll) {
@@ -37,7 +39,8 @@ export class ListMasterPage {
   }
 
   doRefresh (refresher) {
-    this.paginationService.update();
+    // this.paginationService.update();
+    this.paginationService.init('items', 'timestamp');
     this.paginationService.stateLoading$.subscribe(data => {
       if (!data) refresher.complete()
     })
@@ -49,18 +52,18 @@ export class ListMasterPage {
    */
   addItem() {
     const addModal = this.modalCtrl.create(ItemCreatePage);
-    addModal.present();
+    addModal.present().catch(() => {console.error('Error ´addItem´')});
   }
 
   filterItems() {
-    this.navCtrl.push(FilterPage);
+    this.navCtrl.push(FilterPage).catch(() => {console.error('Error ´filterItems´')});
   }
 
   /**
    * Navigate to the detail page for this item.
    */
   handleItemBtn(event) {
-    this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem });
+    this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem }).catch(() => {console.error('Error ´handleItemBtn´')});
   }
 
 }

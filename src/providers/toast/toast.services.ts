@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+
+// Ionic
 import { ToastController } from 'ionic-angular';
 
 @Injectable()
@@ -15,6 +17,6 @@ export class ToastService {
       position: 'top',
       cssClass: cssClass
     });
-    toast.present();
+    toast.present().catch(() => 'error presenting toast');
   }
 }

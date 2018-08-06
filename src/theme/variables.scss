@@ -21,9 +21,11 @@ $colors: (
   danger:         #873333,
   light:          #FAE2AA,
   light-second:   #FAE7B9,
+  background-color:#FAE7B9,
   dark:           #00262C,
   info:           #00262C,
   box-shadow:     rgba(0, 0, 0, 0.58),
+  facebook:       #3b5998,
 );
 
 // Shared Variables
@@ -34,7 +36,7 @@ $colors: (
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
 
 $text-color:          color($colors, dark);
-$app-background:      linear-gradient(to right, color($colors, light) 0%, color($colors, light-second) 100%);
+$app-background:      linear-gradient(to right, color($colors, background-color) 0%, color($colors, background-color) 100%);
 $background-color:    transparent;
 $toolbar-background:  transparent;
 $text-input-highlight-color-valid: color($colors, success);

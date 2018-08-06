@@ -4,19 +4,13 @@
   <ion-navbar>
     <ion-buttons left>
       <button ion-button (click)="cancel()">
-        <span color="primary" showWhen="ios">
-          {{ 'CANCEL_BUTTON' | translate }}
-        </span>
-        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+        <ion-icon name="md-close"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>{{ 'USER_EDIT_TITLE' | translate }}</ion-title>
     <ion-buttons right>
       <button ion-button (click)="saveData()" [disabled]="!isReadyToSave" strong>
-        <span color="primary" showWhen="ios">
-          {{ 'DONE_BUTTON' | translate }}
-        </span>
-        <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
+        <ion-icon name="md-checkmark"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -40,15 +34,15 @@
           <ion-input type="text" formControlName="lastName"></ion-input>
         </ion-item>
 
-        <ion-item disabled>
+        <ion-item *ngIf="isEnabledToEdit">
           <ion-label floating>{{ 'EMAIL' | translate }}</ion-label>
-          <ion-input type="email" formControlName="email"></ion-input>
+          <ion-input type="email" [disabled]="true">{{userInformation.email}}</ion-input>
         </ion-item>
 
-        <!-- <ion-item>
+        <ion-item *ngIf="isEnabledToEdit">
           <ion-label floating>{{ 'NEW_PASSWORD' | translate }}</ion-label>
-          <ion-input type="password" formControlName="password"></ion-input>
-        </ion-item> -->
+          <ion-input type="password" [disabled]="true">{{ 'PASSWORD' | translate }}</ion-input>
+        </ion-item>
       </ion-list>
     </form>
 </ion-content>

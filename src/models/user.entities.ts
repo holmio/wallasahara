@@ -5,6 +5,7 @@ export interface UserDetail {
   pictureURL: RoutePicture;
   email: string;
   lastSignInTime?: string;
+  providerUserInfo?: string;
   listOfItems?: Array<ItemOfUser>;
 }
 

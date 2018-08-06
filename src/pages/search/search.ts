@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
+// ionic
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+
+// Services
 import { ItemsService, LoadingService } from '../../providers/providers';
-import { MainPage } from '../pages';
+
+// Lodash
 import * as _ from 'lodash';
 
 @IonicPage()
@@ -35,7 +39,6 @@ export class SearchPage {
     public formBuilder: FormBuilder,
     private itemsService: ItemsService,
     private loadingService: LoadingService,
-    private viewCtrl: ViewController,
   ) {
     this.form = formBuilder.group({
       name: [''],
@@ -55,7 +58,7 @@ export class SearchPage {
    * Navigate to the detail page for this item.
    */
   handleItemBtn(event) {
-    this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem });
+    this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem }).catch(() => {console.error('Error ´handleItemBtn´')});
   }
 
   /**

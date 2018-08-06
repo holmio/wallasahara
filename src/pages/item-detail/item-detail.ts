@@ -1,11 +1,22 @@
-import { Component, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+
+// Ionic
 import { IonicPage, NavController, NavParams, Slides, ModalController, PopoverController, AlertController } from 'ionic-angular';
 
-import { ItemsService, LoadingService } from '../../providers/providers';
+// Services
+import { ItemsService, LoadingService, UsersService } from '../../providers/providers';
+
+// Entities
 import { DetailsItem } from '../../models/item.entities';
-import { FirstRunPage, PopoverPage } from '../pages';
+
+// Pages
+import { PopoverPage } from '../pages';
+
+// Ngx-translate
 import { TranslateService } from '@ngx-translate/core';
-import { ISubscription } from 'rxjs/Subscription';
+
+// config
+import { wilayas } from '../../app/shared/config';
 
 @IonicPage()
 @Component({
@@ -20,6 +31,7 @@ export class ItemDetailPage {
     pager:true
   };
   itemDetails: DetailsItem;
+  isEnabled: boolean = false;
   private itemUuid: any;
 
   constructor(
@@ -31,6 +43,7 @@ export class ItemDetailPage {
     private popoverCtrl: PopoverController,
     private alertCtrl: AlertController,
     private translate: TranslateService,
+    private userService: UsersService,
   ) {
     console.log(navParams.get('event'));
     this.itemUuid = navParams.get('uuidItem') || undefined;
@@ -41,10 +54,16 @@ export class ItemDetailPage {
    */
   ionViewDidLoad() {
     this.loadingService.showLoading();
-    this.itemsService.getItemByUuid(this.itemUuid).subscribe(
+    this.userService.getUserInformationStorage()
+    .concatMap((response) => {
+      this.isEnabled = (response.listOfItems.find(o => o.uuid === this.itemUuid) !== undefined) ? true : false;
+      return this.itemsService.getItemByUuid(this.itemUuid)
+    }).subscribe(
       (data) => {
         console.log(data);
         this.itemDetails = data;
+        // Convert to logic text
+        wilayas.map( val => { if (val.value === this.itemDetails.wilaya) this.itemDetails.wilaya = val.nameAr });
         // Delete the first element of the array, it is a thumnail.
         this.itemDetails.imagesItem.shift();
       },
@@ -60,7 +79,7 @@ export class ItemDetailPage {
 
   goToSlide() {
     const addModal = this.modalCtrl.create('SlideGalleryPage', { gallery: this.itemDetails.imagesItem });
-    addModal.present();
+    addModal.present().catch(() => {console.error('Error ´goToSlide´')});
   }
 
 
@@ -75,13 +94,13 @@ export class ItemDetailPage {
     });
     popover.present({
       ev: myEvent
-    });
+    }).catch(() => {console.error('Error ´presentPopover´')});
   }
 
   private deleteItem() {
     this.itemsService.deleteItem(this.itemDetails).subscribe(
       () => {
-        this.navCtrl.pop({});
+        this.navCtrl.pop().catch(() => {console.error('Error ´deleteItem´')});
       },
       (error) => {
         console.error(error);
@@ -108,7 +127,7 @@ export class ItemDetailPage {
         }
       ]
     });
-    confirm.present();
+    confirm.present().catch(() => {console.error('Error ´showDeleteConfirm´')});
   }
 
 }

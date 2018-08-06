@@ -3,19 +3,13 @@
   <ion-navbar>
     <ion-buttons left>
       <button ion-button (click)="cancel()">
-        <span color="primary" showWhen="ios">
-          {{ 'CANCEL_BUTTON' | translate }}
-        </span>
-        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+        <ion-icon name="md-close"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>{{ 'ITEM_CREATE_TITLE' | translate }}</ion-title>
     <ion-buttons right>
       <button ion-button (click)="createItem()" [disabled]="!isReadyToSave" strong>
-        <span color="primary" showWhen="ios">
-          {{ 'DONE_BUTTON' | translate }}
-        </span>
-        <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
+        <ion-icon name="md-checkmark"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -48,7 +42,13 @@
         <ion-item col-12>
           <ion-label floating>{{ 'ITEM_CATEGORY_PLACEHOLDER' | translate }}</ion-label>
           <ion-select interface="action-sheet" formControlName="category">
-            <ion-option *ngFor="let category of categories" [value]="category.value">{{category.name}}</ion-option>
+            <ion-option *ngFor="let category of categories" [value]="category.value">{{category.nameAr}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item col-12>
+          <ion-label floating>{{ 'ITEM_WILAYA_PLACEHOLDER' | translate }}</ion-label>
+          <ion-select interface="action-sheet" formControlName="wilaya">
+            <ion-option *ngFor="let wilaya of wilayas" [value]="wilaya.value">{{wilaya.nameAr}}</ion-option>
           </ion-select>
         </ion-item>
       </ion-row>

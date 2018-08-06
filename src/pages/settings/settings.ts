@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+
+// Ngx-translate
 import { TranslateService } from '@ngx-translate/core';
+
+// Ionic
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 
-import { SettingsServices, LoadingService } from '../../providers/providers';
+// Services
+import { SettingsServices } from '../../providers/providers';
 
 /**
  * The Settings page is a simple form that syncs with a Settings provider
@@ -36,7 +41,8 @@ export class SettingsPage {
 
   private currentLang: string;
 
-  constructor(public navCtrl: NavController,
+  constructor(
+    public navCtrl: NavController,
     public settingsServices: SettingsServices,
     public formBuilder: FormBuilder,
     public navParams: NavParams,

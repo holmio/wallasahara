@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, MenuController, NavController, Platform, NavParams, ModalController } from 'ionic-angular';
 
+// Ionic
+import { IonicPage, MenuController, NavController, Platform} from 'ionic-angular';
+
+// Ngx-translate
 import { TranslateService } from '@ngx-translate/core';
-import { DocumentDirection } from 'ionic-angular/platform/platform';
 
 export interface Slide {
   title: string;
@@ -61,7 +63,7 @@ export class TutorialPage {
     this.navCtrl.setRoot('LoginPage', {}, {
       animate: true,
       direction: 'forward'
-    });
+    }).catch(() => {console.error('Error ´startApp´')});
   }
 
   onSlideChangeStart(slider) {

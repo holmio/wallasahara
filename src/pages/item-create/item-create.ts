@@ -1,10 +1,20 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+// Ionic
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
-import { ItemsService, LoadingService, UploadService, ToastService, UsersService } from '../../providers/providers';
+
+// Services
+import { ItemsService, LoadingService, ToastService } from '../../providers/providers';
+
+// Entities
 import { CreateItem } from '../../models/item.entities';
+
+// Ngx-translate
 import { TranslateService } from '@ngx-translate/core';
-import { UserDetail } from '../../models/user.entities';
+
+// config
+import { categories, currencies, wilayas } from '../../app/shared/config';
 
 @IonicPage()
 @Component({
@@ -19,20 +29,12 @@ export class ItemCreatePage {
 
   form: FormGroup;
 
-  // TODO
-  categories: any = [
-    {value: 'videos', name: 'Videos'},
-    {value: 'play', name: 'Play'},
-    {value: 'camells', name: 'Camellos'},
-    {value: 'cabra', name: 'Cabra'},
-    {value: 'melfa', name: 'Melfa'},
-    {value: 'coche', name: 'coche'},
-    {value: 'otro', name: 'Otro'},
-  ]
-  currencies: any = [
-    {value: 'dza', nameAr: 'دينار', nameEn: 'Dinar'},
-    {value: 'eur', nameAr: 'اليورو', nameEn: 'Euro'},
-  ]
+  /**
+   * Config of diferent categories
+   */
+  categories = categories;
+  currencies = currencies;
+  wilayas = wilayas;
 
   constructor(
     public navCtrl: NavController,
@@ -46,10 +48,11 @@ export class ItemCreatePage {
     this.form = formBuilder.group({
       imagesItem: [[], Validators.required],
       name: ['', Validators.required],
+      about: [''],
       price: ['', Validators.compose([Validators.required, Validators.pattern(/^\d+.\d{1}$/)])],
       currency: ['dza', Validators.required],
       category: ['', Validators.required],
-      about: [''],
+      wilaya:['', Validators.required],
     });
 
     // Watch the form for changes, and
@@ -69,7 +72,7 @@ export class ItemCreatePage {
    * The user cancelled, so we dismiss without sending data back.
    */
   cancel() {
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss().catch(() => {console.error('Error ´cancel´')});
   }
 
   /**
@@ -92,7 +95,7 @@ export class ItemCreatePage {
       },
       () => {
         this.loadingService.hideLoading();
-        this.viewCtrl.dismiss(this.form.value);
+        this.viewCtrl.dismiss(this.form.value).catch(() => {console.error('Error ´createItem´')});
       }
     );
   }

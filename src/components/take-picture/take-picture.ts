@@ -1,7 +1,13 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
+
+// Ionic
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Platform, ActionSheetController } from 'ionic-angular';
+
+// Services
 import { LoadingService, ToastService } from '../../providers/providers';
+
+// Ngx-translate
 import { TranslateService } from '@ngx-translate/core';
 
 /**
@@ -91,7 +97,7 @@ export class TakePictureComponent {
         }
       ]
     });
-    actionSheet.present();
+    actionSheet.present().catch(() => {console.error('Error ´presentMethodToUploadPictures´')});
   }
 
 }
