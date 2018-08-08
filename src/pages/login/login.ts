@@ -42,7 +42,9 @@ export class LoginPage {
 
   ionViewWillEnter(){
    if (this.auth.authenticated){
+    this.loadingService.showLoading();
      this.userService.getUserInformationStorage().subscribe((response) => {
+      this.loadingService.hideLoading();
        if (response) {
         this.events.publish('user:logged', response);
         this.navCtrl.setRoot(MainPage).catch(() => {console.error('Error ´doLogin´')});

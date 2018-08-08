@@ -16,6 +16,9 @@ import { TranslateService } from '@ngx-translate/core';
 // config
 import { categories, currencies, wilayas } from '../../app/shared/config';
 
+// Lodash
+import * as _ from 'lodash';
+
 @IonicPage()
 @Component({
   selector: 'page-item-create',
@@ -82,6 +85,8 @@ export class ItemCreatePage {
   createItem() {
     if (!this.form.valid) { return; }
     const dataItem: CreateItem = this.form.value;
+    // Convert to type number the price
+    dataItem.price = _.parseInt(this.form.value.price);
     this.loadingService.showLoading();
     this.itemsService.addItem(dataItem).subscribe(
       data => {
