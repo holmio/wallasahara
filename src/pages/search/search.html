@@ -27,21 +27,36 @@
             <ion-label floating>{{ 'ITEM_NAME_PLACEHOLDER' | translate }}</ion-label>
             <ion-input type="text" formControlName="name"></ion-input>
           </ion-item>
-          <ion-item col-8>
-            <ion-label floating>{{ 'ITEM_PRICE_PLACEHOLDER' | translate }}</ion-label>
-            <ion-input type="number" max="9" formControlName="price"></ion-input>
+          <ion-item col-6>
+            <ion-label floating>{{ 'ITEM_PRICE_FROM_PLACEHOLDER' | translate }}</ion-label>
+            <ion-input type="number" max="9" formControlName="priceMin"></ion-input>
           </ion-item>
-          <ion-item col-12>
+          <ion-item col-6>
+            <ion-label floating>{{ 'ITEM_PRICE_TO_PLACEHOLDER' | translate }}</ion-label>
+            <ion-input type="number" max="9" formControlName="priceMax"></ion-input>
+          </ion-item>
+          <ion-item col-6>
             <ion-label floating>{{ 'ITEM_CATEGORY_PLACEHOLDER' | translate }}</ion-label>
             <ion-select interface="action-sheet" formControlName="category">
-              <ion-option *ngFor="let category of categories" [value]="category.value">{{category.name}}</ion-option>
+              <ion-option *ngFor="let category of categories" [value]="category.value">{{category.nameAr}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item col-6>
+            <ion-label floating>{{ 'ITEM_WILAYA_PLACEHOLDER' | translate }}</ion-label>
+            <ion-select interface="action-sheet" formControlName="wilaya">
+              <ion-option *ngFor="let wilaya of wilayas" [value]="wilaya.value">{{wilaya.nameAr}}</ion-option>
             </ion-select>
           </ion-item>
         </ion-row>
       </ion-list>
     </form>
 
-  <card-item *ngIf="statusSearch" [dataItems] = "currentItems" (dataToEmmit)="handleItemBtn($event)"></card-item>
+  <card-item *ngIf="statusSearch" [dataItems] = "paginationService.itemsData$" (dataToEmmit)="handleItemBtn($event)"></card-item>
+  <ion-infinite-scroll *ngIf="statusSearch" enabled="paginationService.requestDone$" (ionInfinite)="infiniteScrolling($event)">
+    <ion-infinite-scroll-content
+    loadingText="{{'LOADING_DATA' | translate}}">
+  </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
   </ion-content>
 

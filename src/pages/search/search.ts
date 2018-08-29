@@ -5,11 +5,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 // Services
-import { ItemsService, LoadingService } from '../../providers/providers';
+import { ItemsService, LoadingService, PaginationService } from '../../providers/providers';
 
 // Lodash
 import * as _ from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 
+// config
+import { categories, wilayas } from '../../app/shared/config';
+
+/**
+ * TODO: Page with a form to search items.
+ */
 @IonicPage()
 @Component({
   selector: 'page-search',
@@ -17,41 +24,28 @@ import * as _ from 'lodash';
 })
 export class SearchPage {
 
-  currentItems: any = [];
+  currentItems = new BehaviorSubject([]);
 
   form: FormGroup;
 
   statusSearch: boolean = false;
 
-  categories: any = [
-    {value: 'videos', name: 'Videos'},
-    {value: 'play', name: 'Play'},
-    {value: 'camells', name: 'Camellos'},
-    {value: 'cabra', name: 'Cabra'},
-    {value: 'melfa', name: 'Melfa'},
-    {value: 'coche', name: 'coche'},
-    {value: 'otro', name: 'Otro'},
-  ]
+  categories: any = categories;
+  wilayas: any = wilayas;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    private itemsService: ItemsService,
-    private loadingService: LoadingService,
+    private paginationService: PaginationService,
   ) {
     this.form = formBuilder.group({
       name: [''],
-      price: ['', Validators.pattern(/^\d+.\d{1}$/)],
+      priceMin: ['0', Validators.pattern(/^\d+.\d{1}$/)],
+      priceMax: ['999999999', Validators.pattern(/^\d+.\d{1}$/)],
       category: [''],
+      wilaya: [''],
     });
-  }
-
-  /**
-   * Accept the filter and go to the list of items.
-   */
-  acceptFilter () {
-    this.getListOfItemsByFilter(this.form.value)
   }
 
   /**
@@ -61,6 +55,16 @@ export class SearchPage {
     this.navCtrl.push('ItemDetailPage', { uuidItem: event.uuidItem }).catch(() => {console.error('Error ´handleItemBtn´')});
   }
 
+  infiniteScrolling (infiniteScroll) {
+    const filter = this.form.value;
+    filter.priceMin = _.parseInt(filter.priceMin);
+    filter.priceMax = _.parseInt(filter.priceMax);
+    this.paginationService.more(filter);
+    this.paginationService.stateLoading$.subscribe(data => {
+      if (!data) infiniteScroll.complete()
+    })
+  }
+
   /**
    * Reset status of showing filter
    */
@@ -68,20 +72,29 @@ export class SearchPage {
     this.statusSearch = false;
   }
 
-  private getListOfItemsByFilter(filter?: any) {
-    this.loadingService.showLoading();
-    this.itemsService.getListOfItemsByFilter(filter).subscribe(
-      (itemsList) => {
-        console.log(itemsList);
-        this.currentItems = _.reverse(itemsList);
-        this.statusSearch = true;
-        this.loadingService.hideLoading();
-      },
-      error => {
-        console.log(error);
-        this.loadingService.hideLoading();
-      }
-    );
+  /**
+   * TODO: Waiting for a kind of filter in firebase that can help to search products.
+   */
+  acceptFilter() {
+    const filter = this.form.value;
+    // Convert to type number
+    filter.priceMin = _.parseInt(filter.priceMin);
+    filter.priceMax = _.parseInt(filter.priceMax);
+    this.paginationService.init('items', 'timestamp', undefined, filter);
+    this.statusSearch = true;
+    // this.loadingService.showLoading();
+    // this.itemsService.getListOfItemsByFilter(filter).subscribe(
+    //   (itemsList) => {
+    //     console.log(itemsList);
+    //     this.currentItems.next(_.reverse(itemsList));
+    //     this.statusSearch = true;
+    //     this.loadingService.hideLoading();
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     this.loadingService.hideLoading();
+    //   }
+    // );
   }
 
 }

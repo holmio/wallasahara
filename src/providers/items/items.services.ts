@@ -125,14 +125,18 @@ export class ItemsService {
     return new Observable<any>((observer: any) => {
       const sourceItemToDelete = this.deleteService.deleteFiles(itemDetails.imagesPathDirectory);
       Observable.concat(sourceItemToDelete)
+      // Remove img in firestorage
       this.deleteService.deleteFiles(itemDetails.imagesPathDirectory)
       .concatMap(() => {
+        // Remove item in firestore
         return this.itemCollectionRef.doc(itemDetails.uuid).delete()
       })
       .concatMap(() => {
+        // Remove references of img in firestore
         return this.imagesCollectionRef.doc(itemDetails.uuid).delete()
       })
       .concatMap(() => {
+        // Get information of item
         return this.userService.getUserInformationStorage();
       })
       .concatMap((response) => {
@@ -157,7 +161,7 @@ export class ItemsService {
   }
 
   /**
-   * Get the list of items.
+   * TODO: Get the list of items by filter.
    */
   getListOfItemsByFilter(filter: any = {}) {
 
@@ -182,24 +186,13 @@ export class ItemsService {
 
     return this.afStore.collection('items', (ref: any) => {
       let query: any = ref;
-      if (filter.price) { query = query.where('price', '>=', filter.price) };
-      if (filter.name) { query = query.where('name', '==', '%'+filter.name+'%') };
+      if (filter.name) { query = query.orderBy('name').startAt(filter.name).endAt(filter.name+"\uf8ff") };
+      if (filter.priceMin) { query = query.where('price', '>=', filter.priceMin).where('price','<=', filter.priceMax) };
+      if (filter.category) {  query = query.where('category', '==', filter.category) };
+      if (filter.wilaya) {  query = query.where('wilaya', '==', filter.wilaya) };
       return query
-    }).valueChanges();
+    }).valueChanges().take(1);
   }
-
-  /**
-   * Get the list of items.
-   */
-  // getListOfItems(limit: number, last: string) {
-  //   return this.paginationService.init('items', 'timestamp');
-  //   return this.afStore.collection('items', ref => (
-  //     ref
-  //       .where('id', '<', last)
-  //       .orderBy('id', 'desc')
-  //       .limit(limit)
-  //    )).snapshotChanges();
-  // }
 
   /**
    * Get the data of item.
@@ -221,8 +214,10 @@ export class ItemsService {
           currency: response.currency,
           uuid: response.uuid,
         };
-        return this.imagesCollectionRef.doc(uuidItem).valueChanges().take(1)
-      }).subscribe(
+        return this.imagesCollectionRef.doc(uuidItem).valueChanges()
+      })
+      .take(1)
+      .subscribe(
         (response:any) => {
             itemDetails.imagesItem = response.pathOfImages;
             itemDetails.imagesPathDirectory = response.pathOfBucket;

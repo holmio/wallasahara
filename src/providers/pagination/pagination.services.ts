@@ -34,7 +34,7 @@ export class PaginationService {
 
   // Initial query sets options and defines the Observable
   // passing opts will override the defaults
-  init(path: string, field: string, opts?: any) {
+  init(path: string, field: string, opts?: any, filter?: any) {
     this.query = {
       path,
       field,
@@ -45,9 +45,19 @@ export class PaginationService {
     }
 
     const first = this.afs.collection(this.query.path, ref => {
-      return ref
-        .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-        .limit(this.query.limit);
+      let query: any = ref;
+      // TODO: create a pagination of the list with filter.
+      if (!_.isUndefined(filter)) {
+        if (filter.name) { query = query.orderBy('name').startAt(filter.name).endAt(filter.name+"\uf8ff") };
+        if (filter.priceMin) { query = query.where('price', '>=', filter.priceMin).where('price','<=', filter.priceMax) };
+        if (filter.category) {  query = query.where('category', '==', filter.category) };
+        if (filter.wilaya) {  query = query.where('wilaya', '==', filter.wilaya) };
+        query = query.limit(this.query.limit);
+      } else {
+        query = query.orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
+        query = query.limit(this.query.limit);
+      }
+      return query
     })
 
     this.mapAndUpdate(first);
@@ -61,11 +71,17 @@ export class PaginationService {
 
 
   // Retrieves additional data from firestore
-  more() {
+  more(filter?: any) {
     const cursor = this.getCursor();
-
     const more = this.afs.collection(this.query.path, ref => {
-      return ref
+      let query: any = ref;
+      if (!_.isUndefined(filter)) {
+        if (filter.name) { query = query.orderBy('name').startAt(filter.name).endAt(filter.name+"\uf8ff") };
+        if (filter.priceMin) { query = query.where('price', '>=', filter.priceMin).where('price','<=', filter.priceMax) };
+        if (filter.category) {  query = query.where('category', '==', filter.category) };
+        if (filter.wilaya) {  query = query.where('wilaya', '==', filter.wilaya) };
+      }
+      return query
         .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
         .limit(this.query.limit)
         .startAfter(cursor);
